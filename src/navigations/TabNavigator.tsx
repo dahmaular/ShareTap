@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {TabNavigatorParamsList} from '../types';
 import {Home, Chat, Contacts, Profile, Card} from '../screens/tabs';
@@ -10,6 +10,7 @@ const TabStack = createBottomTabNavigator<TabNavigatorParamsList>();
 interface TabContainerProps {
   label?: string;
   focused?: boolean;
+  color: string;
 }
 
 const TabContainer: React.FunctionComponent<TabContainerProps> = ({
@@ -21,20 +22,20 @@ const TabContainer: React.FunctionComponent<TabContainerProps> = ({
     {focused ? (
       <View
         style={{
-          borderBottomWidth: 1,
+          borderBottomWidth: 2,
           borderBottomColor: '#316F8A',
           alignItems: 'center',
           flex: 1,
-          paddingTop: 7,
+          paddingTop: 15,
         }}>
         {children}
-        <Text style={{color: '#316F8A', marginTop: 6}}>{label}</Text>
+        <Text style={{...styles.labelText, color: '#316F8A'}}>{label}</Text>
       </View>
     ) : (
       <View
-        style={{width: '100%', alignItems: 'center', flex: 1, paddingTop: 8}}>
+        style={{width: '100%', alignItems: 'center', flex: 1, paddingTop: 15}}>
         {children}
-        <Text style={{color: '#8C8C8C', marginTop: 6}}>{label}</Text>
+        <Text style={{...styles.labelText, color: '#8C8C8C'}}>{label}</Text>
       </View>
     )}
   </>
@@ -46,16 +47,8 @@ const TabNavigator = () => {
   return (
     <Navigator
       initialRouteName="Home"
-      // tabBarOptions={{
-      //   showLabel: false,
-      //   style: {
-      //     height: 80,
-      //     backgroundColor: '#30444E',
-      //     borderTopColor: 'rgba(0, 0, 0, 0)',
-      //   },
-      // }}
       screenOptions={({route}) => ({
-        tabBarIcon: ({focused}) => {
+        tabBarIcon: ({focused, color}) => {
           let label, iconName: string;
 
           switch (route.name) {
@@ -79,8 +72,8 @@ const TabNavigator = () => {
               return null;
           }
           return (
-            <TabContainer label={label} focused={focused}>
-              <HomeIcon color={`${focused ? 'red' : 'blue'}`} />
+            <TabContainer label={label} focused={focused} color={color}>
+              <HomeIcon color={color} />
             </TabContainer>
           );
         },
@@ -88,16 +81,34 @@ const TabNavigator = () => {
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
           height: 70,
-          borderTopColor: 'transparent',
+          position: 'absolute',
         },
-        headerShown: false,
+        tabBarShowLabel: false,
       })}>
-      <Screen name="Home" component={Home} />
-      <Screen name="Chat" component={Chat} />
-      <Screen name="Contacts" component={Contacts} />
-      <Screen name="Profile" component={Profile} />
+      <Screen name="Home" component={Home} options={{headerShown: false}} />
+      <Screen name="Chat" component={Chat} options={{headerShown: false}} />
+      <Screen
+        name="Contacts"
+        component={Contacts}
+        options={{headerShown: false}}
+      />
+      <Screen
+        name="Profile"
+        component={Profile}
+        options={{headerShown: false}}
+      />
     </Navigator>
   );
 };
 
 export default TabNavigator;
+
+const styles = StyleSheet.create({
+  labelText: {
+    fontFamily: 'Poppins',
+    fontSize: 10,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    marginTop: 6,
+  },
+});

@@ -12,7 +12,7 @@ export default function AuthenticatedRoutes() {
     <Drawer.Navigator
       initialRouteName="Root"
       drawerContent={props => <DrawerContent {...props} />}>
-      <Drawer.Screen name="Root" component={TabNavigator} />
+      <Drawer.Screen name="Root" component={TabNavigator} options={{headerShown: false}} />
     </Drawer.Navigator>
   );
 }

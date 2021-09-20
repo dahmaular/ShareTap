@@ -1,115 +1,56 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React from 'react';
+import React, {FC, useEffect} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
   StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
   View,
+  SafeAreaView,
+  Platform,
+  LogBox,
+  Linking,
 } from 'react-native';
+import {STATUS_BAR, PRIMARY_COLOR} from './src/core/color';
+import {Provider as PaperProvider, DefaultTheme} from 'react-native-paper';
+// import {store, persistor} from './src/store/store';
+// import {PersistGate} from 'redux-persist/integration/react';
+// import {RootSiblingParent} from 'react-native-root-siblings';
+// import {Provider} from 'react-redux';
+import SwitchNavigator from './src/navigations/SwitchNavigator';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section: React.FC<{
-  title: string;
-}> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: PRIMARY_COLOR,
+  },
 };
 
-const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+const statusBarIOS = () => {
+  if (Platform.OS === 'ios') {
+    return <View style={{backgroundColor: STATUS_BAR, height: 50}} />;
+  }
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+  return null;
 };
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+const App: FC = () => {
+  return (
+    // <Provider store={store}>
+    <PaperProvider theme={theme}>
+      {/* <PersistGate loading={null} persistor={persistor}>
+       <RootSiblingParent> */}
+      <View style={{flex: 1}}>
+        {statusBarIOS()}
+        <SafeAreaView style={{flex: 1}}>
+          <StatusBar backgroundColor={STATUS_BAR} barStyle={'light-content'} />
+          <SwitchNavigator />
+        </SafeAreaView>
+      </View>
+      {/* </RootSiblingParent>
+      </PersistGate> */}
+    </PaperProvider>
+    // </Provider>
+  );
+};
 
 export default App;
+
+LogBox.ignoreAllLogs(true);
