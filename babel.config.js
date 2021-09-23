@@ -11,7 +11,8 @@ module.exports = {
           "GRAPHQL_ENDPOINT",
           "APPSYNC_APIKEY",
           "APPSYNC_REGION",
-          "APPSYNC_APPID"
+          "APPSYNC_APPID",
+          "LOAD_STORYBOOK"
         ],
         safe: false,
         allowUndefined: true,
