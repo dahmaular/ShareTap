@@ -15,6 +15,7 @@ export type UnauthenticatedRoutesParamsList = {
   Signin: undefined;
   Verification: undefined;
   Welcome: undefined;
+  Splash: undefined
 };
 
 export type AuthenticatedRoutesParamsList = {
