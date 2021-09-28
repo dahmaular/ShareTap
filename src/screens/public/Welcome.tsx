@@ -14,9 +14,10 @@ import NavButton from '../../components/NavButton';
 import Tapiolla from '../../assets/svg/tap_logo_2.svg';
 import {UnauthenticatedRoutesParamsList} from '../../types';
 import {StackNavigationProp} from '@react-navigation/stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 const {width} = Dimensions.get('screen');
 
-type WelcomeNavigationProp = StackNavigationProp<
+type WelcomeNavigationProp = NativeStackNavigationProp<
   UnauthenticatedRoutesParamsList,
   'Welcome'
 >;
@@ -65,7 +66,7 @@ const Welcome = ({navigation}: Props) => {
             <View style={styles.button}>
               <NavButton
                 label="SIGN IN"
-                onPress={() => navigation.navigate('ProfileType')}
+                onPress={() => <></>}
               />
             </View>
 
