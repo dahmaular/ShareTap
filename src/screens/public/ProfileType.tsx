@@ -96,7 +96,7 @@ const ProfileType = ({navigation}: Props) => {
                   </View>
 
                   <View style={styles.detailsView}>
-                    <Text style={styles.title}>{k.title}</Text>
+                    <Text style={{...styles.title, color: active ? '#316F8A' : '#333333'}}>{k.title}</Text>
                     <Text style={styles.description}>{k.description}</Text>
                   </View>
                 </TouchableOpacity>
@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontStyle: 'normal',
     fontWeight: '500',
-    color: '#333333',
     marginBottom: 7,
   },
 
