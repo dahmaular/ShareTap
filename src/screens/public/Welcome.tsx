@@ -1,5 +1,12 @@
 import React from 'react';
-import {Dimensions, StyleSheet, Text, ScrollView, View} from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  ScrollView,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 import {BACKGROUND_COLOR} from '../../core/color';
 import Group from '../../assets/svg/group.svg';
 import Button from '../../components/Button';
@@ -9,10 +16,16 @@ import {UnauthenticatedRoutesParamsList} from '../../types';
 import {StackNavigationProp} from '@react-navigation/stack';
 const {width} = Dimensions.get('screen');
 
-export interface WelcomeProps {
-  navigation: StackNavigationProp<UnauthenticatedRoutesParamsList, 'Welcome'>;
-}
-const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
+type WelcomeNavigationProp = StackNavigationProp<
+  UnauthenticatedRoutesParamsList,
+  'Welcome'
+>;
+
+type Props = {
+  navigation: WelcomeNavigationProp;
+};
+
+const Welcome = ({navigation}: Props) => {
   return (
     <View style={{flex: 1}}>
       <View style={styles.container}>
@@ -50,7 +63,10 @@ const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
             </View>
 
             <View style={styles.button}>
-              <NavButton label="SIGN IN" />
+              <NavButton
+                label="SIGN IN"
+                onPress={() => navigation.navigate('ProfileType')}
+              />
             </View>
 
             <View style={styles.tapLogo}>

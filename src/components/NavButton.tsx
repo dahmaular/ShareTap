@@ -1,7 +1,12 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
-const NavButton = (props: any) => {
+interface NavButtonProps {
+  label: string;
+  onPress: () => void;
+}
+
+const NavButton = (props: NavButtonProps) => {
   const pressBtn = () => {
     if (props.onPress) {
       props.onPress();

@@ -7,8 +7,8 @@ interface HeaderProps {
   title: string;
   bgColor: string;
   titleColor: string;
-  rightOnPress: Function;
-  leftOnPress: Function;
+  rightOnPress: () => void;
+  leftOnPress: () => void;
 }
 
 const Header: FC<HeaderProps> = ({

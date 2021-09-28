@@ -10,7 +10,7 @@ import {
 interface ButtonProps {
   label: string;
   loading: boolean;
-  onPress: Function;
+  onPress: () => void;
   disabled: boolean;
 }
 
@@ -30,7 +30,7 @@ const Button = (props: ButtonProps) => {
   return (
     <TouchableOpacity
       onPress={() => pressBtn()}
-      style={[styles.btn, {backgroundColor: disabled ? '#333333' : '#316F8A'}]}
+      style={[styles.btn, {backgroundColor: disabled ? '#c2c2c2' : '#316F8A'}]}
       disabled={props.disabled}>
       {loading ? (
         <ActivityIndicator color={'white'} size={'small'} animating={true} />

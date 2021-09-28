@@ -5,14 +5,16 @@ import ArrowLeft from '../../assets/svg/thin_big_left.svg';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {UnauthenticatedRoutesParamsList} from '../../types';
 
-export interface ProfileTypeProps {
-  navigation: StackNavigationProp<
-    UnauthenticatedRoutesParamsList,
-    'ProfileType'
-  >;
-}
+type ProfileNavigationProp = StackNavigationProp<
+  UnauthenticatedRoutesParamsList,
+  'ProfileType'
+>;
 
-const ProfileType: React.FC<ProfileTypeProps> = ({navigation}) => {
+type Props = {
+  navigation: ProfileNavigationProp;
+};
+
+const ProfileType = ({navigation}: Props) => {
   return (
     <View style={{flex: 1}}>
       <Header
