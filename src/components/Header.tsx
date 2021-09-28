@@ -1,14 +1,58 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, {FC} from 'react';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
-const Header = () => {
-    return (
-        <View>
-            <Text></Text>
-        </View>
-    )
+interface HeaderProps {
+  leftSvg: any;
+  rightSvg: any;
+  title: string;
+  bgColor: string;
+  titleColor: string;
+  rightOnPress: Function;
+  leftOnPress: Function;
 }
 
-export default Header
+const Header: FC<HeaderProps> = ({
+  leftSvg,
+  rightSvg,
+  title,
+  bgColor,
+  titleColor,
+  rightOnPress,
+  leftOnPress,
+}) => {
+  return (
+    <View style={{...styles.header, backgroundColor: bgColor}}>
+      <TouchableOpacity onPress={() => leftOnPress()}>
+        {leftSvg}
+      </TouchableOpacity>
 
-const styles = StyleSheet.create({})
+      <View>
+        <Text style={{...styles.title, color: titleColor}}>{title}</Text>
+      </View>
+
+      <TouchableOpacity onPress={() => rightOnPress()}>
+        {rightSvg}
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default Header;
+
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    height: 85,
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+  },
+
+  title: {
+    fontSize: 16,
+    fontWeight: '600',
+    fontStyle: 'normal',
+    fontFamily: 'Poppins',
+  },
+});

@@ -7,7 +7,14 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-const Button = (props: any) => {
+interface ButtonProps {
+  label: string;
+  loading: boolean;
+  onPress: Function;
+  disabled: boolean;
+}
+
+const Button = (props: ButtonProps) => {
   const {loading} = props;
   const disabled = loading || props.disabled;
 

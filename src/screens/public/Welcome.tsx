@@ -5,8 +5,14 @@ import Group from '../../assets/svg/group.svg';
 import Button from '../../components/Button';
 import NavButton from '../../components/NavButton';
 import Tapiolla from '../../assets/svg/tap_logo_2.svg';
+import {UnauthenticatedRoutesParamsList} from '../../types';
+import {StackNavigationProp} from '@react-navigation/stack';
 const {width} = Dimensions.get('screen');
-const Welcome = () => {
+
+export interface WelcomeProps {
+  navigation: StackNavigationProp<UnauthenticatedRoutesParamsList, 'Welcome'>;
+}
+const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
       <View style={styles.container}>
@@ -35,7 +41,12 @@ const Welcome = () => {
             </View>
 
             <View style={styles.buttonView}>
-              <Button label="CREATE ACCOUNT" />
+              <Button
+                disabled={false}
+                label="CREATE ACCOUNT"
+                onPress={() => navigation.navigate('ProfileType')}
+                loading={false}
+              />
             </View>
 
             <View style={styles.button}>
