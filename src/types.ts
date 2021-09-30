@@ -7,7 +7,9 @@ export type TabNavigatorParamsList = {
 };
 
 export type UnauthenticatedRoutesParamsList = {
-  CreateAccount: undefined;
+  CreateAccount: {
+    item: AccountCreation;
+  };
   ForgotPassword: undefined;
   PhoneNumber: undefined;
   ProfileType: undefined;
@@ -15,9 +17,16 @@ export type UnauthenticatedRoutesParamsList = {
   Signin: undefined;
   Verification: undefined;
   Welcome: undefined;
-  Splash: undefined
+  Splash: undefined;
 };
 
 export type AuthenticatedRoutesParamsList = {
   Root: undefined;
 };
+
+export interface AccountCreation {
+  id: number | null;
+  title: string;
+  description: string;
+  image: any;
+}

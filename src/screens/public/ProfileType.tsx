@@ -48,6 +48,10 @@ const ProfileType = ({navigation}: Props) => {
     image: '',
     id: '',
   });
+
+  const goToCreateAccount = () => {
+    navigation.navigate('CreateAccount', {item: selectedProfile});
+  };
   return (
     <View style={{flex: 1}}>
       <Header
@@ -96,7 +100,13 @@ const ProfileType = ({navigation}: Props) => {
                   </View>
 
                   <View style={styles.detailsView}>
-                    <Text style={{...styles.title, color: active ? '#316F8A' : '#333333'}}>{k.title}</Text>
+                    <Text
+                      style={{
+                        ...styles.title,
+                        color: active ? '#316F8A' : '#333333',
+                      }}>
+                      {k.title}
+                    </Text>
                     <Text style={styles.description}>{k.description}</Text>
                   </View>
                 </TouchableOpacity>
@@ -109,7 +119,7 @@ const ProfileType = ({navigation}: Props) => {
               disabled={selectedProfile.title == 'Business profile'}
               loading={false}
               label="NEXT"
-              onPress={() => navigation.navigate('CreateAccount')}
+              onPress={() => goToCreateAccount()}
             />
           </View>
         </ScrollView>
