@@ -60,6 +60,8 @@ const CreateAccount = ({navigation, route}: Props) => {
 
   const {item} = route.params;
 
+  console.log('Create Account Items', item);
+
   const _onRegisterPressed = () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
@@ -71,6 +73,18 @@ const CreateAccount = ({navigation, route}: Props) => {
       setPassword({...password, error: passwordError});
       return;
     }
+
+    navigation.navigate('PhoneNumber', {
+      item: {
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        image: item.image,
+        fullName: fullName.value,
+        email: email.value,
+        password: password.value,
+      },
+    });
   };
 
   return (
