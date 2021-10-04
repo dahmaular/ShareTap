@@ -73,7 +73,6 @@ const CreateAccount = ({navigation, route}: Props) => {
       setPassword({...password, error: passwordError});
       return;
     }
-
     navigation.navigate('PhoneNumber', {
       item: {
         id: item.id,

@@ -17,7 +17,9 @@ export type UnauthenticatedRoutesParamsList = {
   ProfileType: undefined;
   ResetPassword: undefined;
   Signin: undefined;
-  Verification: undefined;
+  Verification: {
+    item: VerificationRoute
+  };
   Welcome: undefined;
   Splash: undefined;
 };
@@ -41,4 +43,15 @@ export interface PhoneNumberRoute {
   fullName: string;
   email: string;
   password: string;
+}
+
+export interface VerificationRoute {
+  id: number | null;
+  title: string;
+  description: string;
+  image: any;
+  fullName: string;
+  email: string;
+  password: string;
+  phone: string
 }
