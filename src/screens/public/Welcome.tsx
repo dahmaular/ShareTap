@@ -66,7 +66,7 @@ const Welcome = ({navigation}: Props) => {
             <View style={styles.button}>
               <NavButton
                 label="SIGN IN"
-                onPress={() => <></>}
+                onPress={() => navigation.navigate('Signin')}
               />
             </View>
 
