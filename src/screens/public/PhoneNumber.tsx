@@ -70,7 +70,7 @@ const PhoneNumber = ({navigation, route}: Props) => {
         propagateSwipe={true}
         style={styles.bottomModal}
         isVisible={modal}
-        onBackdropPress={() => setModal(false)}
+        onBackdropPress={() => setModal(true)}
         onBackButtonPress={() => setModal(false)}>
         <TouchableOpacity
           onPress={() => setModal(false)}

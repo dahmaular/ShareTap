@@ -60,7 +60,7 @@ const ForgotPassword = ({navigation, route}: Props) => {
 
   const proceedToResetPassword = () => {
     setModal(false);
-    navigation.navigate('ResetPassword');
+    navigation.navigate('ResetPassword'); //! routing should proceed to verification page
   };
 
   const forgotPasswordModal = () => {
@@ -70,7 +70,7 @@ const ForgotPassword = ({navigation, route}: Props) => {
         propagateSwipe={true}
         style={styles.bottomModal}
         isVisible={modal}
-        onBackdropPress={() => setModal(false)}
+        onBackdropPress={() => setModal(true)}
         onBackButtonPress={() => setModal(false)}>
         <TouchableOpacity
           onPress={() => setModal(false)}
@@ -85,12 +85,12 @@ const ForgotPassword = ({navigation, route}: Props) => {
 
             <View style={{marginTop: 30}}>
               <Text style={styles.modalContentText}>
-                A reset link has been sent to your
+              We have sent a verification code
               </Text>
               <Text style={styles.modalContentText}>
                 to{' '}
                 <Text style={styles.modalContentPhoneText}>
-                  mailbox Mu***bs24@gmail.com
+                +1 ... ... ... ... 9237
                 </Text>
               </Text>
             </View>
