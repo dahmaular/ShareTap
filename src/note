@@ -1,0 +1,406 @@
+import React, {useState, useRef} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import {BACKGROUND_COLOR} from '../../shared/Color';
+import {useNavigation} from '@react-navigation/native';
+const {width} = Dimensions.get('window');
+import Axios from 'axios';
+import Toast from '../../shared/Toast';
+import {BASE_URL} from '../../common/url';
+import OtpInput from '../../components/OtpInput';
+
+// const otpValidationSchema = yup.object().shape({
+//   otp: yup
+//     .string()
+//     .min(7, ({min}) => `OTP must be at least ${min} characters`)
+//     .max(7, ({max}) => `OTP must not exceed ${max} characters`)
+//     .required('OTP is required'),
+// });
+
+export default function VerifyOTP({route}) {
+  // console.log({route});
+  let navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState('');
+  const [otpArray, setOtpArray] = useState(['', '', '', '', '', '', '']);
+  const firstTextInputRef = useRef();
+  const secondTextInputRef = useRef();
+  const thirdTextInputRef = useRef();
+  const fourthTextInputRef = useRef();
+  const fifthTextInputRef = useRef();
+  const sixthTextInputRef = useRef();
+  const seventhTextInputRef = useRef();
+
+  // console.log(otpArray.toString().split(',').join(''));
+
+  const refArray = [
+    firstTextInputRef,
+    secondTextInputRef,
+    thirdTextInputRef,
+    fourthTextInputRef,
+    fifthTextInputRef,
+    sixthTextInputRef,
+    seventhTextInputRef,
+  ];
+
+  const onChangeOtp = (value, index) => {
+    const otpArrayCopy = otpArray.concat();
+    otpArrayCopy[index] = value;
+    setOtpArray(otpArrayCopy);
+
+    if (index < refArray.length - 1 && value) {
+      refArray[index + 1].current?.focus();
+    }
+    if (index === refArray.length - 1) {
+      refArray[index].current?.blur();
+    }
+  };
+
+  const onKeyPressOtp = (e, index) => {
+    if (e.nativeEvent.key === 'Backspace' && otpArray[index] === '') {
+      if (index === 1) {
+        firstTextInputRef.current?.focus();
+      } else if (index === 2) {
+        secondTextInputRef.current?.focus();
+      } else if (index === 3) {
+        thirdTextInputRef.current?.focus();
+      } else if (index === 4) {
+        fourthTextInputRef.current?.focus();
+      } else if (index === 5) {
+        fifthTextInputRef.current?.focus();
+      } else if (index === 6) {
+        sixthTextInputRef.current?.focus();
+      } else if (index === 6) {
+        seventhTextInputRef.current?.focus();
+      }
+
+      if (index > 0) {
+        // Check behavior on android
+        const otpArrayCopy = otpArray.concat();
+        otpArrayCopy[index - 1] = '';
+        setOtpArray(otpArrayCopy);
+      }
+    }
+  };
+
+  const {reg} = route.params;
+
+  const myHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const resend = async () => {
+    const resendValues = {
+      email: reg.email,
+    };
+
+    // console.log('Resend Values', resendValues);
+    setLoading(true);
+
+    try {
+      const res = await Axios.post(
+        `${BASE_URL}/api/drivers/resendverification`,
+        resendValues,
+        {headers: myHeaders},
+      );
+
+      // console.log('Resend Response', res);
+      if (res.status === 200) {
+        setLoading(false);
+        Toast(res.data.message);
+      } else {
+        setLoading(false);
+        Toast(res.data.message);
+      }
+    } catch (err) {
+      console.log('Error', err.response);
+      setLoading(false);
+      Toast(err.response.data.message);
+    }
+  };
+
+  const verify = async () => {
+    // console.log('OTP Values', val);
+
+    const otp = otpArray.toString().split(',').join('');
+
+    const verifyValues = {
+      email: reg.email,
+      code: otp,
+    };
+    if (otp.length < 7) {
+      return setErrors('OTP must be at least 7 characters');
+    }
+    if (otp.length < 1) {
+      return setErrors('OTP is required');
+    }
+    setErrors('');
+    setLoading(true);
+
+    try {
+      const res = await Axios.post(
+        `${BASE_URL}/api/drivers/verify`,
+        verifyValues,
+        {headers: myHeaders},
+      );
+
+      console.log('Verify Response', res);
+      if (res.status === 200) {
+        setLoading(false);
+        navigation.navigate('Login');
+        Toast(res.data.message);
+      } else {
+        setLoading(false);
+        Toast(res.data.message);
+      }
+    } catch (err) {
+      console.log('Error', err.response);
+      setLoading(false);
+      Toast(err.response.data.message);
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" animating color="#1890FF" />
+      </View>
+    );
+  }
+
+  return (
+    <View style={{flex: 1}}>
+      <View style={styles.container}>
+        <ScrollView
+          style={styles.scrollContainer}
+          contentContainerStyle={{flexGrow: 1}}
+          alwaysBounceVertical={false}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled">
+          <View style={{marginTop: 62}}>
+            <Text style={styles.verifyOtp}>Verify OTP</Text>
+          </View>
+
+          <View style={styles.otpNote}>
+            <Text style={styles.enter}>
+              Enter the verification code sent {'\n'} to your email{' '}
+              <Text style={styles.blueText}>{reg.email}</Text>{' '}
+            </Text>
+          </View>
+
+          {/* <OTPInputView
+                  style={{width: '100%', height: 100, marginTop: 30}}
+                  pinCount={7}
+                  keyboardType="default"
+                  autoFocusOnLoad
+                  codeInputFieldStyle={styles.underlineStyleBase}
+                  codeInputHighlightStyle={styles.underlineStyleHighLighted}
+                  onCodeFilled={code => {
+                    // console.log(`Code is ${code}, you are good to go!`);
+                    setFieldValue('otp', code);
+                  }}
+                /> */}
+
+          <View style={styles.otp}>
+            {refArray.map((textInputRef, index) => (
+              <OtpInput
+                key={index}
+                refCallback={textInputRef}
+                onChangeText={value => onChangeOtp(value, index)}
+                onKeyPress={e => onKeyPressOtp(e, index)}
+              />
+            ))}
+          </View>
+
+          {errors !== '' && <Text style={styles.error}>{errors}</Text>}
+
+          <TouchableOpacity style={styles.blue} onPress={() => verify()}>
+            <Text style={styles.verifyText}>Verify</Text>
+          </TouchableOpacity>
+
+          <View style={styles.receive}>
+            <Text style={styles.receiveText}>
+              Didn’t recieve a verification code?
+            </Text>
+          </View>
+
+          <View style={styles.resend}>
+            <TouchableOpacity onPress={() => resend()}>
+              <Text style={styles.resendChange}>Resend Code |</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity>
+              <Text style={styles.resendChange}>&nbsp;Change Number</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+
+  scrollContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    backgroundColor: BACKGROUND_COLOR,
+    height: '100%',
+    width: width,
+  },
+
+  verifyOtp: {
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+    fontSize: 24,
+    color: '#282F39',
+  },
+
+  error: {
+    fontSize: 10,
+    color: 'red',
+    marginTop: 5,
+  },
+
+  blue: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: 50,
+    backgroundColor: '#1890FF',
+    marginTop: 40,
+    borderRadius: 4,
+  },
+
+  verifyText: {
+    fontWeight: '500',
+    fontStyle: 'normal',
+    fontSize: 15,
+    color: '#FFFFFF',
+  },
+
+  enter: {
+    fontWeight: 'bold',
+    fontStyle: 'normal',
+    fontSize: 16,
+    color: '#282F39',
+    textAlign: 'center',
+    lineHeight: 35,
+  },
+
+  blueText: {
+    color: '#1890FF',
+  },
+
+  otpNote: {
+    marginTop: 91,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  receive: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
+  },
+
+  receiveText: {
+    color: '#ABB4BD',
+    fontSize: 14,
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+  },
+
+  resend: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+
+  resendChange: {
+    color: '#1890FF',
+    fontSize: 14,
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+  },
+  otp: {
+    width: '100%',
+    height: 100,
+    marginTop: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  underlineStyleBase: {
+    color: '#1D2029',
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontStyle: 'normal',
+    borderWidth: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(171, 180, 189, 0.3)',
+  },
+
+  underlineStyleHighLighted: {
+    color: '#1D2029',
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontStyle: 'normal',
+  },
+});
+
+
+
+
+import React from 'react';
+import {StyleSheet, View, TextInput} from 'react-native';
+
+const styles = StyleSheet.create({
+  container: {
+    borderBottomWidth: 1,
+    borderColor: 'rgba(171, 180, 189, 0.3)',
+    width: 40,
+    height: 45,
+  },
+  input: {
+    height: '100%',
+    fontSize: 24,
+    alignSelf: 'center',
+    width: '100%',
+    paddingLeft: '35%',
+    color: '#000',
+  },
+});
+
+const OtpInput = ({refCallback, ...props}) => {
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        keyboardType="default"
+        maxLength={1}
+        ref={refCallback}
+        {...props}
+      />
+    </View>
+  );
+};
+
+export default OtpInput;

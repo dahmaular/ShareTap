@@ -6,6 +6,7 @@ import {
 import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import AuthenticatedRoutes from './Authenticated';
 import UnauthenticatedRoutes from './Public';
+import Splash from '../screens/public/Splash';
 
 const SwitchNavigator = () => {
   const [isUserLoggedIn, setUserLoggedIn] = useState('initializing');
@@ -14,20 +15,16 @@ const SwitchNavigator = () => {
 
   useEffect(() => {
     checkAuthState();
-  }, []);
+  }, [isUserLoggedIn]);
 
   const checkAuthState = async () => {
-    setUserLoggedIn('loggedIn');
+    setUserLoggedIn('loggedOut');
   };
 
   return (
     <>
       <NavigationContainer ref={navigationRef}>
-        {isUserLoggedIn === 'initializing' && (
-          <View style={styles.loader}>
-            <ActivityIndicator size="large" animating color="#316F8A" />
-          </View>
-        )}
+        {isUserLoggedIn === 'initializing' && <Splash />}
         {isUserLoggedIn === 'loggedIn' && <AuthenticatedRoutes />}
         {isUserLoggedIn === 'loggedOut' && <UnauthenticatedRoutes />}
       </NavigationContainer>
