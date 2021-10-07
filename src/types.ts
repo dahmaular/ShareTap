@@ -19,7 +19,7 @@ export type UnauthenticatedRoutesParamsList = {
   Signin: undefined;
   Verification: {
     item: VerificationRoute
-  };
+  } | undefined;
   Welcome: undefined;
   Splash: undefined;
 };

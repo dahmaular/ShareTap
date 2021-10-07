@@ -1,23 +1,15 @@
 import React, {useState, useRef} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, Dimensions} from 'react-native';
 import Header from '../../components/Header';
 import ArrowLeft from '../../assets/svg/thin_big_left.svg';
-import Close from '../../assets/svg/phone-verif-close-icon.svg';
-import Mail from '../../assets/svg/mail.svg';
 import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {UnauthenticatedRoutesParamsList} from '../../types';
 import PhoneInput from 'react-native-phone-number-input';
 import Button from '../../components/Button';
-import Modal from 'react-native-modal';
+import PhoneModal from '../../components/PhoneModal';
+import Toast from '../../core/toast';
 
 const {width} = Dimensions.get('screen');
 
@@ -38,83 +30,32 @@ type Props = {
 
 const PhoneNumber = ({navigation, route}: Props) => {
   const {item} = route.params;
-  console.log('Item on Phone Number', item);
-  const phoneInput = useRef(null);
+  const phoneInput = useRef<PhoneInput>(null);
   const [phone, setPhone] = useState('');
   const [modal, setModal] = useState(false);
 
   const _onRegisterPressed = () => {
+    const checkValid = phoneInput.current?.isValidNumber(phone);
+    if (!checkValid) {
+      Toast("Phone number isn't valid");
+      return;
+    }
     setModal(true);
-  };
-
-  const proceedToVerify = () => {
-    setModal(false);
-    navigation.navigate('Verification', {
-      item: {
-        id: item.id,
-        title: item.title,
-        description: item.description,
-        image: item.image,
-        fullName: item.fullName,
-        email: item.email,
-        password: item.password,
-        phone: phone,
-      },
-    });
-  };
-
-  const phoneVerificationModal = () => {
-    return (
-      <Modal
-        avoidKeyboard
-        propagateSwipe={true}
-        style={styles.bottomModal}
-        isVisible={modal}
-        onBackdropPress={() => setModal(true)}
-        onBackButtonPress={() => setModal(false)}>
-        <TouchableOpacity
-          onPress={() => setModal(false)}
-          style={styles.modalCloseBtn}>
-          <Close />
-        </TouchableOpacity>
-        <View style={styles.modal}>
-          <View style={styles.modalContentWrap}>
-            <View style={styles.mailBg}>
-              <Mail height={50} width={50} />
-            </View>
-
-            <View style={{marginTop: 30}}>
-              <Text style={styles.modalContentText}>
-                We have sent a verification code{' '}
-              </Text>
-              <Text style={styles.modalContentText}>
-                to{' '}
-                <Text style={styles.modalContentPhoneText}>
-                  +1 ... ... ... ... 9237
-                </Text>
-              </Text>
-            </View>
-
-            <View style={{marginTop: 17}}>
-              <Text style={styles.didReceiveText}>
-                DIDNT RECEIVE A CODE?{' '}
-                <Text style={styles.resendText}>RESEND CODE</Text>
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => proceedToVerify()}>
-            <Text style={styles.modalBtnText}>CONTINUE</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-    );
   };
 
   return (
     <View style={{flex: 1}}>
-      {modal && phoneVerificationModal()}
+      {modal && (
+        <PhoneModal
+          visible={modal}
+          onBackButtonPress={() => setModal(true)}
+          onBackdropPress={() => setModal(true)}
+          onClose={() => setModal(false)}
+          navigation={navigation}
+          route={item}
+          phone={phone}
+        />
+      )}
       <Header
         title=""
         titleColor="#000000"
@@ -143,7 +84,10 @@ const PhoneNumber = ({navigation, route}: Props) => {
             defaultValue={phone}
             defaultCode="NG"
             layout="first"
-            onChangeText={text => setPhone(text)}
+            // onChangeText={text => setPhone(text)}
+            onChangeFormattedText={text => {
+              setPhone(text);
+            }}
             containerStyle={styles.phone}
             textContainerStyle={styles.phoneText}
             textInputStyle={styles.phoneInput}

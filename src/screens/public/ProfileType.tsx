@@ -32,6 +32,7 @@ interface ProfileTypeProps {
   title: string;
   description: string;
   image: any;
+  comingSoon: boolean;
 }
 
 const ProfileType = ({navigation}: Props) => {
@@ -41,6 +42,7 @@ const ProfileType = ({navigation}: Props) => {
     description: '',
     image: '',
     id: null,
+    comingSoon: false,
   });
   const [selectedProfileHash, setSelectedProfileHash] = useState<any>({
     title: '',
@@ -100,6 +102,11 @@ const ProfileType = ({navigation}: Props) => {
                   </View>
 
                   <View style={styles.detailsView}>
+                    {k.comingSoon && (
+                      <View style={styles.coming}>
+                        <Text style={styles.comingSoon}>COMING SOON 🔐</Text>
+                      </View>
+                    )}
                     <Text
                       style={{
                         ...styles.title,
@@ -184,6 +191,7 @@ const styles = StyleSheet.create({
     height: 142,
     justifyContent: 'center',
     paddingHorizontal: 15,
+    position: 'relative',
   },
 
   title: {
@@ -209,5 +217,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 67,
     marginBottom: 50,
+  },
+
+  coming: {
+    width: 94,
+    height: 23,
+    backgroundColor: 'rgba(51, 51, 51, 0.15)',
+    borderRadius: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 8.5,
+    right: 10,
+    paddingHorizontal: 5
+  },
+
+  comingSoon: {
+    fontFamily: 'Poppins',
+    fontSize: 10,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    color: '#333333',
   },
 });
