@@ -1,30 +1,14 @@
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, Dimensions} from 'react-native';
 import Header from '../../components/Header';
 import ArrowLeft from '../../assets/svg/thin_big_left.svg';
-import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
+import {BACKGROUND_COLOR} from '../../core/color';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {UnauthenticatedRoutesParamsList} from '../../types';
-import Close from '../../assets/svg/phone-verif-close-icon.svg';
-import Message from '../../assets/svg/message-icon.svg';
 import TextInputs from '../../components/TextInput';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {TextInput} from 'react-native-paper';
 import Button from '../../components/Button';
-import {
-  emailValidator,
-  passwordValidator,
-  nameValidator,
-} from '../../core/utils';
-import Modal from 'react-native-modal';
+import {emailValidator} from '../../core/utils';
 import EmailModal from '../../components/EmailModal';
 
 const {width} = Dimensions.get('screen');
