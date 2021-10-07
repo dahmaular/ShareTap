@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   },
 
   coming: {
-    width: 94,
+    width: 100,
     height: 23,
     backgroundColor: 'rgba(51, 51, 51, 0.15)',
     borderRadius: 2,
