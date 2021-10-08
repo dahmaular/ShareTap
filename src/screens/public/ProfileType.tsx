@@ -74,8 +74,8 @@ const ProfileType = ({navigation}: Props) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled">
           <View style={styles.createView}>
-            <Text style={styles.createText}>Profile type</Text>
-            <Text style={styles.create}>Click on a profile type to select</Text>
+            <Text style={styles.createText}>Account type</Text>
+            <Text style={styles.create}>Click on a account type to select</Text>
           </View>
 
           <View style={styles.profileView}>
