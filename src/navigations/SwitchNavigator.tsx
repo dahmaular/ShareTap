@@ -18,7 +18,7 @@ const SwitchNavigator = () => {
   }, [isUserLoggedIn]);
 
   const checkAuthState = async () => {
-    setUserLoggedIn('loggedOut');
+    setUserLoggedIn('loggedIn');
   };
 
   return (

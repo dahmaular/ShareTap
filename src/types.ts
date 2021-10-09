@@ -1,3 +1,5 @@
+import { NavigatorScreenParams } from '@react-navigation/native'
+
 export type TabNavigatorParamsList = {
   Home: undefined;
   Chat: undefined;

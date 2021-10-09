@@ -1,9 +1,14 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {TabNavigatorParamsList} from '../types';
+import {AuthenticatedRoutesParamsList, TabNavigatorParamsList} from '../types';
 import {Home, Chat, Contacts, Profile, Card} from '../screens/tabs';
 import HomeIcon from '../assets/svg/Home.svg';
+import ChatBubble from '../assets/svg/Chat.svg';
+import People from '../assets/svg/user.svg';
+import User from '../assets/svg/Profile.svg';
+import Plus from '../assets/svg/add_black_24dp (6) 1.svg';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const TabStack = createBottomTabNavigator<TabNavigatorParamsList>();
 
@@ -13,6 +18,10 @@ interface TabContainerProps {
   color: string;
 }
 
+interface CustomTabProps {
+  onPress: () => void;
+}
+
 const TabContainer: React.FunctionComponent<TabContainerProps> = ({
   children,
   label,
@@ -20,14 +29,7 @@ const TabContainer: React.FunctionComponent<TabContainerProps> = ({
 }) => (
   <>
     {focused ? (
-      <View
-        style={{
-          borderBottomWidth: 2,
-          borderBottomColor: '#316F8A',
-          alignItems: 'center',
-          flex: 1,
-          paddingTop: 15,
-        }}>
+      <View style={styles.tab}>
         {children}
         <Text style={{...styles.labelText, color: '#316F8A'}}>{label}</Text>
       </View>
@@ -39,6 +41,16 @@ const TabContainer: React.FunctionComponent<TabContainerProps> = ({
       </View>
     )}
   </>
+);
+
+const CustomTabBarButton: React.FunctionComponent<CustomTabProps> = ({
+  onPress,
+}) => (
+  <TouchableOpacity style={styles.plusView} onPress={onPress}>
+    <View style={styles.plusContainer}>
+      <Plus color="#FFFFFF" />
+    </View>
+  </TouchableOpacity>
 );
 
 const TabNavigator = () => {
@@ -54,26 +66,40 @@ const TabNavigator = () => {
           switch (route.name) {
             case 'Home':
               label = 'Home';
-              iconName = 'home';
+              iconName = 'home-outline';
               break;
             case 'Chat':
               label = 'Chat';
-              iconName = 'chat';
+              iconName = 'chatbubble-ellipses-outline';
               break;
             case 'Contacts':
               label = 'Contacts';
-              iconName = 'contacts';
+              iconName = 'people';
               break;
             case 'Profile':
               label = 'Profile';
-              iconName = 'profile';
+              iconName = 'person-outline';
               break;
             default:
               return null;
           }
           return (
             <TabContainer label={label} focused={focused} color={color}>
-              <HomeIcon color={color} />
+              {label == 'Home' && (
+                <HomeIcon color={focused ? '#31AAB7' : '#ACBAC3'} />
+              )}
+
+              {label == 'Chat' && (
+                <ChatBubble color={focused ? '#31AAB7' : '#ACBAC3'} />
+              )}
+
+              {label == 'Contacts' && (
+                <People color={focused ? '#31AAB7' : '#ACBAC3'} />
+              )}
+
+              {label == 'Profile' && (
+                <User color={focused ? '#31AAB7' : '#ACBAC3'} />
+              )}
             </TabContainer>
           );
         },
@@ -87,6 +113,15 @@ const TabNavigator = () => {
       })}>
       <Screen name="Home" component={Home} options={{headerShown: false}} />
       <Screen name="Chat" component={Chat} options={{headerShown: false}} />
+
+      <Screen
+        name="Card"
+        component={Card}
+        options={{
+          headerShown: false,
+          tabBarButton: props => <CustomTabBarButton onPress={() => <></>} />,
+        }}
+      />
       <Screen
         name="Contacts"
         component={Contacts}
@@ -104,11 +139,34 @@ const TabNavigator = () => {
 export default TabNavigator;
 
 const styles = StyleSheet.create({
+  tab: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#316F8A',
+    alignItems: 'center',
+    flex: 1,
+    paddingTop: 15,
+  },
   labelText: {
     fontFamily: 'Poppins',
     fontSize: 10,
     fontStyle: 'normal',
     fontWeight: 'normal',
     marginTop: 6,
+  },
+
+  plusView: {
+    top: -30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  plusContainer: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#316F8A',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
