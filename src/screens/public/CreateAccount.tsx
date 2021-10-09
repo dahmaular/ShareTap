@@ -110,10 +110,10 @@ const CreateAccount = ({navigation, route}: Props) => {
           </View>
 
           <TextInputs
-            label="Full Name"
+            label="Username"
             returnKeyType="next"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
-            placeholder="Enter your full name"
+            placeholder="Enter your username"
             value={fullName.value}
             onChangeText={text => setFullName({value: text, error: ''})}
             error={!!fullName.error}
