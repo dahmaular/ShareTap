@@ -8,8 +8,11 @@ import AuthenticatedRoutes from './Authenticated';
 import UnauthenticatedRoutes from './Public';
 import Splash from '../screens/public/Splash';
 
+type LoggedInState = 'initializing' | 'loggedIn' | 'loggedOut';
+
 const SwitchNavigator = () => {
-  const [isUserLoggedIn, setUserLoggedIn] = useState('initializing');
+  const [isUserLoggedIn, setUserLoggedIn] =
+    useState<LoggedInState>('initializing');
 
   const navigationRef = useNavigationContainerRef();
 
@@ -18,7 +21,7 @@ const SwitchNavigator = () => {
   }, [isUserLoggedIn]);
 
   const checkAuthState = async () => {
-    setUserLoggedIn('loggedIn');
+    setUserLoggedIn('loggedOut');
   };
 
   return (
