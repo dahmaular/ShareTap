@@ -7,11 +7,20 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
-import {CardProps} from '../types';
 
+import {CardProps} from '../types';
+import {Menu} from 'react-native-paper';
+import Link from '../assets/svg/link_02.svg';
+import Facebook from '../assets/svg/facebook.svg';
+import Twitter from '../assets/svg/twitter.svg';
 const {width} = Dimensions.get('window');
 
 const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
+  const [visible, setVisible] = React.useState(false);
+
+  const openMenu = () => setVisible(true);
+
+  const closeMenu = () => setVisible(false);
   return (
     <Animated.View
       style={{
@@ -30,9 +39,43 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
           },
         ],
       }}>
-      <TouchableOpacity style={{...styles.touchable, width: boxWidth}}>
-        <Text>I dey here</Text>
-      </TouchableOpacity>
+      <Menu
+        visible={visible}
+        onDismiss={closeMenu}
+        style={{position: 'absolute', top: 460, left: 280, width: 100, height: 112}}
+        anchor={
+          <TouchableOpacity
+            style={{...styles.touchable, width: boxWidth}}
+            onLongPress={openMenu}>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.profession}>{item.profession}</Text>
+            <Text style={styles.email}>{item.email}</Text>
+            <View style={styles.telSocial}>
+              <View>
+                <Text style={styles.telephone}>{item.phone}</Text>
+              </View>
+
+              <View style={styles.rowCenter}>
+                <TouchableOpacity style={{marginRight: 10}}>
+                  <Link />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{marginRight: 10}}>
+                  <Facebook />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{marginRight: 10}}>
+                  <Twitter />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableOpacity>
+        }>
+        <Menu.Item titleStyle={styles.text} onPress={() => {}} title="Share" />
+        <Menu.Item titleStyle={styles.text} onPress={() => {}} title="Edit" />
+        <Menu.Item titleStyle={styles.deleteText} onPress={() => {}} title="Delete" />
+      </Menu>
+      <View style={styles.bottomLine}></View>
     </Animated.View>
   );
 };
@@ -50,7 +93,68 @@ const styles = StyleSheet.create({
   },
 
   touchable: {
-    height: 191,
+    height: 184,
     paddingHorizontal: 20,
+    paddingVertical: 20,
+    justifyContent: 'space-between',
   },
+
+  bottomLine: {width: '100%', height: 7, backgroundColor: '#219653'},
+
+  telSocial: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+
+  rowCenter: {flexDirection: 'row', alignItems: 'center'},
+
+  name: {
+    fontFamily: 'Poppins',
+    fontSize: 15,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    color: '#219653',
+  },
+  profession: {
+    fontFamily: 'Poppins',
+    fontSize: 13,
+    fontStyle: 'normal',
+    fontWeight: '300',
+    color: '#cccccc',
+  },
+
+  email: {
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    color: '#333333',
+  },
+
+  telephone: {
+    fontFamily: 'Poppins',
+    fontSize: 11,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    color: '#333333',
+  },
+
+  deleteText: {
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '300',
+    color: '#EB5757',
+  },
+
+  text: {
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '300',
+    color: '#333333',
+  }
 });

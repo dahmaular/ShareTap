@@ -1,7 +1,7 @@
 export default [
   {
     id: 1,
-    name: 'Magic Chris',
+    name: 'Magical Chris',
     phone: '124-675-8744',
     email: 'chris@gmail.com',
     profession: 'Marketing',
@@ -9,7 +9,7 @@ export default [
 
   {
     id: 2,
-    name: 'Magic Samuel',
+    name: 'Magical Samuel',
     phone: '124-675-8745',
     email: 'samuel@gmail.com',
     profession: 'Engineering',
@@ -17,7 +17,7 @@ export default [
 
   {
     id: 3,
-    name: 'Magic Ayo',
+    name: 'Magical Ayo',
     phone: '124-675-8746',
     email: 'ayo@gmail.com',
     profession: 'Banking',
