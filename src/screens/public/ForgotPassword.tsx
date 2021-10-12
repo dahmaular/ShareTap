@@ -1,30 +1,15 @@
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, Dimensions} from 'react-native';
 import Header from '../../components/Header';
 import ArrowLeft from '../../assets/svg/thin_big_left.svg';
-import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
+import {BACKGROUND_COLOR} from '../../core/color';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {UnauthenticatedRoutesParamsList} from '../../types';
-import Close from '../../assets/svg/phone-verif-close-icon.svg';
-import Message from '../../assets/svg/message-icon.svg';
 import TextInputs from '../../components/TextInput';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {TextInput} from 'react-native-paper';
 import Button from '../../components/Button';
-import {
-  emailValidator,
-  passwordValidator,
-  nameValidator,
-} from '../../core/utils';
-import Modal from 'react-native-modal';
+import {emailValidator} from '../../core/utils';
+import EmailModal from '../../components/EmailModal';
 
 const {width} = Dimensions.get('screen');
 
@@ -58,63 +43,18 @@ const ForgotPassword = ({navigation, route}: Props) => {
     }
   };
 
-  const proceedToResetPassword = () => {
-    setModal(false);
-    navigation.navigate('ResetPassword'); //! routing should proceed to verification page
-  };
-
-  const forgotPasswordModal = () => {
-    return (
-      <Modal
-        avoidKeyboard
-        propagateSwipe={true}
-        style={styles.bottomModal}
-        isVisible={modal}
-        onBackdropPress={() => setModal(true)}
-        onBackButtonPress={() => setModal(false)}>
-        <TouchableOpacity
-          onPress={() => setModal(false)}
-          style={styles.modalCloseBtn}>
-          <Close />
-        </TouchableOpacity>
-        <View style={styles.modal}>
-          <View style={styles.modalContentWrap}>
-            <View style={styles.modalContentIcon}>
-              <Message height={43} width={43} />
-            </View>
-
-            <View style={{marginTop: 30}}>
-              <Text style={styles.modalContentText}>
-              We have sent a verification code
-              </Text>
-              <Text style={styles.modalContentText}>
-                to{' '}
-                <Text style={styles.modalContentPhoneText}>
-                +1 ... ... ... ... 9237
-                </Text>
-              </Text>
-            </View>
-
-            <View style={{marginTop: 17}}>
-              <Text style={styles.didReceiveText}>
-                DIDNT RECEIVE A LINK?
-                <Text style={styles.resendText}> RESEND LINK</Text>
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => proceedToResetPassword()}>
-            <Text style={styles.modalBtnText}>CONTINUE</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-    );
-  };
-
   return (
     <View style={{flex: 1}}>
-      {modal && forgotPasswordModal()}
+      {modal && (
+        <EmailModal
+          visible={modal}
+          onBackButtonPress={() => setModal(true)}
+          onBackdropPress={() => setModal(true)}
+          onClose={() => setModal(false)}
+          navigation={navigation}
+          email={email.value}
+        />
+      )}
       <Header
         title=""
         titleColor="#000000"
@@ -211,81 +151,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     marginTop: 200,
-  },
-
-  bottomModal: {
-    justifyContent: 'flex-end',
-    paddingBottom: 60,
-  },
-
-  modal: {
-    width: '100%',
-    height: 332,
-    backgroundColor: '#FFFFFF',
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-  },
-
-  modalButton: {
-    height: 73,
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: PRIMARY_COLOR,
-  },
-
-  modalContentWrap: {
-    height: 259,
-    width: '100%',
-    paddingHorizontal: 29,
-    paddingTop: 56.93,
-  },
-  modalContentIcon: {
-    paddingLeft: 13,
-    marginBottom: 30,
-  },
-  modalBtnText: {
-    fontFamily: 'Poppins',
-    fontSize: 12,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    color: '#FFFFFF',
-    letterSpacing: 0.2,
-  },
-
-  modalCloseBtn: {marginBottom: 24, alignSelf: 'flex-end'},
-
-  modalContentText: {
-    fontFamily: 'Poppins',
-    fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    color: '#000000',
-  },
-
-  modalContentPhoneText: {
-    fontFamily: 'Poppins',
-    fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    color: '#209AD7',
-  },
-
-  didReceiveText: {
-    fontFamily: 'Poppins',
-    fontSize: 12,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    color: '#9E9E9E',
-  },
-
-  resendText: {
-    fontFamily: 'Poppins',
-    fontSize: 12,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    color: PRIMARY_COLOR,
-    textDecorationLine: 'underline'
   },
 });
