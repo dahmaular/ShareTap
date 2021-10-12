@@ -123,7 +123,7 @@ const ProfileType = ({navigation}: Props) => {
 
           <View style={styles.buttonView}>
             <Button
-              disabled={selectedProfile.title == 'Business profile'}
+              disabled={selectedProfile.title === 'Business account'}
               loading={false}
               label="NEXT"
               onPress={() => goToCreateAccount()}
