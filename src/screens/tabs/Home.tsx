@@ -18,6 +18,7 @@ import {
 import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
 import {Badge} from 'react-native-paper';
 import Menu from '../../assets/svg/menu.svg';
+import Tap from '../../assets/svg/tap.svg';
 import Notification from '../../assets/svg/ion-ios-notifications.svg';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {BACKGROUND_COLOR} from '../../core/color';
@@ -101,50 +102,50 @@ const Home = ({navigation}: Props) => {
               <Text style={styles.yourCardsText}>Your Cards (4)</Text>
               <Text style={styles.viewAll}>View all</Text>
             </View>
+            <View style={styles.flatlistView}>
+              <FlatList
+                horizontal
+                data={cardsList}
+                contentContainerStyle={{paddingVertical: 5}}
+                contentInsetAdjustmentBehavior="never"
+                snapToAlignment="center"
+                decelerationRate="fast"
+                automaticallyAdjustContentInsets={false}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                scrollEventThrottle={1}
+                snapToInterval={boxWidth}
+                contentInset={{
+                  left: halfBoxDistance,
+                  right: halfBoxDistance,
+                }}
+                contentOffset={{x: halfBoxDistance * -1, y: 0}}
+                onLayout={e => {
+                  setScrollViewWidth(e.nativeEvent.layout.width);
+                }}
+                onScroll={Animated.event(
+                  [{nativeEvent: {contentOffset: {x: pan.x}}}],
+                  {
+                    useNativeDriver: false,
+                  },
+                )}
+                keyExtractor={(item, index) => `${index}-${item}`}
+                renderItem={({item, index}) => (
+                  <Card
+                    item={item}
+                    index={index}
+                    boxWidth={boxWidth}
+                    halfBoxDistance={halfBoxDistance}
+                    pan={pan}
+                  />
+                )}
+              />
+            </View>
 
-            <FlatList
-              horizontal
-              data={cardsList}
-              style={{
-                // height: 250,
-                // width: '100%',
-                marginTop: 25,
-                marginBottom: 20,
-              }}
-              contentContainerStyle={{paddingVertical: 5}}
-              contentInsetAdjustmentBehavior="never"
-              snapToAlignment="center"
-              decelerationRate="fast"
-              automaticallyAdjustContentInsets={false}
-              showsHorizontalScrollIndicator={false}
-              showsVerticalScrollIndicator={false}
-              scrollEventThrottle={1}
-              snapToInterval={boxWidth}
-              contentInset={{
-                left: halfBoxDistance,
-                right: halfBoxDistance,
-              }}
-              contentOffset={{x: halfBoxDistance * -1, y: 0}}
-              onLayout={e => {
-                setScrollViewWidth(e.nativeEvent.layout.width);
-              }}
-              onScroll={Animated.event(
-                [{nativeEvent: {contentOffset: {x: pan.x}}}],
-                {
-                  useNativeDriver: false,
-                },
-              )}
-              keyExtractor={(item, index) => `${index}-${item}`}
-              renderItem={({item, index}) => (
-                <Card
-                  item={item}
-                  index={index}
-                  boxWidth={boxWidth}
-                  halfBoxDistance={halfBoxDistance}
-                  pan={pan}
-                />
-              )}
-            />
+            <TouchableOpacity style={styles.tap}>
+              <Tap />
+              <Text style={styles.tapText}>TAP TO SHARE</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
@@ -240,5 +241,21 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#316F8A',
     textDecorationLine: 'underline',
+  },
+
+  flatlistView: {
+    height: 200,
+    width: '100%',
+    marginTop: 25,
+  },
+
+  tap: {width: '100%', marginTop: 37, alignItems: 'center', marginBottom: 120},
+
+  tapText: {
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    color: '#333333',
   },
 });

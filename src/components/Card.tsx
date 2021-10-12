@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Animated,
   Dimensions,
+  Share,
 } from 'react-native';
 
 import {CardProps} from '../types';
@@ -21,6 +22,25 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: item.email,
+      });
+      console.log('Result', result);
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {}
+  };
+
   return (
     <Animated.View
       style={{
@@ -56,15 +76,15 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
               </View>
 
               <View style={styles.rowCenter}>
-                <TouchableOpacity style={{marginRight: 10}}>
+                <TouchableOpacity style={{marginRight: 10}} onPress={onShare}>
                   <Link />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{marginRight: 10}}>
+                <TouchableOpacity style={{marginRight: 10}} onPress={onShare}>
                   <Facebook />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{marginRight: 10}}>
+                <TouchableOpacity style={{marginRight: 10}} onPress={onShare}>
                   <Twitter />
                 </TouchableOpacity>
               </View>
