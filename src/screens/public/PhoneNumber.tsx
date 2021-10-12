@@ -153,16 +153,17 @@ const styles = StyleSheet.create({
   },
 
   phone: {
-    backgroundColor: 'transparent',
+    // backgroundColor: 'transparent',
     alignItems: 'center',
     flexDirection: 'row',
     width: '100%',
     marginTop: 126,
     elevation: 10,
-    shadowColor: '#5468FF4D',
+    shadowColor: '#209AD7',
     shadowOffset: {width: 0, height: 3},
-    shadowOpacity: 0.5,
+    shadowOpacity: 1,
     shadowRadius: 5,
+    height: 64
   },
 
   phoneText: {
@@ -172,18 +173,18 @@ const styles = StyleSheet.create({
   codeText: {
     color: '#ABB4BD',
     fontSize: 12,
-    marginTop: 7,
+    marginTop: 0,
   },
 
   phoneInput: {
     color: '#ABB4BD',
     fontSize: 12,
-    marginTop: 7,
+    marginTop: 0,
   },
 
   flag: {
     marginLeft: 10,
-    marginTop: 7,
+    marginTop: 0,
   },
 
   bottomModal: {
