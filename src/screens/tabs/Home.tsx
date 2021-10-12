@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,10 +6,13 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
+  FlatList,
+  Animated,
 } from 'react-native';
 import Header from '../../components/Header';
 import {
   AuthenticatedRoutesParamsList,
+  ItemProps,
   TabNavigatorParamsList,
 } from '../../types';
 import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
@@ -19,6 +22,8 @@ import Notification from '../../assets/svg/ion-ios-notifications.svg';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {BACKGROUND_COLOR} from '../../core/color';
 import Message from '../../components/Message';
+import cards from '../../mock/CarouselList';
+import Card from '../../components/Card';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -31,6 +36,12 @@ const {width} = Dimensions.get('screen');
 
 const Home = ({navigation}: Props) => {
   const [message, setMessage] = useState('');
+  const [cardsList] = useState<ItemProps[]>(cards);
+  const [scrollViewWidth, setScrollViewWidth] = useState(0);
+  const boxWidth = scrollViewWidth * 1;
+  const boxDistance = scrollViewWidth - boxWidth;
+  const halfBoxDistance = boxDistance / 2;
+  const pan = useRef(new Animated.ValueXY()).current;
 
   return (
     <View style={{flex: 1}}>
@@ -91,7 +102,49 @@ const Home = ({navigation}: Props) => {
               <Text style={styles.viewAll}>View all</Text>
             </View>
 
-            
+            <FlatList
+              horizontal
+              data={cardsList}
+              style={{
+                // height: 250,
+                // width: '100%',
+                marginTop: 25,
+                marginBottom: 20,
+              }}
+              contentContainerStyle={{paddingVertical: 5}}
+              contentInsetAdjustmentBehavior="never"
+              snapToAlignment="center"
+              decelerationRate="fast"
+              automaticallyAdjustContentInsets={false}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
+              scrollEventThrottle={1}
+              snapToInterval={boxWidth}
+              contentInset={{
+                left: halfBoxDistance,
+                right: halfBoxDistance,
+              }}
+              contentOffset={{x: halfBoxDistance * -1, y: 0}}
+              onLayout={e => {
+                setScrollViewWidth(e.nativeEvent.layout.width);
+              }}
+              onScroll={Animated.event(
+                [{nativeEvent: {contentOffset: {x: pan.x}}}],
+                {
+                  useNativeDriver: false,
+                },
+              )}
+              keyExtractor={(item, index) => `${index}-${item}`}
+              renderItem={({item, index}) => (
+                <Card
+                  item={item}
+                  index={index}
+                  boxWidth={boxWidth}
+                  halfBoxDistance={halfBoxDistance}
+                  pan={pan}
+                />
+              )}
+            />
           </View>
         </ScrollView>
       </View>
@@ -186,5 +239,6 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '500',
     color: '#316F8A',
+    textDecorationLine: 'underline',
   },
 });
