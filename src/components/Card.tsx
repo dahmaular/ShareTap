@@ -42,7 +42,7 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
       <Menu
         visible={visible}
         onDismiss={closeMenu}
-        style={{position: 'absolute', top: 460, left: 280, width: 100, height: 112}}
+        style={styles.menu}
         anchor={
           <TouchableOpacity
             style={{...styles.touchable, width: boxWidth}}
@@ -73,7 +73,11 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
         }>
         <Menu.Item titleStyle={styles.text} onPress={() => {}} title="Share" />
         <Menu.Item titleStyle={styles.text} onPress={() => {}} title="Edit" />
-        <Menu.Item titleStyle={styles.deleteText} onPress={() => {}} title="Delete" />
+        <Menu.Item
+          titleStyle={styles.deleteText}
+          onPress={() => {}}
+          title="Delete"
+        />
       </Menu>
       <View style={styles.bottomLine}></View>
     </Animated.View>
@@ -156,5 +160,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '300',
     color: '#333333',
-  }
+  },
+
+  menu: {position: 'absolute', top: 460, left: 280, width: 100, height: 112},
 });
