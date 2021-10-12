@@ -257,5 +257,6 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '500',
     color: '#333333',
+    marginTop: 10
   },
 });
