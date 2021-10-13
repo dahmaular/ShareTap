@@ -184,8 +184,8 @@ const styles = StyleSheet.create({
   },
 
   viewButton: {
-    width: 132,
-    height: 48,
+    width: 128,
+    height: 38,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
