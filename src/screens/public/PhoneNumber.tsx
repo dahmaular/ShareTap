@@ -1,5 +1,12 @@
 import React, {useState, useRef} from 'react';
-import {StyleSheet, Text, View, ScrollView, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import Header from '../../components/Header';
 import ArrowLeft from '../../assets/svg/thin_big_left.svg';
 import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
@@ -79,22 +86,24 @@ const PhoneNumber = ({navigation, route}: Props) => {
             </Text>
           </View>
 
-          <PhoneInput
-            ref={phoneInput}
-            defaultValue={phone}
-            defaultCode="NG"
-            layout="first"
-            // onChangeText={text => setPhone(text)}
-            onChangeFormattedText={text => {
-              setPhone(text);
-            }}
-            containerStyle={styles.phone}
-            textContainerStyle={styles.phoneText}
-            textInputStyle={styles.phoneInput}
-            codeTextStyle={styles.codeText}
-            flagButtonStyle={styles.flag}
-            withShadow={true}
-          />
+          <View style={styles.phoneSelect}>
+            <PhoneInput
+              ref={phoneInput}
+              defaultValue={phone}
+              defaultCode="NG"
+              layout="first"
+              // onChangeText={text => setPhone(text)}
+              onChangeFormattedText={text => {
+                setPhone(text);
+              }}
+              containerStyle={styles.phone}
+              textContainerStyle={styles.phoneText}
+              textInputStyle={styles.phoneInput}
+              codeTextStyle={styles.codeText}
+              flagButtonStyle={styles.flag}
+              withShadow={true}
+            />
+          </View>
 
           <View style={styles.buttonView}>
             <Button
@@ -153,17 +162,16 @@ const styles = StyleSheet.create({
   },
 
   phone: {
-    // backgroundColor: 'transparent',
     alignItems: 'center',
     flexDirection: 'row',
     width: '100%',
     marginTop: 126,
     elevation: 10,
     shadowColor: '#209AD7',
-    shadowOffset: {width: 0, height: 3},
+    shadowOffset: {width: 3, height: 3},
     shadowOpacity: 1,
     shadowRadius: 5,
-    height: 64
+    height: 64,
   },
 
   phoneText: {
@@ -264,4 +272,8 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     color: PRIMARY_COLOR,
   },
+  
+  phoneSelect: {
+    paddingHorizontal: 5
+  }
 });
