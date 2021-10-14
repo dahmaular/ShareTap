@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
 
-  tap: {width: '100%', marginTop: 37, alignItems: 'center', marginBottom: 120},
+  tap: {width: '100%', marginTop: 20, alignItems: 'center', marginBottom: 120},
 
   tapText: {
     fontFamily: 'Poppins',
@@ -257,6 +257,6 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '500',
     color: '#333333',
-    marginTop: 10
+    marginTop: 0
   },
 });
