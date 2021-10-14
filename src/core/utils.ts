@@ -9,14 +9,10 @@ export const emailValidator = (email: string) => {
 
 export const passwordValidator = (password: string) => {
   if (!password || password.length <= 0) return 'Password cannot be empty.';
-
   return '';
 };
 
 export const nameValidator = (name: string) => {
-  const regex = /(\w.+\s).+/;
-  if (!name || name.length <= 0) return 'Full name cannot be empty.';
-  if (!regex.test(name)) return 'Enter at least 2 names.';
-
+  if (!name || name.length <= 0) return 'Username cannot be empty.';
   return '';
 };
