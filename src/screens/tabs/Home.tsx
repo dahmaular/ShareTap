@@ -25,6 +25,7 @@ import {BACKGROUND_COLOR} from '../../core/color';
 import Message from '../../components/Message';
 import cards from '../../mock/CarouselList';
 import Card from '../../components/Card';
+import NotificationModal from '../../components/NotificationModal';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -39,13 +40,26 @@ const Home = ({navigation}: Props) => {
   const [message, setMessage] = useState('');
   const [cardsList] = useState<ItemProps[]>(cards);
   const [scrollViewWidth, setScrollViewWidth] = useState(0);
+  const [modal, setModal] = useState(false);
   const boxWidth = scrollViewWidth * 1;
   const boxDistance = scrollViewWidth - boxWidth;
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
 
+  const _onNotificationPressed = () => {
+    setModal(true);
+  };
+
   return (
     <View style={{flex: 1}}>
+      {modal && (
+        <NotificationModal
+          visible={modal}
+          onBackButtonPress={() => setModal(true)}
+          onBackdropPress={() => setModal(true)}
+          onClose={() => setModal(false)}
+        />
+      )}
       <Header
         title="HOME"
         titleColor="#FFFFFF"
@@ -54,7 +68,7 @@ const Home = ({navigation}: Props) => {
         leftOnPress={() => navigation.dispatch(DrawerActions.openDrawer())}
         rightSvg={
           <>
-            <Notification />
+            <Notification onPress={_onNotificationPressed} />
 
             <Badge size={12} style={styles.badgeStyle}>
               0
