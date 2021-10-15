@@ -21,7 +21,7 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Provider} from 'react-redux';
 import rootReducer from './src/slices';
 import {configureStore} from '@reduxjs/toolkit';
@@ -46,7 +46,7 @@ const statusBarIOS = () => {
 const persistConfig = {
   key: 'root',
   version: 1,
-  storage,
+  storage: AsyncStorage,
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
