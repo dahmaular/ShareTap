@@ -1,21 +1,21 @@
 import React, {FC} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import Google from '../assets/svg/google.svg';
+import Facebook from '../assets/svg/facebook.svg';
 
-interface GoogleProps {
+interface FacebookProps {
   label: string;
   onPress: Function;
   disabled: boolean;
 }
 
-const GoogleButton: FC<GoogleProps> = ({label, onPress, disabled}) => {
+const FacebookButton: FC<FacebookProps> = ({label, onPress, disabled}) => {
   return (
     <TouchableOpacity
       onPress={() => onPress()}
       style={styles.btn}
       disabled={disabled}>
       <View style={styles.svg}>
-        <Google />
+        <Facebook />
       </View>
 
       <Text style={styles.label}>{label}</Text>
@@ -23,20 +23,19 @@ const GoogleButton: FC<GoogleProps> = ({label, onPress, disabled}) => {
   );
 };
 
-export default GoogleButton;
+export default FacebookButton;
 
 const styles = StyleSheet.create({
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '47.35%',
+    width: '47.4%',
     height: 48,
     borderRadius: 2,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: 'rgba(0, 0, 0, 0.19)',
-    marginRight: 20,
   },
 
   label: {

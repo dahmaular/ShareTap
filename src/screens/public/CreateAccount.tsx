@@ -18,6 +18,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TextInput} from 'react-native-paper';
 import Button from '../../components/Button';
 import GoogleButton from '../../components/GoogleButton';
+import FacebookButton from '../../components/FacebookButton';
 import {
   emailValidator,
   passwordValidator,
@@ -229,10 +230,15 @@ const CreateAccount = ({navigation, route}: Props) => {
             <View style={styles.secondLine}></View>
           </View>
 
-          <View style={styles.googleView}>
+          <View style={styles.socialButtonWrap}>
             <GoogleButton
               disabled={false}
-              label="CONTINUE"
+              label="Continue with google"
+              onPress={() => <></>}
+            />
+            <FacebookButton
+              disabled={false}
+              label="Continue with facebook"
               onPress={() => <></>}
             />
           </View>
@@ -318,7 +324,7 @@ const styles = StyleSheet.create({
     color: '#333333',
   },
 
-  googleView: {
+  socialButtonWrap: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
