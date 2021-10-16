@@ -24,6 +24,8 @@ import {
   passwordValidator,
   nameValidator,
 } from '../../core/utils';
+import {FederatedSignInOptions} from '@aws-amplify/auth/lib-esm/types';
+import {Auth} from 'aws-amplify';
 
 const {width} = Dimensions.get('screen');
 
@@ -85,6 +87,14 @@ const CreateAccount = ({navigation, route}: Props) => {
         password: password.value,
       },
     });
+  };
+
+  const facebookLogin = () => {
+    Auth.federatedSignIn({provider: 'Facebook'} as FederatedSignInOptions);
+  };
+
+  const googleLogin = () => {
+    Auth.federatedSignIn({provider: 'Google'} as FederatedSignInOptions);
   };
 
   return (
@@ -234,12 +244,12 @@ const CreateAccount = ({navigation, route}: Props) => {
             <GoogleButton
               disabled={false}
               label="Continue with google"
-              onPress={() => <></>}
+              onPress={googleLogin}
             />
             <FacebookButton
               disabled={false}
               label="Continue with facebook"
-              onPress={() => <></>}
+              onPress={facebookLogin}
             />
           </View>
         </ScrollView>
