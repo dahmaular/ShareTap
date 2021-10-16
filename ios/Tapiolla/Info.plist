@@ -88,5 +88,14 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>homedotly</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
