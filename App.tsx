@@ -9,11 +9,26 @@ import {
 } from 'react-native';
 import {STATUS_BAR, PRIMARY_COLOR} from './src/core/color';
 import {Provider as PaperProvider, DefaultTheme} from 'react-native-paper';
-// import {store, persistor} from './src/store/store';
-// import {PersistGate} from 'redux-persist/integration/react';
-// import {RootSiblingParent} from 'react-native-root-siblings';
-// import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import {RootSiblingParent} from 'react-native-root-siblings';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Provider} from 'react-redux';
+import rootReducer from './src/slices';
+import {configureStore} from '@reduxjs/toolkit';
 import SwitchNavigator from './src/navigations/SwitchNavigator';
+import { awsConfig } from './src/core/awsExports';
+import Amplify from 'aws-amplify';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 const theme = {
   ...DefaultTheme,
@@ -31,23 +46,68 @@ const statusBarIOS = () => {
   return null;
 };
 
+const persistConfig = {
+  key: 'root',
+  version: 1,
+  storage: AsyncStorage,
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
+
+let persistor = persistStore(store);
+
+const urlOpener= async(url: string, redirectUrl: string) =>{
+  await InAppBrowser.isAvailable();
+  const res = await InAppBrowser.openAuth(url, redirectUrl, {
+    showTitle: false,
+    enableUrlBarHiding: true,
+    enableDefaultShare: false,
+    ephemeralWebSession: false,
+  });
+
+  if (res.type === 'success') {
+    Linking.openURL(res.url);
+  }
+}
+
+Amplify.configure({
+  ...awsConfig,
+  oauth: {
+    ...awsConfig.Auth.oauth,
+    urlOpener,
+  },
+});
+
 const App: FC = () => {
   return (
-    // <Provider store={store}>
-    <PaperProvider theme={theme}>
-      {/* <PersistGate loading={null} persistor={persistor}>
-       <RootSiblingParent> */}
-      <View style={{flex: 1}}>
-        {statusBarIOS()}
-        <SafeAreaView style={{flex: 1}}>
-          <StatusBar backgroundColor={STATUS_BAR} barStyle={'light-content'} />
-          <SwitchNavigator />
-        </SafeAreaView>
-      </View>
-      {/* </RootSiblingParent>
-      </PersistGate> */}
-    </PaperProvider>
-    // </Provider>
+    <Provider store={store}>
+      <PaperProvider theme={theme}>
+        <PersistGate loading={null} persistor={persistor}>
+          <RootSiblingParent>
+            <View style={{flex: 1}}>
+              {statusBarIOS()}
+              <SafeAreaView style={{flex: 1}}>
+                <StatusBar
+                  backgroundColor={STATUS_BAR}
+                  barStyle={'light-content'}
+                />
+                <SwitchNavigator />
+              </SafeAreaView>
+            </View>
+          </RootSiblingParent>
+        </PersistGate>
+      </PaperProvider>
+    </Provider>
   );
 };
 
