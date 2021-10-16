@@ -230,7 +230,7 @@ const CreateAccount = ({navigation, route}: Props) => {
             <View style={styles.secondLine}></View>
           </View>
 
-          <View style={styles.socialButtonsWrap}>
+          <View style={styles.socialButtonWrap}>
             <GoogleButton
               disabled={false}
               label="Continue with google"
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     color: '#333333',
   },
 
-  socialButtonsWrap: {
+  socialButtonWrap: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
