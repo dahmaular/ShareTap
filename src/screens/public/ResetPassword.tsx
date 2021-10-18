@@ -21,9 +21,10 @@ import {
   emailValidator,
   passwordValidator,
   nameValidator,
+  confirmPasswordValidator,
 } from '../../core/utils';
 import {resetPassword} from '../../services/authService';
-import { hubDispatch } from '../../core/awsExports';
+import {hubDispatch} from '../../core/awsExports';
 
 const {width} = Dimensions.get('screen');
 
@@ -44,8 +45,14 @@ type Props = {
 
 const ResetPassword = ({navigation, route}: Props) => {
   const [password, setPassword] = useState({value: '', error: ''});
+  const [confirmPassword, setConfirmPassword] = useState({
+    value: '',
+    error: '',
+  });
   const [passwordEntry, setPasswordEntry] = useState(true);
+  const [confirmPasswordEntry, setConfirmPasswordEntry] = useState(true);
   const [passwordFocus, setPasswordFocus] = useState(false);
+  const [confirmPasswordFocus, setConfirmPasswordFocus] = useState(false);
   const {item} = route.params;
 
   const _onRegisterPressed = async () => {
@@ -57,10 +64,29 @@ const ResetPassword = ({navigation, route}: Props) => {
     }
 
     const response = await resetPassword(item.email, item.code, password.value);
-    
+
     if (response) {
       hubDispatch('navigation', 'loggedIn'); //Route to homepage
     }
+  };
+
+  const handlePasswordBlur = () => {
+    setPasswordFocus(true);
+
+    const validationError = passwordValidator(password.value);
+
+    setPassword({...password, error: validationError});
+  };
+
+  const handleConfirmPasswordBlur = () => {
+    setConfirmPasswordFocus(true);
+
+    const validationError = confirmPasswordValidator(
+      confirmPassword.value,
+      password.value,
+    );
+
+    setConfirmPassword({...confirmPassword, error: validationError});
   };
 
   return (
@@ -96,7 +122,7 @@ const ResetPassword = ({navigation, route}: Props) => {
             errorText={password.error}
             secureTextEntry={passwordEntry}
             onFocus={() => setPasswordFocus(true)}
-            onBlur={() => setPasswordFocus(false)}
+            onBlur={handlePasswordBlur}
             style={{
               backgroundColor: passwordFocus ? '#FFFFFF' : '#EEEFEF',
               marginTop: 31,
@@ -122,24 +148,24 @@ const ResetPassword = ({navigation, route}: Props) => {
             returnKeyType="next"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
             placeholder="Enter your password"
-            value={password.value}
-            onChangeText={text => setPassword({value: text, error: ''})}
-            error={!!password.error}
-            errorText={password.error}
-            secureTextEntry={passwordEntry}
-            onFocus={() => setPasswordFocus(true)}
-            onBlur={() => setPasswordFocus(false)}
+            value={confirmPassword.value}
+            onChangeText={text => setConfirmPassword({value: text, error: ''})}
+            error={!!confirmPassword.error}
+            errorText={confirmPassword.error}
+            secureTextEntry={confirmPasswordEntry}
+            onFocus={() => setConfirmPasswordFocus(true)}
+            onBlur={handleConfirmPasswordBlur}
             style={{
-              backgroundColor: passwordFocus ? '#FFFFFF' : '#EEEFEF',
+              backgroundColor: confirmPasswordFocus ? '#FFFFFF' : '#EEEFEF',
             }}
             right={
               <TextInput.Icon
                 name={() => (
                   <TouchableOpacity
                     style={styles.eyeView}
-                    onPress={() => setPasswordEntry(prev => !prev)}>
+                    onPress={() => setConfirmPasswordEntry(prev => !prev)}>
                     <Ionicons
-                      name={passwordEntry ? 'eye-outline' : 'eye-off-outline'}
+                      name={confirmPasswordEntry ? 'eye-outline' : 'eye-off-outline'}
                       size={17}
                       color="#000000"
                     />
