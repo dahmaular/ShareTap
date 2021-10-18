@@ -47,6 +47,13 @@ const ForgotPassword = ({navigation}: Props) => {
     if (response) setModal(true);
   };
 
+  const handleEmailBlur = () => {
+    setEmailFocus(true);
+
+    const validationError = emailValidator(email.value);
+    setEmail({...email, error: validationError});
+  };
+
   return (
     <View style={{flex: 1}}>
       {modal && (
@@ -94,7 +101,7 @@ const ForgotPassword = ({navigation}: Props) => {
             textContentType="emailAddress"
             keyboardType="email-address"
             onFocus={() => setEmailFocus(true)}
-            onBlur={() => setEmailFocus(false)}
+            onBlur={handleEmailBlur}
             style={{
               backgroundColor: emailFocus ? '#FFFFFF' : '#EEEFEF',
               marginTop: 34,
