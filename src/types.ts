@@ -8,6 +8,11 @@ export interface ItemProps {
   profession: string;
 }
 
+export interface ConnectProps {
+  id: number;
+  name: string;
+}
+
 export interface CardProps {
   item: ItemProps;
   index: number;
@@ -44,6 +49,7 @@ export type UnauthenticatedRoutesParamsList = {
 
 export type AuthenticatedRoutesParamsList = {
   Root: undefined;
+  Search: undefined
 };
 
 export interface AccountCreationRoute {
