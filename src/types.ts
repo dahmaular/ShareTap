@@ -1,4 +1,4 @@
-import { NavigatorScreenParams } from '@react-navigation/native';
+import {NavigatorScreenParams} from '@react-navigation/native';
 
 export interface ItemProps {
   id: number;
@@ -25,19 +25,13 @@ export type TabNavigatorParamsList = {
 };
 
 export type UnauthenticatedRoutesParamsList = {
-  CreateAccount: {
-    item: AccountCreationRoute;
-  };
+  CreateAccount: Record<'item', AccountCreationRoute>;
   ForgotPassword: undefined;
-  PhoneNumber: {
-    item: PhoneNumberRoute;
-  };
+  PhoneNumber: Record<'item', PhoneNumberRoute>;
   ProfileType: undefined;
-  ResetPassword: undefined;
+  ResetPassword: Record<'item', ResetPasswordRoute>;
   Signin: undefined;
-  Verification: {
-    item: VerificationRoute
-  } | undefined;
+  Verification: Record<'item', VerificationRoute>;
   Welcome: undefined;
   Splash: undefined;
 };
@@ -61,15 +55,19 @@ export interface PhoneNumberRoute {
   fullName: string;
   email: string;
   password: string;
+  userName: string;
 }
 
 export interface VerificationRoute {
-  id: number | null;
-  title: string;
-  description: string;
-  image: any;
-  fullName: string;
   email: string;
-  password: string;
-  phone: string
+  isForgotPassword?: boolean;
+}
+
+export interface ForgotPasswordRoute {
+  userName: string;
+}
+
+export interface ResetPasswordRoute {
+  code: string
+  email: string
 }
