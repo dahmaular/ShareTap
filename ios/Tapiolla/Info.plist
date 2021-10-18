@@ -93,7 +93,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>homedotly</string>
+				<string>tapiolla</string>
 			</array>
 		</dict>
 	</array>

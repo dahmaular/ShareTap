@@ -17,6 +17,7 @@ import PhoneInput from 'react-native-phone-number-input';
 import Button from '../../components/Button';
 import PhoneModal from '../../components/PhoneModal';
 import Toast from '../../core/toast';
+import {signUpService} from '../../services/authService';
 
 const {width} = Dimensions.get('screen');
 
@@ -41,13 +42,27 @@ const PhoneNumber = ({navigation, route}: Props) => {
   const [phone, setPhone] = useState('');
   const [modal, setModal] = useState(false);
 
-  const _onRegisterPressed = () => {
+  const _onRegisterPressed = async () => {
     const checkValid = phoneInput.current?.isValidNumber(phone);
+
+    const signUpPayload = {
+      email: item.email,
+      fullName: item.fullName,
+      password: item.password,
+      userName: item.userName,
+      phone,
+    };
+
     if (!checkValid) {
       Toast("Phone number isn't valid");
       return;
     }
-    setModal(true);
+
+    const response = await signUpService(signUpPayload);
+
+    if (response) {
+      setModal(true);
+    }
   };
 
   return (
@@ -272,8 +287,8 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     color: PRIMARY_COLOR,
   },
-  
+
   phoneSelect: {
-    paddingHorizontal: 5
-  }
+    paddingHorizontal: 5,
+  },
 });

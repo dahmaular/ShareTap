@@ -40,6 +40,7 @@ const EmailModal = ({
     navigation.navigate('Verification', {
       item: {
         email: email,
+        isForgotPassword: true,
       },
     });
 

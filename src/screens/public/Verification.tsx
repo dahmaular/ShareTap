@@ -8,6 +8,7 @@ import {RouteProp} from '@react-navigation/native';
 import {UnauthenticatedRoutesParamsList} from '../../types';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Button from '../../components/Button';
+import {confirmSignUpService, resetPassword} from '../../services/authService';
 
 const {width} = Dimensions.get('screen');
 
@@ -30,7 +31,20 @@ const Verification = ({navigation, route}: Props) => {
   const {item} = route.params;
   const [otpCode, setOtpCode] = useState('');
 
-  const _onRegisterPressed = () => {};
+  const _onRegisterPressed = async () => {
+    if (item.isForgotPassword) {
+      navigation.navigate('ResetPassword', {
+        item: {code: otpCode, email: item.email},
+      });
+      return;
+    }
+
+    const response = await confirmSignUpService(item.email, otpCode);
+
+    if (response) {
+      navigation.navigate('Signin');
+    }
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -125,7 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     marginTop: 200,
-    marginBottom: 40
+    marginBottom: 40,
   },
 
   otpContainer: {

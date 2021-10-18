@@ -10,6 +10,7 @@ import TextInputs from '../../components/TextInput';
 import Button from '../../components/Button';
 import {emailValidator} from '../../core/utils';
 import EmailModal from '../../components/EmailModal';
+import {forgotPassword} from '../../services/authService';
 
 const {width} = Dimensions.get('screen');
 
@@ -28,19 +29,22 @@ type Props = {
   route: ForgotPasswordRouteProp;
 };
 
-const ForgotPassword = ({navigation, route}: Props) => {
+const ForgotPassword = ({navigation}: Props) => {
   const [email, setEmail] = useState({value: '', error: ''});
   const [emailFocus, setEmailFocus] = useState(false);
   const [modal, setModal] = useState(false);
 
-  const _onRegisterPressed = () => {
-    setModal(true);
+  const _onRegisterPressed = async () => {
     const emailError = emailValidator(email.value);
 
     if (emailError) {
       setEmail({...email, error: emailError});
       return;
     }
+
+    const response = await forgotPassword(email.value);
+
+    if (response) setModal(true);
   };
 
   return (

@@ -23,6 +23,8 @@ import {
   passwordValidator,
   nameValidator,
 } from '../../core/utils';
+import {signInService} from '../../services/authService';
+import {hubDispatch} from '../../core/awsExports';
 
 const {width} = Dimensions.get('screen');
 
@@ -47,7 +49,7 @@ const Signin = ({navigation, route}: Props) => {
   const [emailFocus, setEmailFocus] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
 
-  const _onRegisterPressed = () => {
+  const _onRegisterPressed = async () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
 
@@ -56,7 +58,14 @@ const Signin = ({navigation, route}: Props) => {
       setPassword({...password, error: passwordError});
       return;
     }
+
+    const response = await signInService(email.value, password.value);
+
+    if (response) {
+      hubDispatch('navigation', 'loggedIn'); //Route to homepage
+    }
   };
+
   return (
     <View style={{flex: 1}}>
       <Header
