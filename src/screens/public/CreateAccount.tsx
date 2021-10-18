@@ -47,6 +47,7 @@ type Props = {
 const CreateAccount = ({navigation, route}: Props) => {
   const [fullName, setFullName] = useState({value: '', error: ''});
   const [email, setEmail] = useState({value: '', error: ''});
+  const [userName, setUserName] = useState({value: '', error: ''});
   const [password, setPassword] = useState({value: '', error: ''});
   const [confirmPassword, setConfirmPassword] = useState({
     value: '',
@@ -60,20 +61,21 @@ const CreateAccount = ({navigation, route}: Props) => {
   const [fullNameFocus, setFullNameFocus] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
   const [confirmPasswordFocus, setConfirmPasswordFocus] = useState(false);
+  const [userNameFocus, setUserNameFocus] = useState(false);
 
   const {item} = route.params;
-
-  console.log('Create Account Items', item);
 
   const _onRegisterPressed = () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
     const fullNameError = nameValidator(fullName.value);
+    const userNameError = nameValidator(userName.value);
 
-    if (emailError || passwordError || fullNameError) {
+    if (emailError || passwordError || fullNameError || userNameError) {
       setFullName({...fullName, error: fullNameError});
       setEmail({...email, error: emailError});
       setPassword({...password, error: passwordError});
+      setUserName({...userName, error: userNameError});
       return;
     }
     navigation.navigate('PhoneNumber', {
@@ -85,6 +87,7 @@ const CreateAccount = ({navigation, route}: Props) => {
         fullName: fullName.value,
         email: email.value,
         password: password.value,
+        userName: userName.value,
       },
     });
   };
@@ -121,10 +124,10 @@ const CreateAccount = ({navigation, route}: Props) => {
           </View>
 
           <TextInputs
-            label="Username"
+            label="Full name"
             returnKeyType="next"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
-            placeholder="Enter your username"
+            placeholder="Enter your full name"
             value={fullName.value}
             onChangeText={text => setFullName({value: text, error: ''})}
             error={!!fullName.error}
@@ -158,6 +161,26 @@ const CreateAccount = ({navigation, route}: Props) => {
             onBlur={() => setEmailFocus(false)}
             style={{
               backgroundColor: emailFocus ? '#FFFFFF' : '#EEEFEF',
+            }}
+          />
+
+          <TextInputs
+            label="Username"
+            returnKeyType="next"
+            placeholderTextColor="rgba(90, 89, 89, 0.55)"
+            placeholder="Enter your username"
+            value={userName.value}
+            onChangeText={text => setUserName({value: text, error: ''})}
+            error={!!userName.error}
+            errorText={userName.error}
+            autoCapitalize="none"
+            autoCompleteType="name"
+            textContentType="familyName"
+            keyboardType="name-phone-pad"
+            onFocus={() => setFullNameFocus(true)}
+            onBlur={() => setFullNameFocus(false)}
+            style={{
+              backgroundColor: userNameFocus ? '#FFFFFF' : '#EEEFEF',
             }}
           />
 

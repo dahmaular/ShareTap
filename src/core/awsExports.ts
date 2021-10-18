@@ -1,3 +1,5 @@
+import { Hub } from '@aws-amplify/core';
+
 import {
   APPSYNC_APIKEY,
   GRAPHQL_ENDPOINT,
@@ -10,6 +12,8 @@ import {
   AWS_DOMAIN
 } from 'react-native-dotenv';
 
+import { LoggedInState } from '../navigations/SwitchNavigator';
+
 export const awsConfig = {
   Auth: {
     identityPoolId: IDENTITY_POOL_ID,
@@ -19,17 +23,27 @@ export const awsConfig = {
     mandatorySignIn: true,
     oauth: {
       domain: AWS_DOMAIN,
-      redirectSignIn: 'homedotly://',
-      redirectSignOut: 'homedotly://',
+      redirectSignIn: 'tapiolla://',
+      redirectSignOut: 'tapiolla://',
       responseType: 'token',
     },
   },
 
-  API: {
-    aws_appsync_region: APPSYNC_REGION, // (optional) - AWS AppSync region
-    aws_appsync_graphqlEndpoint: GRAPHQL_ENDPOINT, // (optional) - AWS AppSync endpoint
-    aws_appsync_authenticationType: 'API_KEY', // AMAZON_COGNITO_USER_POOLS or API_KEY (optional) - Primary AWS AppSync authentication type
-    aws_appsync_apiKey: APPSYNC_APIKEY, // (optional) - AWS AppSync API Key
-    aws_appsync_appId: APPSYNC_APPID,
-  },
+  // API: {
+  //   aws_appsync_region: APPSYNC_REGION, // (optional) - AWS AppSync region
+  //   aws_appsync_graphqlEndpoint: GRAPHQL_ENDPOINT, // (optional) - AWS AppSync endpoint
+  //   aws_appsync_authenticationType: 'API_KEY', // AMAZON_COGNITO_USER_POOLS or API_KEY (optional) - Primary AWS AppSync authentication type
+  //   aws_appsync_apiKey: APPSYNC_APIKEY, // (optional) - AWS AppSync API Key
+  //   aws_appsync_appId: APPSYNC_APPID,
+  // },
+};
+
+export const hubDispatch = (
+  channel: 'navigation',
+  data: LoggedInState
+) => {
+  Hub.dispatch(channel, {
+    event: '',
+    data,
+  });
 };

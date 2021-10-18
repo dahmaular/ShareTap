@@ -22,6 +22,8 @@ import {
   passwordValidator,
   nameValidator,
 } from '../../core/utils';
+import {resetPassword} from '../../services/authService';
+import { hubDispatch } from '../../core/awsExports';
 
 const {width} = Dimensions.get('screen');
 
@@ -44,15 +46,23 @@ const ResetPassword = ({navigation, route}: Props) => {
   const [password, setPassword] = useState({value: '', error: ''});
   const [passwordEntry, setPasswordEntry] = useState(true);
   const [passwordFocus, setPasswordFocus] = useState(false);
+  const {item} = route.params;
 
-  const _onRegisterPressed = () => {
+  const _onRegisterPressed = async () => {
     const passwordError = passwordValidator(password.value);
 
     if (passwordError) {
       setPassword({...password, error: passwordError});
       return;
     }
+
+    const response = await resetPassword(item.email, item.code, password.value);
+    
+    if (response) {
+      hubDispatch('navigation', 'loggedIn'); //Route to homepage
+    }
   };
+
   return (
     <View style={{flex: 1}}>
       <Header
@@ -88,7 +98,8 @@ const ResetPassword = ({navigation, route}: Props) => {
             onFocus={() => setPasswordFocus(true)}
             onBlur={() => setPasswordFocus(false)}
             style={{
-              backgroundColor: passwordFocus ? '#FFFFFF' : '#EEEFEF', marginTop: 31
+              backgroundColor: passwordFocus ? '#FFFFFF' : '#EEEFEF',
+              marginTop: 31,
             }}
             right={
               <TextInput.Icon

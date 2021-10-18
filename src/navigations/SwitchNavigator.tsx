@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {Hub, HubCapsule} from '@aws-amplify/core';
 import {
   NavigationContainer,
   useNavigationContainerRef,
@@ -7,22 +8,33 @@ import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import AuthenticatedRoutes from './Authenticated';
 import UnauthenticatedRoutes from './Public';
 import Splash from '../screens/public/Splash';
+import {getUserIdService} from '../services/userService';
 
-type LoggedInState = 'initializing' | 'loggedIn' | 'loggedOut';
+export type LoggedInState = 'initializing' | 'loggedIn' | 'loggedOut';
 
 const SwitchNavigator = () => {
   const [isUserLoggedIn, setUserLoggedIn] =
-    useState<LoggedInState>('initializing');
+    useState<LoggedInState>('loggedOut');
 
   const navigationRef = useNavigationContainerRef();
 
   useEffect(() => {
-    checkAuthState();
-  }, [isUserLoggedIn]);
+    getUserIdService()
+      .then(() => setUserLoggedIn('loggedIn')) //also dispatch redux action to get users
+      .catch(() => setUserLoggedIn('loggedOut'));
+  }, []);
 
-  const checkAuthState = async () => {
-    setUserLoggedIn('loggedIn');
+  const hubListener = (data: HubCapsule) => {
+    setUserLoggedIn(data.payload.data);
   };
+
+  useEffect(() => {
+    Hub.listen('navigation', hubListener);
+
+    return () => {
+      Hub.remove('navigation', hubListener);
+    };
+  }, []);
 
   return (
     <>
