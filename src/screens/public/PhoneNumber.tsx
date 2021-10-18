@@ -47,7 +47,7 @@ const PhoneNumber = ({navigation, route}: Props) => {
 
     const signUpPayload = {
       email: item.email,
-      fullName: item.fullName,
+      firstName: item.firstName,
       password: item.password,
       userName: item.userName,
       phone,

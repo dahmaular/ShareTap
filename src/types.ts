@@ -52,7 +52,7 @@ export interface PhoneNumberRoute {
   title: string;
   description: string;
   image: any;
-  fullName: string;
+  firstName: string;
   email: string;
   password: string;
   userName: string;
@@ -68,6 +68,6 @@ export interface ForgotPasswordRoute {
 }
 
 export interface ResetPasswordRoute {
-  code: string
-  email: string
+  code: string;
+  email: string;
 }
