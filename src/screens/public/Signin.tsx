@@ -66,6 +66,21 @@ const Signin = ({navigation, route}: Props) => {
     }
   };
 
+  const handlePasswordBlur = () => {
+    setPasswordFocus(true);
+
+    const validationError = passwordValidator(password.value);
+
+    setPassword({...password, error: validationError});
+  };
+
+  const handleEmailBlur = () => {
+    setEmailFocus(true);
+
+    const validationError = emailValidator(email.value);
+    setEmail({...email, error: validationError});
+  };
+
   return (
     <View style={{flex: 1}}>
       <Header
@@ -103,7 +118,7 @@ const Signin = ({navigation, route}: Props) => {
             textContentType="emailAddress"
             keyboardType="email-address"
             onFocus={() => setEmailFocus(true)}
-            onBlur={() => setEmailFocus(false)}
+            onBlur={handleEmailBlur}
             style={{
               backgroundColor: emailFocus ? '#FFFFFF' : '#EEEFEF',
               marginTop: 34,
@@ -121,7 +136,7 @@ const Signin = ({navigation, route}: Props) => {
             errorText={password.error}
             secureTextEntry={passwordEntry}
             onFocus={() => setPasswordFocus(true)}
-            onBlur={() => setPasswordFocus(false)}
+            onBlur={handlePasswordBlur}
             style={{
               backgroundColor: passwordFocus ? '#FFFFFF' : '#EEEFEF',
             }}
