@@ -32,13 +32,14 @@ export const signUpService = async (
 
     return response;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
 export const resendSignUpService = async (userName: string) => {
   try {
-    await Auth.resendSignUp(userName);
+    const response = await Auth.resendSignUp(userName);
+    return response;
   } catch (error) {
     throw error;
   }
@@ -72,6 +73,14 @@ export const resetPassword = async (
     const response = await Auth.forgotPasswordSubmit(userName, code, password);
 
     return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const signOutService = async () => {
+  try {
+    await Auth.signOut();
   } catch (error) {
     throw error;
   }
