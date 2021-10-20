@@ -18,8 +18,19 @@ import AboutIcon from '../assets/svg/about-icon.svg';
 import SubscriptionIcon from '../assets/svg/subscription-icon.svg';
 import SupportIcon from '../assets/svg/support-icon.svg';
 import {useSelector} from 'react-redux';
+import {signOutService} from '../services/authService';
+import {hubDispatch} from '../core/awsExports';
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
+  const handleLogOut = async () => {
+    try {
+      await signOutService();
+      hubDispatch('navigation', 'loggedOut');
+    } catch (error: any) {
+      hubDispatch('alert', error.message);
+    }
+  };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView
@@ -64,7 +75,9 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           <View style={styles.drawerFooterWrap}>
             <Text style={styles.drawerFooterLink}>Terms and Conditions</Text>
             <Text style={styles.drawerFooterLink}>Privacy Policy</Text>
-            <Text style={styles.drawerFooterLogout}>Logout</Text>
+            <Text style={styles.drawerFooterLogout} onPress={handleLogOut}>
+              Logout
+            </Text>
           </View>
         </View>
       </ScrollView>
@@ -140,7 +153,7 @@ const styles = StyleSheet.create({
 
   drawerFooterWrap: {
     marginTop: 120,
-    marginBottom: 60
+    marginBottom: 60,
   },
   drawerFooterLink: {
     fontStyle: 'normal',
@@ -150,7 +163,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins',
     marginLeft: 18,
     color: '#333333',
-    marginBottom: 16
+    marginBottom: 16,
   },
   drawerFooterLogout: {
     fontStyle: 'normal',
