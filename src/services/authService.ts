@@ -15,7 +15,7 @@ export const signInService = async (username: string, password: string) => {
 
 export const signUpService = async (
   user: Record<
-    'firstName' | 'email' | 'phone' | 'password' | 'userName',
+    'firstName' | 'lastName' | 'email' | 'phone' | 'password' | 'userName',
     string
   >,
 ) => {
@@ -27,18 +27,20 @@ export const signUpService = async (
         email: user.email,
         phone_number: user.phone,
         'custom:firstName': user.firstName,
+        'custom:lastName': user.lastName,
       },
     });
 
     return response;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
 export const resendSignUpService = async (userName: string) => {
   try {
-    await Auth.resendSignUp(userName);
+    const response = await Auth.resendSignUp(userName);
+    return response;
   } catch (error) {
     throw error;
   }
@@ -72,6 +74,14 @@ export const resetPassword = async (
     const response = await Auth.forgotPasswordSubmit(userName, code, password);
 
     return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const signOutService = async () => {
+  try {
+    await Auth.signOut();
   } catch (error) {
     throw error;
   }

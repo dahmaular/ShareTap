@@ -11,6 +11,7 @@ import Button from '../../components/Button';
 import {emailValidator} from '../../core/utils';
 import EmailModal from '../../components/EmailModal';
 import {forgotPassword} from '../../services/authService';
+import {hubDispatch} from '../../core/awsExports';
 
 const {width} = Dimensions.get('screen');
 
@@ -33,18 +34,25 @@ const ForgotPassword = ({navigation}: Props) => {
   const [email, setEmail] = useState({value: '', error: ''});
   const [emailFocus, setEmailFocus] = useState(false);
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const _onRegisterPressed = async () => {
-    const emailError = emailValidator(email.value);
+    try {
+      const emailError = emailValidator(email.value);
 
-    if (emailError) {
-      setEmail({...email, error: emailError});
-      return;
+      if (emailError) {
+        setEmail({...email, error: emailError});
+        return;
+      }
+      setLoading(true);
+      await forgotPassword(email.value);
+
+      setModal(true);
+    } catch (error: any) {
+      hubDispatch('alert', error.message);
+    } finally {
+      setLoading(false);
     }
-
-    const response = await forgotPassword(email.value);
-
-    if (response) setModal(true);
   };
 
   const handleEmailBlur = () => {
@@ -111,7 +119,7 @@ const ForgotPassword = ({navigation}: Props) => {
           <View style={styles.buttonView}>
             <Button
               disabled={false}
-              loading={false}
+              loading={loading}
               label="CONTINUE"
               onPress={() => _onRegisterPressed()}
             />

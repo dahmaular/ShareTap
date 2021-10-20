@@ -62,10 +62,12 @@ export interface PhoneNumberRoute {
   email: string;
   password: string;
   userName: string;
+  lastName: string
 }
 
 export interface VerificationRoute {
   email: string;
+  userName: string;
   isForgotPassword?: boolean;
 }
 
