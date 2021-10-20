@@ -39,10 +39,7 @@ export const confirmPasswordValidator = (value: string, password: string) => {
   return '';
 };
 
-export const nameValidator = (
-  value: string,
-  type: 'First name' | 'Lastname' | 'Username',
-) => {
+export const nameValidator = (value: string, type: string) => {
   if (!value || value.length <= 0) return `${type} cannot be empty.`;
   return '';
 };

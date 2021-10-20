@@ -15,7 +15,7 @@ export const signInService = async (username: string, password: string) => {
 
 export const signUpService = async (
   user: Record<
-    'firstName' | 'email' | 'phone' | 'password' | 'userName',
+    'firstName' | 'lastName' | 'email' | 'phone' | 'password' | 'userName',
     string
   >,
 ) => {
@@ -27,6 +27,7 @@ export const signUpService = async (
         email: user.email,
         phone_number: user.phone,
         'custom:firstName': user.firstName,
+        'custom:lastName': user.lastName,
       },
     });
 

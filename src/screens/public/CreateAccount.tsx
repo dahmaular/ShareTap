@@ -47,6 +47,7 @@ type Props = {
 
 const CreateAccount = ({navigation, route}: Props) => {
   const [firstName, setfirstName] = useState({value: '', error: ''});
+  const [lastName, setLastName] = useState({value: '', error: ''});
   const [email, setEmail] = useState({value: '', error: ''});
   const [userName, setUserName] = useState({value: '', error: ''});
   const [password, setPassword] = useState({value: '', error: ''});
@@ -60,6 +61,7 @@ const CreateAccount = ({navigation, route}: Props) => {
 
   const [emailFocus, setEmailFocus] = useState(false);
   const [firstNameFocus, setfirstNameFocus] = useState(false);
+  const [lastNameFocus, setLastNameFocus] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
   const [confirmPasswordFocus, setConfirmPasswordFocus] = useState(false);
   const [userNameFocus, setUserNameFocus] = useState(false);
@@ -70,6 +72,7 @@ const CreateAccount = ({navigation, route}: Props) => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
     const firstNameError = nameValidator(firstName.value, 'First name');
+    const lastNameError = nameValidator(lastName.value, 'Last name');
     const userNameError = nameValidator(userName.value, 'Username');
     const confirmPasswordError = confirmPasswordValidator(
       confirmPassword.value,
@@ -82,6 +85,7 @@ const CreateAccount = ({navigation, route}: Props) => {
       firstNameError,
       userNameError,
       confirmPasswordError,
+      lastNameError,
     };
   };
 
@@ -93,6 +97,7 @@ const CreateAccount = ({navigation, route}: Props) => {
       setEmail({...email, error: validationErrors.emailError});
       setPassword({...password, error: validationErrors.passwordError});
       setUserName({...userName, error: validationErrors.userNameError});
+      setLastName({...lastName, error: validationErrors.lastNameError});
       setConfirmPassword({
         ...confirmPassword,
         error: validationErrors.confirmPasswordError,
@@ -108,6 +113,7 @@ const CreateAccount = ({navigation, route}: Props) => {
           email: email.value,
           password: password.value,
           userName: userName.value,
+          lastName: lastName.value,
         },
       });
     }
@@ -119,6 +125,14 @@ const CreateAccount = ({navigation, route}: Props) => {
     const validationError = nameValidator(firstName.value, 'First name');
 
     setfirstName({...firstName, error: validationError});
+  };
+
+  const handleLastNameBlur = () => {
+    setLastNameFocus(true);
+
+    const validationError = nameValidator(lastName.value, 'Last name');
+
+    setLastName({...lastName, error: validationError});
   };
 
   const handlePasswordBlur = () => {
@@ -207,6 +221,26 @@ const CreateAccount = ({navigation, route}: Props) => {
           />
 
           <TextInputs
+            label="Last name"
+            returnKeyType="next"
+            placeholderTextColor="rgba(90, 89, 89, 0.55)"
+            placeholder="Enter your last name"
+            value={lastName.value}
+            onChangeText={text => setLastName({value: text, error: ''})}
+            error={!!lastName.error}
+            errorText={lastName.error}
+            autoCapitalize="none"
+            autoCompleteType="name"
+            textContentType="familyName"
+            keyboardType="name-phone-pad"
+            onFocus={() => setLastNameFocus(true)}
+            onBlur={handleLastNameBlur}
+            style={{
+              backgroundColor: lastNameFocus ? '#FFFFFF' : '#EEEFEF',
+            }}
+          />
+
+          <TextInputs
             label="Email"
             returnKeyType="next"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
@@ -239,7 +273,7 @@ const CreateAccount = ({navigation, route}: Props) => {
             autoCompleteType="name"
             textContentType="familyName"
             keyboardType="name-phone-pad"
-            onFocus={() => setfirstNameFocus(true)}
+            onFocus={() => setUserNameFocus(true)}
             onBlur={handleUsernameBlur}
             style={{
               backgroundColor: userNameFocus ? '#FFFFFF' : '#EEEFEF',
