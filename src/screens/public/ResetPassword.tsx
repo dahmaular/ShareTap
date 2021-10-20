@@ -53,20 +53,26 @@ const ResetPassword = ({navigation, route}: Props) => {
   const [confirmPasswordEntry, setConfirmPasswordEntry] = useState(true);
   const [passwordFocus, setPasswordFocus] = useState(false);
   const [confirmPasswordFocus, setConfirmPasswordFocus] = useState(false);
+  const [loading, setLoading] = useState(false);
   const {item} = route.params;
 
   const _onRegisterPressed = async () => {
-    const passwordError = passwordValidator(password.value);
+    try {
+      const passwordError = passwordValidator(password.value);
 
-    if (passwordError) {
-      setPassword({...password, error: passwordError});
-      return;
-    }
+      if (passwordError) {
+        setPassword({...password, error: passwordError});
+        return;
+      }
 
-    const response = await resetPassword(item.email, item.code, password.value);
+      setLoading(true);
+      await resetPassword(item.email, item.code, password.value);
 
-    if (response) {
       hubDispatch('navigation', 'loggedIn'); //Route to homepage
+    } catch (error: any) {
+      hubDispatch('alert', error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -165,7 +171,9 @@ const ResetPassword = ({navigation, route}: Props) => {
                     style={styles.eyeView}
                     onPress={() => setConfirmPasswordEntry(prev => !prev)}>
                     <Ionicons
-                      name={confirmPasswordEntry ? 'eye-outline' : 'eye-off-outline'}
+                      name={
+                        confirmPasswordEntry ? 'eye-outline' : 'eye-off-outline'
+                      }
                       size={17}
                       color="#000000"
                     />
@@ -178,7 +186,7 @@ const ResetPassword = ({navigation, route}: Props) => {
           <View style={styles.buttonView}>
             <Button
               disabled={false}
-              loading={false}
+              loading={loading}
               label="RESET"
               onPress={() => _onRegisterPressed()}
             />
