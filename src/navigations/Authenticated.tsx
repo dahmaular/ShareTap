@@ -5,6 +5,7 @@ import TabNavigator from './TabNavigator';
 import DrawerContent from './DrawerContent';
 import {AuthenticatedRoutesParamsList} from '../types';
 import Search from '../screens/private/Search';
+import Rolodex from '../screens/private/Rolodex';
 
 const Drawer = createDrawerNavigator<AuthenticatedRoutesParamsList>();
 
@@ -21,6 +22,12 @@ export default function AuthenticatedRoutes() {
       <Drawer.Screen
         name="Search"
         component={Search}
+        options={{headerShown: false}}
+      />
+
+      <Drawer.Screen
+        name="Rolodex"
+        component={Rolodex}
         options={{headerShown: false}}
       />
     </Drawer.Navigator>

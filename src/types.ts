@@ -43,7 +43,8 @@ export type UnauthenticatedRoutesParamsList = {
 
 export type AuthenticatedRoutesParamsList = {
   Root: undefined;
-  Search: undefined
+  Search: undefined;
+  Rolodex: undefined;
 };
 
 export interface AccountCreationRoute {
