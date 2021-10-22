@@ -1,14 +1,25 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AppThunk} from '../../src/slices';
 
+import {
+  ListUserCardsResponse,
+  listUserCardsService,
+} from '../services/userService';
+
+type Card = ListUserCardsResponse['listUserCards']['cards'];
+
 interface State {
   error: boolean;
   loading: boolean;
+  profile: {};
+  cards: Card;
 }
 
 const initialState: State = {
   error: false,
   loading: false,
+  profile: {},
+  cards: [],
 };
 
 const fetchStart = (state: State) => {
@@ -25,29 +36,47 @@ const user = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    fetchUserStart: fetchStart,
+    fetchUserCardsStart: fetchStart,
 
-    fetchUserSuccess(state: State /*{ payload }: PayloadAction<User>*/) {
+    fetchUserCardsSuccess(state: State, {payload}: PayloadAction<Card>) {
+      state.cards = payload;
       state.error = false;
       state.loading = false;
     },
 
-    fetchUserFailure: fetchFailure,
+    fetchUserCardsFailure: fetchFailure,
   },
 });
 
-export const {fetchUserFailure, fetchUserSuccess, fetchUserStart} =
-  user.actions;
+export const {
+  fetchUserCardsFailure,
+  fetchUserCardsSuccess,
+  fetchUserCardsStart,
+} = user.actions;
 
 export default user.reducer;
 
 /****** Thunks ******/
 export const fetchUser =
-  (userData: Record<'userId' | 'userRole', string>): AppThunk =>
+  (userId: string): AppThunk =>
   async dispatch => {
     try {
-      dispatch(fetchUserStart());
+      dispatch(fetchUserCardsStart());
     } catch (error) {
-      dispatch(fetchUserFailure());
+      dispatch(fetchUserCardsFailure());
+    }
+  };
+
+export const fetchUserCards =
+  (userId: string): AppThunk =>
+  async dispatch => {
+    try {
+      dispatch(fetchUserCardsStart());
+
+      const {data} = await listUserCardsService(userId);
+
+      dispatch(fetchUserCardsSuccess(data));
+    } catch (error) {
+      dispatch(fetchUserCardsFailure());
     }
   };
