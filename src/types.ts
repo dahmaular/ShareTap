@@ -43,7 +43,8 @@ export type UnauthenticatedRoutesParamsList = {
 
 export type AuthenticatedRoutesParamsList = {
   Root: undefined;
-  Search: undefined
+  Search: undefined;
+  Rolodex: undefined;
 };
 
 export interface AccountCreationRoute {
@@ -58,14 +59,16 @@ export interface PhoneNumberRoute {
   title: string;
   description: string;
   image: any;
-  fullName: string;
+  firstName: string;
   email: string;
   password: string;
   userName: string;
+  lastName: string
 }
 
 export interface VerificationRoute {
   email: string;
+  userName: string;
   isForgotPassword?: boolean;
 }
 
@@ -74,6 +77,6 @@ export interface ForgotPasswordRoute {
 }
 
 export interface ResetPasswordRoute {
-  code: string
-  email: string
+  code: string;
+  email: string;
 }

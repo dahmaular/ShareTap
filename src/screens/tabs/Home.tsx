@@ -181,8 +181,12 @@ const Home = ({navigation}: Props) => {
 
               <TouchableOpacity
                 style={styles.viewButton}
-                onPress={() =>
-                  setMessage('Upgrade to premium to unlock full access.')
+                onPress={() =>{
+                   // setMessage('Upgrade to premium to unlock full access.')
+                   console.log('Pressed')
+                   navigation.navigate('Rolodex');
+                }
+                 
                 }>
                 <Text style={styles.viewButtonText}>View Rodolex</Text>
               </TouchableOpacity>
@@ -190,7 +194,11 @@ const Home = ({navigation}: Props) => {
 
             <View style={styles.yourCards}>
               <Text style={styles.yourCardsText}>Your Cards (4)</Text>
-              <Text style={styles.viewAll} onPress={()=>navigation.navigate('Search')}>View all</Text>
+              <Text
+                style={styles.viewAll}
+                onPress={() => navigation.navigate('Search')}>
+                View all
+              </Text>
             </View>
             <View style={styles.flatlistView}>
               <FlatList

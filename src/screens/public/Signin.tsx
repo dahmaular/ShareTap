@@ -18,11 +18,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TextInput} from 'react-native-paper';
 import Button from '../../components/Button';
 import GoogleButton from '../../components/GoogleButton';
-import {
-  emailValidator,
-  passwordValidator,
-  nameValidator,
-} from '../../core/utils';
+import {passwordValidator, nameValidator} from '../../core/utils';
 import {signInService} from '../../services/authService';
 import {hubDispatch} from '../../core/awsExports';
 
@@ -41,29 +37,51 @@ type Props = {
 };
 
 const Signin = ({navigation, route}: Props) => {
-  const [email, setEmail] = useState({value: '', error: ''});
+  const [userName, setUserName] = useState({value: '', error: ''});
   const [password, setPassword] = useState({value: '', error: ''});
+  const [loading, setLoading] = useState(false);
 
   const [passwordEntry, setPasswordEntry] = useState(true);
 
-  const [emailFocus, setEmailFocus] = useState(false);
+  const [userNameFocus, setUserNameFocus] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
 
   const _onRegisterPressed = async () => {
-    const emailError = emailValidator(email.value);
-    const passwordError = passwordValidator(password.value);
+    try {
+      const emailError = nameValidator(userName.value, 'Username');
+      const passwordError = passwordValidator(password.value);
 
-    if (emailError || passwordError) {
-      setEmail({...email, error: emailError});
-      setPassword({...password, error: passwordError});
-      return;
-    }
+      if (emailError || passwordError) {
+        setUserName({...userName, error: emailError});
+        setPassword({...password, error: passwordError});
+        return;
+      }
 
-    const response = await signInService(email.value, password.value);
+      setLoading(true);
 
-    if (response) {
+      await signInService(userName.value, password.value);
+
       hubDispatch('navigation', 'loggedIn'); //Route to homepage
+    } catch (error: any) {
+      hubDispatch('alert', error.message);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handlePasswordBlur = () => {
+    setPasswordFocus(true);
+
+    const validationError = passwordValidator(password.value);
+
+    setPassword({...password, error: validationError});
+  };
+
+  const handleUserNameBlur = () => {
+    setUserNameFocus(true);
+
+    const validationError = nameValidator(userName.value, 'Username');
+    setUserName({...userName, error: validationError});
   };
 
   return (
@@ -90,23 +108,22 @@ const Signin = ({navigation, route}: Props) => {
           </View>
 
           <TextInputs
-            label="Email"
+            label="Username"
             returnKeyType="next"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
-            placeholder="Enter your email address"
-            value={email.value}
-            onChangeText={text => setEmail({value: text, error: ''})}
-            error={!!email.error}
-            errorText={email.error}
+            placeholder="Enter your username"
+            value={userName.value}
+            onChangeText={text => setUserName({value: text, error: ''})}
+            error={!!userName.error}
+            errorText={userName.error}
             autoCapitalize="none"
-            autoCompleteType="email"
-            textContentType="emailAddress"
-            keyboardType="email-address"
-            onFocus={() => setEmailFocus(true)}
-            onBlur={() => setEmailFocus(false)}
+            autoCompleteType="name"
+            textContentType="familyName"
+            keyboardType="name-phone-pad"
+            onFocus={() => setUserNameFocus(true)}
+            onBlur={handleUserNameBlur}
             style={{
-              backgroundColor: emailFocus ? '#FFFFFF' : '#EEEFEF',
-              marginTop: 34,
+              backgroundColor: userNameFocus ? '#FFFFFF' : '#EEEFEF',
             }}
           />
 
@@ -121,7 +138,7 @@ const Signin = ({navigation, route}: Props) => {
             errorText={password.error}
             secureTextEntry={passwordEntry}
             onFocus={() => setPasswordFocus(true)}
-            onBlur={() => setPasswordFocus(false)}
+            onBlur={handlePasswordBlur}
             style={{
               backgroundColor: passwordFocus ? '#FFFFFF' : '#EEEFEF',
             }}
@@ -153,7 +170,7 @@ const Signin = ({navigation, route}: Props) => {
           <View style={styles.buttonView}>
             <Button
               disabled={false}
-              loading={false}
+              loading={loading}
               label="CONTINUE"
               onPress={() => _onRegisterPressed()}
             />

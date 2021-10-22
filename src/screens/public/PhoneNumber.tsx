@@ -18,6 +18,7 @@ import Button from '../../components/Button';
 import PhoneModal from '../../components/PhoneModal';
 import Toast from '../../core/toast';
 import {signUpService} from '../../services/authService';
+import {hubDispatch} from '../../core/awsExports';
 
 const {width} = Dimensions.get('screen');
 
@@ -41,27 +42,33 @@ const PhoneNumber = ({navigation, route}: Props) => {
   const phoneInput = useRef<PhoneInput>(null);
   const [phone, setPhone] = useState('');
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const _onRegisterPressed = async () => {
-    const checkValid = phoneInput.current?.isValidNumber(phone);
+    try {
+      const checkValid = phoneInput.current?.isValidNumber(phone);
 
-    const signUpPayload = {
-      email: item.email,
-      fullName: item.fullName,
-      password: item.password,
-      userName: item.userName,
-      phone,
-    };
+      const signUpPayload = {
+        email: item.email,
+        firstName: item.firstName,
+        lastName: item.lastName,
+        password: item.password,
+        userName: item.userName,
+        phone,
+      };
 
-    if (!checkValid) {
-      Toast("Phone number isn't valid");
-      return;
-    }
+      if (!checkValid) {
+        Toast("Phone number isn't valid");
+        return;
+      }
+      setLoading(true);
+      await signUpService(signUpPayload);
 
-    const response = await signUpService(signUpPayload);
-
-    if (response) {
       setModal(true);
+    } catch (error: any) {
+      hubDispatch('alert', error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -123,7 +130,7 @@ const PhoneNumber = ({navigation, route}: Props) => {
           <View style={styles.buttonView}>
             <Button
               disabled={false}
-              loading={false}
+              loading={loading}
               label="CONTINUE"
               onPress={() => _onRegisterPressed()}
             />

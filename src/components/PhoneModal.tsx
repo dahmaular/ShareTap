@@ -4,6 +4,8 @@ import Modal from 'react-native-modal';
 import Close from '../assets/svg/phone-verif-close-icon.svg';
 import Mail from '../assets/svg/mail.svg';
 import {PRIMARY_COLOR} from '../core/color';
+import {resendSignUpService} from '../services/authService';
+import {hubDispatch} from '../core/awsExports';
 
 type Props = {
   navigation: any;
@@ -49,8 +51,20 @@ const PhoneModal = ({
         email: route.email,
         password: route.password,
         phone: phone,
+        userName: route.userName,
+        lastName: route.lastName,
       },
     });
+  };
+
+  const handleResendCode = async () => {
+    try {
+      await resendSignUpService(route.userName);
+
+      hubDispatch('alert', 'We have resent a verification code');
+    } catch (error: any) {
+      hubDispatch('alert', error.message);
+    }
   };
 
   return (
@@ -90,7 +104,9 @@ const PhoneModal = ({
             <View style={{marginTop: 17}}>
               <Text style={styles.didReceiveText}>
                 DIDNT RECEIVE A CODE?{' '}
-                <Text style={styles.resendText}>RESEND CODE</Text>
+                <Text onPress={handleResendCode} style={styles.resendText}>
+                  RESEND CODE
+                </Text>
               </Text>
             </View>
           )}

@@ -9,6 +9,7 @@ import {UnauthenticatedRoutesParamsList} from '../../types';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Button from '../../components/Button';
 import {confirmSignUpService, resetPassword} from '../../services/authService';
+import {hubDispatch} from '../../core/awsExports';
 
 const {width} = Dimensions.get('screen');
 
@@ -30,19 +31,25 @@ type Props = {
 const Verification = ({navigation, route}: Props) => {
   const {item} = route.params;
   const [otpCode, setOtpCode] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const _onRegisterPressed = async () => {
-    if (item.isForgotPassword) {
-      navigation.navigate('ResetPassword', {
-        item: {code: otpCode, email: item.email},
-      });
-      return;
-    }
+    try {
+      if (item.isForgotPassword) {
+        navigation.navigate('ResetPassword', {
+          item: {code: otpCode, email: item.email},
+        });
+        return;
+      }
 
-    const response = await confirmSignUpService(item.email, otpCode);
+      setLoading(true);
+      await confirmSignUpService(item.userName, otpCode);
 
-    if (response) {
-      navigation.navigate('Signin');
+      hubDispatch('navigation', 'loggedIn');
+    } catch (error: any) {
+      hubDispatch('alert', error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -88,7 +95,7 @@ const Verification = ({navigation, route}: Props) => {
           <View style={styles.buttonView}>
             <Button
               disabled={false}
-              loading={false}
+              loading={loading}
               label="CONTINUE"
               onPress={() => _onRegisterPressed()}
             />

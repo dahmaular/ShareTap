@@ -23,6 +23,7 @@ import {
   emailValidator,
   passwordValidator,
   nameValidator,
+  confirmPasswordValidator,
 } from '../../core/utils';
 import {FederatedSignInOptions} from '@aws-amplify/auth/lib-esm/types';
 import {Auth} from 'aws-amplify';
@@ -45,7 +46,8 @@ type Props = {
 };
 
 const CreateAccount = ({navigation, route}: Props) => {
-  const [fullName, setFullName] = useState({value: '', error: ''});
+  const [firstName, setfirstName] = useState({value: '', error: ''});
+  const [lastName, setLastName] = useState({value: '', error: ''});
   const [email, setEmail] = useState({value: '', error: ''});
   const [userName, setUserName] = useState({value: '', error: ''});
   const [password, setPassword] = useState({value: '', error: ''});
@@ -58,38 +60,112 @@ const CreateAccount = ({navigation, route}: Props) => {
   const [confirmEntry, setConfirmEntry] = useState(true);
 
   const [emailFocus, setEmailFocus] = useState(false);
-  const [fullNameFocus, setFullNameFocus] = useState(false);
+  const [firstNameFocus, setfirstNameFocus] = useState(false);
+  const [lastNameFocus, setLastNameFocus] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
   const [confirmPasswordFocus, setConfirmPasswordFocus] = useState(false);
   const [userNameFocus, setUserNameFocus] = useState(false);
 
   const {item} = route.params;
 
-  const _onRegisterPressed = () => {
+  const validateFields = () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
-    const fullNameError = nameValidator(fullName.value);
-    const userNameError = nameValidator(userName.value);
+    const firstNameError = nameValidator(firstName.value, 'First name');
+    const lastNameError = nameValidator(lastName.value, 'Last name');
+    const userNameError = nameValidator(userName.value, 'Username');
+    const confirmPasswordError = confirmPasswordValidator(
+      confirmPassword.value,
+      password.value,
+    );
 
-    if (emailError || passwordError || fullNameError || userNameError) {
-      setFullName({...fullName, error: fullNameError});
-      setEmail({...email, error: emailError});
-      setPassword({...password, error: passwordError});
-      setUserName({...userName, error: userNameError});
-      return;
+    return {
+      emailError,
+      passwordError,
+      firstNameError,
+      userNameError,
+      confirmPasswordError,
+      lastNameError,
+    };
+  };
+
+  const _onRegisterPressed = () => {
+    const validationErrors = validateFields();
+
+    if (Object.values(validationErrors).some(value => value !== '')) {
+      setfirstName({...firstName, error: validationErrors.firstNameError});
+      setEmail({...email, error: validationErrors.emailError});
+      setPassword({...password, error: validationErrors.passwordError});
+      setUserName({...userName, error: validationErrors.userNameError});
+      setLastName({...lastName, error: validationErrors.lastNameError});
+      setConfirmPassword({
+        ...confirmPassword,
+        error: validationErrors.confirmPasswordError,
+      });
+    } else {
+      navigation.navigate('PhoneNumber', {
+        item: {
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          image: item.image,
+          firstName: firstName.value,
+          email: email.value,
+          password: password.value,
+          userName: userName.value,
+          lastName: lastName.value,
+        },
+      });
     }
-    navigation.navigate('PhoneNumber', {
-      item: {
-        id: item.id,
-        title: item.title,
-        description: item.description,
-        image: item.image,
-        fullName: fullName.value,
-        email: email.value,
-        password: password.value,
-        userName: userName.value,
-      },
-    });
+  };
+
+  const handleFirstNameBlur = () => {
+    setfirstNameFocus(true);
+
+    const validationError = nameValidator(firstName.value, 'First name');
+
+    setfirstName({...firstName, error: validationError});
+  };
+
+  const handleLastNameBlur = () => {
+    setLastNameFocus(true);
+
+    const validationError = nameValidator(lastName.value, 'Last name');
+
+    setLastName({...lastName, error: validationError});
+  };
+
+  const handlePasswordBlur = () => {
+    setPasswordFocus(true);
+
+    const validationError = passwordValidator(password.value);
+
+    setPassword({...password, error: validationError});
+  };
+
+  const handleConfirmPasswordBlur = () => {
+    setConfirmPasswordFocus(true);
+
+    const validationError = confirmPasswordValidator(
+      confirmPassword.value,
+      password.value,
+    );
+
+    setConfirmPassword({...confirmPassword, error: validationError});
+  };
+
+  const handleEmailBlur = () => {
+    setEmailFocus(true);
+
+    const validationError = emailValidator(email.value);
+    setEmail({...email, error: validationError});
+  };
+
+  const handleUsernameBlur = () => {
+    setUserNameFocus(true);
+
+    const validationError = nameValidator(userName.value, 'Username');
+    setUserName({...userName, error: validationError});
   };
 
   const facebookLogin = () => {
@@ -124,23 +200,43 @@ const CreateAccount = ({navigation, route}: Props) => {
           </View>
 
           <TextInputs
-            label="Full name"
+            label="First name"
             returnKeyType="next"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
-            placeholder="Enter your full name"
-            value={fullName.value}
-            onChangeText={text => setFullName({value: text, error: ''})}
-            error={!!fullName.error}
-            errorText={fullName.error}
+            placeholder="Enter your first name"
+            value={firstName.value}
+            onChangeText={text => setfirstName({value: text, error: ''})}
+            error={!!firstName.error}
+            errorText={firstName.error}
             autoCapitalize="none"
             autoCompleteType="name"
             textContentType="familyName"
             keyboardType="name-phone-pad"
-            onFocus={() => setFullNameFocus(true)}
-            onBlur={() => setFullNameFocus(false)}
+            onFocus={() => setfirstNameFocus(true)}
+            onBlur={handleFirstNameBlur}
             style={{
-              backgroundColor: fullNameFocus ? '#FFFFFF' : '#EEEFEF',
+              backgroundColor: firstNameFocus ? '#FFFFFF' : '#EEEFEF',
               marginTop: 34,
+            }}
+          />
+
+          <TextInputs
+            label="Last name"
+            returnKeyType="next"
+            placeholderTextColor="rgba(90, 89, 89, 0.55)"
+            placeholder="Enter your last name"
+            value={lastName.value}
+            onChangeText={text => setLastName({value: text, error: ''})}
+            error={!!lastName.error}
+            errorText={lastName.error}
+            autoCapitalize="none"
+            autoCompleteType="name"
+            textContentType="familyName"
+            keyboardType="name-phone-pad"
+            onFocus={() => setLastNameFocus(true)}
+            onBlur={handleLastNameBlur}
+            style={{
+              backgroundColor: lastNameFocus ? '#FFFFFF' : '#EEEFEF',
             }}
           />
 
@@ -158,7 +254,7 @@ const CreateAccount = ({navigation, route}: Props) => {
             textContentType="emailAddress"
             keyboardType="email-address"
             onFocus={() => setEmailFocus(true)}
-            onBlur={() => setEmailFocus(false)}
+            onBlur={handleEmailBlur}
             style={{
               backgroundColor: emailFocus ? '#FFFFFF' : '#EEEFEF',
             }}
@@ -177,8 +273,8 @@ const CreateAccount = ({navigation, route}: Props) => {
             autoCompleteType="name"
             textContentType="familyName"
             keyboardType="name-phone-pad"
-            onFocus={() => setFullNameFocus(true)}
-            onBlur={() => setFullNameFocus(false)}
+            onFocus={() => setUserNameFocus(true)}
+            onBlur={handleUsernameBlur}
             style={{
               backgroundColor: userNameFocus ? '#FFFFFF' : '#EEEFEF',
             }}
@@ -195,7 +291,7 @@ const CreateAccount = ({navigation, route}: Props) => {
             errorText={password.error}
             secureTextEntry={passwordEntry}
             onFocus={() => setPasswordFocus(true)}
-            onBlur={() => setPasswordFocus(false)}
+            onBlur={handlePasswordBlur}
             style={{
               backgroundColor: passwordFocus ? '#FFFFFF' : '#EEEFEF',
             }}
@@ -227,7 +323,7 @@ const CreateAccount = ({navigation, route}: Props) => {
             errorText={confirmPassword.error}
             secureTextEntry={confirmEntry}
             onFocus={() => setConfirmPasswordFocus(true)}
-            onBlur={() => setConfirmPasswordFocus(false)}
+            onBlur={handleConfirmPasswordBlur}
             style={{
               backgroundColor: confirmPasswordFocus ? '#FFFFFF' : '#EEEFEF',
             }}

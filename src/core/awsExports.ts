@@ -1,4 +1,4 @@
-import { Hub } from '@aws-amplify/core';
+import {Hub} from '@aws-amplify/core';
 
 import {
   APPSYNC_APIKEY,
@@ -9,15 +9,15 @@ import {
   AWS_REGION,
   USER_POOL_ID,
   USER_POOL_WEB_CLIENT_ID,
-  AWS_DOMAIN
+  AWS_DOMAIN,
 } from 'react-native-dotenv';
 
-import { LoggedInState } from '../navigations/SwitchNavigator';
+import {LoggedInState} from '../navigations/SwitchNavigator';
 
 export const awsConfig = {
   Auth: {
     identityPoolId: IDENTITY_POOL_ID,
-    region:AWS_REGION,
+    region: AWS_REGION,
     userPoolId: USER_POOL_ID,
     userPoolWebClientId: USER_POOL_WEB_CLIENT_ID,
     mandatorySignIn: true,
@@ -39,8 +39,8 @@ export const awsConfig = {
 };
 
 export const hubDispatch = (
-  channel: 'navigation',
-  data: LoggedInState
+  channel: 'navigation' | 'alert',
+  data: string | LoggedInState,
 ) => {
   Hub.dispatch(channel, {
     event: '',
