@@ -12,7 +12,7 @@ import ArrowLeft from '../../assets/svg/thin_big_left.svg';
 import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
-import {UnauthenticatedRoutesParamsList} from '../../types';
+import {UnauthenticatedRoutesParamsList} from '../../types/navigation';
 import PhoneInput from 'react-native-phone-number-input';
 import Button from '../../components/Button';
 import PhoneModal from '../../components/PhoneModal';
