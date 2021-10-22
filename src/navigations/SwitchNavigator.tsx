@@ -27,23 +27,30 @@ const SwitchNavigator = () => {
   }, []);
 
   const hubListener = (data: HubCapsule) => {
-    switch (data.channel as 'navigation' | 'alert') {
+    switch (data.channel as 'navigation' | 'alert' | 'auth') {
       case 'navigation':
         return setUserLoggedIn(data.payload.data);
       case 'alert':
         return setMessage(data.payload.data);
+      case 'auth':
+        if (data.payload.event === 'cognitoHostedUI') {
+          return setUserLoggedIn('loggedIn');
+        }
+        break;
       default:
-        return;
+        return setUserLoggedIn('loggedOut');
     }
   };
 
   useEffect(() => {
     Hub.listen('navigation', hubListener);
     Hub.listen('alert', hubListener);
+    Hub.listen('auth', hubListener);
 
     return () => {
       Hub.remove('navigation', hubListener);
       Hub.remove('alert', hubListener);
+      Hub.remove('auth', hubListener);
     };
   }, []);
 
