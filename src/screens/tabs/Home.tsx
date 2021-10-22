@@ -1,4 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   StyleSheet,
   Text,
@@ -12,9 +13,8 @@ import {
 import Header from '../../components/Header';
 import {
   AuthenticatedRoutesParamsList,
-  ItemProps,
   TabNavigatorParamsList,
-} from '../../types';
+} from '../../types/navigation';
 import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
 import {Badge} from 'react-native-paper';
 import Menu from '../../assets/svg/menu.svg';
@@ -26,6 +26,10 @@ import Message from '../../components/Message';
 import cards from '../../mock/CarouselList';
 import Card from '../../components/Card';
 import NotificationModal from '../../components/NotificationModal';
+import {getUserIdService} from '../../services/userService';
+import {fetchUserCards} from '../../slices/user';
+import {hubDispatch} from '../../core/awsExports';
+import {userSlice} from '../../selectors';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -38,9 +42,11 @@ const {width} = Dimensions.get('screen');
 
 const Home = ({navigation}: Props) => {
   const [message, setMessage] = useState('');
-  const [cardsList] = useState<ItemProps[]>(cards);
   const [scrollViewWidth, setScrollViewWidth] = useState(0);
   const [modal, setModal] = useState(false);
+  const dispatch = useDispatch();
+  const user = useSelector(userSlice);
+
   const boxWidth = scrollViewWidth * 1;
   const boxDistance = scrollViewWidth - boxWidth;
   const halfBoxDistance = boxDistance / 2;
@@ -49,6 +55,12 @@ const Home = ({navigation}: Props) => {
   const _onNotificationPressed = () => {
     setModal(true);
   };
+
+  useEffect(() => {
+    getUserIdService()
+      .then(id => dispatch(fetchUserCards(id)))
+      .catch(() => hubDispatch('navigation', 'loggedIn'));
+  }, [dispatch]);
 
   return (
     <View style={{flex: 1}}>
@@ -119,7 +131,7 @@ const Home = ({navigation}: Props) => {
             <View style={styles.flatlistView}>
               <FlatList
                 horizontal
-                data={cardsList}
+                data={user.cards}
                 contentContainerStyle={{paddingVertical: 5}}
                 contentInsetAdjustmentBehavior="never"
                 snapToAlignment="center"
@@ -271,6 +283,6 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '500',
     color: '#333333',
-    marginTop: 0
+    marginTop: 0,
   },
 });
