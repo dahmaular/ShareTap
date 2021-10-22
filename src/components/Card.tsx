@@ -9,12 +9,21 @@ import {
   Share,
 } from 'react-native';
 
-import {CardProps} from '../types';
 import {Menu} from 'react-native-paper';
 import Link from '../assets/svg/link_02.svg';
 import Facebook from '../assets/svg/facebook.svg';
 import Twitter from '../assets/svg/twitter.svg';
 const {width} = Dimensions.get('window');
+
+import {ListUserCardsResponse} from '../services/userService';
+
+export interface CardProps {
+  item: ListUserCardsResponse['listUserCards']['cards'][0];
+  index: number;
+  boxWidth: number;
+  halfBoxDistance: number;
+  pan: any;
+}
 
 const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
   const [visible, setVisible] = React.useState(false);
@@ -26,7 +35,7 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: item.email,
+        message: item.cardDetails.email,
       });
       console.log('Result', result);
       if (result.action === Share.sharedAction) {
@@ -67,12 +76,12 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
           <TouchableOpacity
             style={{...styles.touchable, width: boxWidth}}
             onLongPress={openMenu}>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.profession}>{item.profession}</Text>
-            <Text style={styles.email}>{item.email}</Text>
+            <Text style={styles.name}>{item.businessProfile.name}</Text>
+            <Text style={styles.profession}>{item.cardDetails.profession}</Text>
+            <Text style={styles.email}>{item.cardDetails.email}</Text>
             <View style={styles.telSocial}>
               <View>
-                <Text style={styles.telephone}>{item.phone}</Text>
+                <Text style={styles.telephone}>{item.businessProfile.phone}</Text>
               </View>
 
               <View style={styles.rowCenter}>
