@@ -63,7 +63,7 @@ export interface PhoneNumberRoute {
   email: string;
   password: string;
   userName: string;
-  lastName: string
+  lastName: string;
 }
 
 export interface VerificationRoute {

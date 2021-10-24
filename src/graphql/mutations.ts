@@ -1,0 +1,157 @@
+/* tslint:disable */
+/* eslint-disable */
+// this is an auto generated file. This will be overwritten
+
+export const createCard = /* GraphQL */ `
+  mutation CreateCard($card: CreateCardInput!) {
+    createCard(card: $card) {
+      id
+      email
+      createdAt
+      businessProfileId
+      userId
+      profession
+      status
+      color
+      category
+    }
+  }
+`;
+export const shareCard = /* GraphQL */ `
+  mutation ShareCard($shareCardPayload: ShareCardPayload) {
+    shareCard(shareCardPayload: $shareCardPayload)
+  }
+`;
+export const createBusinessProfile = /* GraphQL */ `
+  mutation CreateBusinessProfile(
+    $createBusinessProfilePayload: BusinessProfilePayload
+  ) {
+    createBusinessProfile(
+      createBusinessProfilePayload: $createBusinessProfilePayload
+    ) {
+      businessProfile {
+        id
+        name
+        role
+        phone
+        website
+        category
+        address
+        socialLinks {
+          facebook
+          twitter
+          linkedIn
+        }
+        userId
+      }
+      error
+    }
+  }
+`;
+export const deleteBusinessProfile = /* GraphQL */ `
+  mutation DeleteBusinessProfile($id: String) {
+    deleteBusinessProfile(id: $id)
+  }
+`;
+export const updateBusinessProfile = /* GraphQL */ `
+  mutation UpdateBusinessProfile(
+    $businessProfilePayload: UpdateBusinessProfilePayload!
+  ) {
+    updateBusinessProfile(businessProfilePayload: $businessProfilePayload) {
+      businessProfile {
+        id
+        name
+        role
+        phone
+        website
+        category
+        address
+        socialLinks {
+          facebook
+          twitter
+          linkedIn
+        }
+        userId
+      }
+      error
+    }
+  }
+`;
+export const activateUser = /* GraphQL */ `
+  mutation ActivateUser($userId: String) {
+    activateUser(userId: $userId)
+  }
+`;
+export const removeUser = /* GraphQL */ `
+  mutation RemoveUser($userId: String) {
+    removeUser(userId: $userId)
+  }
+`;
+export const suspendUser = /* GraphQL */ `
+  mutation SuspendUser($userId: String) {
+    suspendUser(userId: $userId)
+  }
+`;
+export const subscriptionSession = /* GraphQL */ `
+  mutation SubscriptionSession(
+    $subscriptionSessionPayload: CreateSubscriptionSessionPayload
+  ) {
+    subscriptionSession(
+      subscriptionSessionPayload: $subscriptionSessionPayload
+    ) {
+      url
+      error
+    }
+  }
+`;
+export const updateUserSubscription = /* GraphQL */ `
+  mutation UpdateUserSubscription(
+    $updateUserSubscriptionPayload: UpdateUserSubscriptionPayload!
+  ) {
+    updateUserSubscription(
+      updateUserSubscriptionPayload: $updateUserSubscriptionPayload
+    ) {
+      userSubscriptionData {
+        id
+        subscriptionData {
+          customerPlan
+          subscriptionPrice
+        }
+        createdAt
+        updatedAt
+      }
+      error
+    }
+  }
+`;
+export const cancelUserSubscription = /* GraphQL */ `
+  mutation CancelUserSubscription($userId: String) {
+    cancelUserSubscription(userId: $userId) {
+      data
+      error
+    }
+  }
+`;
+export const userBillingPortal = /* GraphQL */ `
+  mutation UserBillingPortal($userId: String) {
+    userBillingPortal(userId: $userId) {
+      url
+      error
+    }
+  }
+`;
+export const disableUserCard = /* GraphQL */ `
+  mutation DisableUserCard($cardId: String) {
+    disableUserCard(cardId: $cardId)
+  }
+`;
+export const signUp = /* GraphQL */ `
+  mutation SignUp($signUpPayload: SignupPayload) {
+    signUp(signUpPayload: $signUpPayload)
+  }
+`;
+export const confirmSignUp = /* GraphQL */ `
+  mutation ConfirmSignUp($confirmSignUpPayload: ConfirmSignUpPayload) {
+    confirmSignUp(confirmSignUpPayload: $confirmSignUpPayload)
+  }
+`;

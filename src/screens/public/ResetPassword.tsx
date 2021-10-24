@@ -12,7 +12,7 @@ import ArrowLeft from '../../assets/svg/thin_big_left.svg';
 import {BACKGROUND_COLOR} from '../../core/color';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
-import {UnauthenticatedRoutesParamsList} from '../../types';
+import {UnauthenticatedRoutesParamsList} from '../../types/navigation';
 import TextInputs from '../../components/TextInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TextInput} from 'react-native-paper';
