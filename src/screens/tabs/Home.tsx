@@ -227,6 +227,7 @@ const Home = ({navigation}: Props) => {
                     useNativeDriver: false,
                   },
                 )}
+                onScrollEndDrag={()=>console.log('Animation ended')}
                 keyExtractor={(item, index) => `${index}-${item}`}
                 renderItem={({item, index}) => (
                   <Card
