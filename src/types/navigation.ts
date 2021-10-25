@@ -5,6 +5,14 @@ export interface ConnectProps {
   name: string;
 }
 
+export interface CardProps {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  profession: string;
+}
+
 export type TabNavigatorParamsList = {
   Home: undefined;
   Chat: undefined;

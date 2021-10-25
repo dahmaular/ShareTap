@@ -192,13 +192,11 @@ const Home = ({navigation}: Props) => {
 
               <TouchableOpacity
                 style={styles.viewButton}
-                onPress={() =>{
-                   // setMessage('Upgrade to premium to unlock full access.')
-                   console.log('Pressed')
-                   navigation.navigate('Rolodex');
-                }
-                 
-                }>
+                onPress={() => {
+                  // setMessage('Upgrade to premium to unlock full access.')
+                  console.log('Pressed');
+                  navigation.navigate('Rolodex');
+                }}>
                 <Text style={styles.viewButtonText}>View Rodolex</Text>
               </TouchableOpacity>
             </View>
@@ -238,7 +236,7 @@ const Home = ({navigation}: Props) => {
                     useNativeDriver: false,
                   },
                 )}
-                onScrollEndDrag={()=>console.log('Animation ended')}
+                onScrollEndDrag={() => console.log('Animation ended')}
                 keyExtractor={(item, index) => `${index}-${item}`}
                 renderItem={({item, index}) => (
                   <Card
