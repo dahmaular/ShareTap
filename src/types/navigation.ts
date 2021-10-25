@@ -1,24 +1,16 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 
-export interface ItemProps {
-  id: number;
-  name: string;
-  phone: string;
-  email: string;
-  profession: string;
-}
-
 export interface ConnectProps {
   id: number;
   name: string;
 }
 
 export interface CardProps {
-  item: ItemProps;
-  index: number;
-  boxWidth: number;
-  halfBoxDistance: number;
-  pan: any;
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  profession: string;
 }
 
 export type TabNavigatorParamsList = {
@@ -63,7 +55,7 @@ export interface PhoneNumberRoute {
   email: string;
   password: string;
   userName: string;
-  lastName: string
+  lastName: string;
 }
 
 export interface VerificationRoute {

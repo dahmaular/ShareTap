@@ -29,13 +29,13 @@ export const awsConfig = {
     },
   },
 
-  // API: {
-  //   aws_appsync_region: APPSYNC_REGION, // (optional) - AWS AppSync region
-  //   aws_appsync_graphqlEndpoint: GRAPHQL_ENDPOINT, // (optional) - AWS AppSync endpoint
-  //   aws_appsync_authenticationType: 'API_KEY', // AMAZON_COGNITO_USER_POOLS or API_KEY (optional) - Primary AWS AppSync authentication type
-  //   aws_appsync_apiKey: APPSYNC_APIKEY, // (optional) - AWS AppSync API Key
-  //   aws_appsync_appId: APPSYNC_APPID,
-  // },
+  API: {
+    aws_appsync_region: APPSYNC_REGION, // (optional) - AWS AppSync region
+    aws_appsync_graphqlEndpoint: GRAPHQL_ENDPOINT, // (optional) - AWS AppSync endpoint
+    aws_appsync_authenticationType: 'API_KEY', // AMAZON_COGNITO_USER_POOLS or API_KEY (optional) - Primary AWS AppSync authentication type
+    aws_appsync_apiKey: APPSYNC_APIKEY, // (optional) - AWS AppSync API Key
+    aws_appsync_appId: APPSYNC_APPID,
+  },
 };
 
 export const hubDispatch = (

@@ -1,4 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   StyleSheet,
   Text,
@@ -12,9 +13,8 @@ import {
 import Header from '../../components/Header';
 import {
   AuthenticatedRoutesParamsList,
-  ItemProps,
   TabNavigatorParamsList,
-} from '../../types';
+} from '../../types/navigation';
 import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
 import {Badge} from 'react-native-paper';
 import Menu from '../../assets/svg/menu.svg';
@@ -28,6 +28,10 @@ import Card from '../../components/Card';
 import NotificationModal from '../../components/NotificationModal';
 import Modal from 'react-native-modal';
 import Close from '../../assets/svg/phone-verif-close-icon.svg';
+import {getUserIdService} from '../../services/userService';
+import {fetchUserCards} from '../../slices/user';
+import {hubDispatch} from '../../core/awsExports';
+import {userSlice} from '../../selectors';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -40,9 +44,11 @@ const {width} = Dimensions.get('screen');
 
 const Home = ({navigation}: Props) => {
   const [message, setMessage] = useState('');
-  const [cardsList] = useState<ItemProps[]>(cards);
   const [scrollViewWidth, setScrollViewWidth] = useState(0);
   const [modal, setModal] = useState(false);
+  const dispatch = useDispatch();
+  const user = useSelector(userSlice);
+
   const [cardModal, setCardModal] = useState(false);
   const boxWidth = scrollViewWidth * 1;
   const boxDistance = scrollViewWidth - boxWidth;
@@ -78,7 +84,7 @@ const Home = ({navigation}: Props) => {
             </View>
             <FlatList
               horizontal
-              data={cardsList}
+              data={user.cards}
               contentContainerStyle={{paddingVertical: 5, marginTop: 43}}
               contentInsetAdjustmentBehavior="never"
               snapToAlignment="center"
@@ -123,6 +129,11 @@ const Home = ({navigation}: Props) => {
       </Modal>
     );
   };
+  useEffect(() => {
+    getUserIdService()
+      .then(id => dispatch(fetchUserCards(id)))
+      .catch(() => hubDispatch('navigation', 'loggedIn'));
+  }, [dispatch]);
 
   return (
     <View style={{flex: 1}}>
@@ -181,13 +192,11 @@ const Home = ({navigation}: Props) => {
 
               <TouchableOpacity
                 style={styles.viewButton}
-                onPress={() =>{
-                   // setMessage('Upgrade to premium to unlock full access.')
-                   console.log('Pressed')
-                   navigation.navigate('Rolodex');
-                }
-                 
-                }>
+                onPress={() => {
+                  // setMessage('Upgrade to premium to unlock full access.')
+                  console.log('Pressed');
+                  navigation.navigate('Rolodex');
+                }}>
                 <Text style={styles.viewButtonText}>View Rodolex</Text>
               </TouchableOpacity>
             </View>
@@ -203,7 +212,7 @@ const Home = ({navigation}: Props) => {
             <View style={styles.flatlistView}>
               <FlatList
                 horizontal
-                data={cardsList}
+                data={user.cards}
                 contentContainerStyle={{paddingVertical: 5}}
                 contentInsetAdjustmentBehavior="never"
                 snapToAlignment="center"
@@ -227,6 +236,7 @@ const Home = ({navigation}: Props) => {
                     useNativeDriver: false,
                   },
                 )}
+                onScrollEndDrag={() => console.log('Animation ended')}
                 keyExtractor={(item, index) => `${index}-${item}`}
                 renderItem={({item, index}) => (
                   <Card

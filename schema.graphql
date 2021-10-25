@@ -1,0 +1,267 @@
+type BusinessProfile {
+	id: String
+	name: String
+	role: String
+	phone: String
+	website: String
+	category: String
+	address: String
+	socialLinks: SocialLinksResponse
+	userId: String
+}
+
+input BusinessProfilePayload {
+	name: String
+	role: String
+	phone: String
+	website: String
+	category: String
+	address: String
+	socialLinks: SocialLinks
+	city: String
+	country: String
+	userId: String
+	services: [String]
+}
+
+type BusinessProfileResponse {
+	businessProfile: BusinessProfile
+	error: String
+}
+
+type BusinessProfilesPayload {
+	businessProfiles: [BusinessProfile]
+	error: String
+}
+
+type CancelUserSubscriptionResponse {
+	data: String
+	error: String
+}
+
+type Card {
+	id: ID!
+	email: String
+	createdAt: String
+	businessProfileId: String!
+	userId: String
+	profession: String
+	status: String
+	color: String
+	category: String
+}
+
+type CardResponse {
+	cardDetails: Card
+	businessProfile: BusinessProfile
+}
+
+type CardVersion {
+	id: ID!
+	name: String
+	design: [String]
+}
+
+type CardsPayload {
+	cards: [CardResponse]
+	error: String
+}
+
+input ConfirmSignUpPayload {
+	username: String
+	confirmationCode: String
+}
+
+input CreateCardInput {
+	userId: String
+	email: String
+	profession: String
+	businessProfileId: String
+}
+
+input CreateSubscriptionSessionPayload {
+	userId: String!
+	customerPlan: String!
+}
+
+type ListCategoriesPayload {
+	categories: [String]
+	error: String
+}
+
+type ListUser {
+	id: ID!
+	positionId: Int
+	firstName: String
+	lastName: String
+	email: String
+	avatar: String
+	userName: String
+	totalCards: Int
+	subscriptionPlan: String
+	group: String
+}
+
+type ListUsersPayload {
+	users: [ListUser]
+	total: Int
+	error: String
+}
+
+type Mutation {
+	createCard(card: CreateCardInput!): Card
+	shareCard(shareCardPayload: ShareCardPayload): String
+	createBusinessProfile(createBusinessProfilePayload: BusinessProfilePayload): BusinessProfileResponse
+	deleteBusinessProfile(id: String): String
+	updateBusinessProfile(businessProfilePayload: UpdateBusinessProfilePayload!): BusinessProfileResponse
+	activateUser(userId: String): String
+	removeUser(userId: String): String
+	suspendUser(userId: String): String
+	subscriptionSession(subscriptionSessionPayload: CreateSubscriptionSessionPayload): SubscriptionSessionPayload
+	updateUserSubscription(updateUserSubscriptionPayload: UpdateUserSubscriptionPayload!): UpdateUserSubscriptionResponse
+	cancelUserSubscription(userId: String): CancelUserSubscriptionResponse
+	userBillingPortal(userId: String): UserBillingPortalPayload
+	disableUserCard(cardId: String): String
+	signUp(signUpPayload: SignupPayload): String
+	confirmSignUp(confirmSignUpPayload: ConfirmSignUpPayload): String
+}
+
+type Query {
+	listReceivedCards(userId: String): CardsPayload
+	listUserCards(userId: String): CardsPayload
+	listSharedCards(userId: String): CardsPayload
+	listUsersWhoSharedACard(cardId: String): UsersPayload
+	listReceiversFromUser(userId: String): UsersPayload
+	listSendersToUser(userId: String): UsersPayload
+	listUserBusinessProfiles(userId: String): BusinessProfilesPayload
+	getBusinessProfileById(id: String): BusinessProfileResponse
+	listCardsByBusinessProfileId(businessProfileId: String): CardsPayload
+	adminDashboard: adminDashboardPayload
+	listAllUsers: ListUsersPayload
+	viewUserCardsForAdmin(userId: String): CardsPayload
+	mostSharedCards(userId: String): CardsPayload
+	countUserCards(userId: String): Int
+	listSubscriptionPlans: SubscriptionPlansPayload
+	getUserSubscriptionStatus(userId: String): UserSubscriptionStatusPayload
+	getUsersBySubscriptionPlan(plan: String): ListUsersPayload
+	listDisabledUserCards(userId: String): CardsPayload
+	listBusinessCategories: ListCategoriesPayload
+}
+
+input ShareCardPayload {
+	sender: String
+	cardId: String
+	recipient: String
+}
+
+input SignupPayload {
+	phone_number: AWSPhone!
+	email: AWSEmail!
+	username: String!
+	password: String!
+}
+
+input SocialLinks {
+	facebook: String
+	twitter: String
+	linkedIn: String
+}
+
+type SocialLinksResponse {
+	facebook: String
+	twitter: String
+	linkedIn: String
+}
+
+type SubscriptionDetails {
+	customerPlan: String
+	subscriptionPrice: String
+}
+
+type SubscriptionPlanResponse {
+	plan: String
+	currency: String
+	price: String
+	description: String
+}
+
+type SubscriptionPlansPayload {
+	subscriptionPlans: [SubscriptionPlanResponse]
+	error: String
+}
+
+type SubscriptionResponse {
+	id: String
+	subscriptionData: SubscriptionDetails
+	createdAt: AWSDateTime
+	updatedAt: AWSDateTime
+}
+
+type SubscriptionSessionPayload {
+	url: String
+	error: String
+}
+
+input UpdateBusinessProfilePayload {
+	id: String
+	name: String
+	role: String
+	phone: String
+	website: String
+	category: String
+	address: String
+	socialLinks: SocialLinks
+}
+
+input UpdateUserSubscriptionPayload {
+	userId: String!
+	customerPlan: String!
+}
+
+type UpdateUserSubscriptionResponse {
+	userSubscriptionData: SubscriptionResponse
+	error: String
+}
+
+type User {
+	id: ID!
+	firstName: String
+	lastName: String
+	email: String
+	address: String
+	phoneNumber: String
+	avatar: String
+	userName: String
+}
+
+type UserBillingPortalPayload {
+	url: String
+	error: String
+}
+
+input UserInput {
+	name: String
+}
+
+type UserSubscriptionStatusPayload {
+	userSubscriptionData: SubscriptionResponse
+	renewalDate: String
+	cardLastDigits: String
+	cardBrand: String
+	currency: String
+	error: String
+}
+
+type UsersPayload {
+	users: [User]
+	error: String
+}
+
+type adminDashboardPayload {
+	totalUsers: Int
+	totalInactiveUsers: Int
+	totalCardsCreated: Int
+	totalCardsShared: Int
+	totalEarnings: String
+	error: String
+}
