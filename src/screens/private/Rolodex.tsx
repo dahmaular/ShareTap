@@ -14,7 +14,6 @@ import {
 import Header from '../../components/Header';
 import Back from '../../assets/svg/back.svg';
 import More from '../../assets/svg/more.svg';
-import Plus from '../../assets/svg/plus.svg';
 import {BACKGROUND_COLOR} from '../../core/color';
 import cats from '../../mock/Categories';
 import {AuthenticatedRoutesParamsList, CardProps} from '../../types/navigation';
@@ -25,7 +24,6 @@ import Twitter from '../../assets/svg/twitter.svg';
 import EmptyCard from '../../assets/svg/EmptyCard.svg';
 import cards from '../../mock/CarouselList';
 import tabs from '../../mock/Tabs';
-import RolodexScrollList from '../../components/RolodexScrollList';
 
 type RolodexProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -72,6 +70,15 @@ const Rolodex = ({navigation}: Props) => {
     catName: '',
   });
 
+  const [selectedTab, setSelectedTab] = useState<TabsProps>({
+    id: null,
+    tab: '',
+  });
+  const [selectedTabHash, setSelectedTabHash] = useState<any>({
+    id: '',
+    tab: '',
+  });
+
   const ListEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
@@ -90,9 +97,28 @@ const Rolodex = ({navigation}: Props) => {
     return (
       <View style={styles.tabsView}>
         {tabsList.map((k, i) => {
+          const active = selectedTabHash[k.id as number];
           return (
-            <TouchableOpacity style={styles.tab} key={i}>
-              <Text style={styles.tabText}>{k.tab}</Text>
+            <TouchableOpacity
+              style={{
+                ...styles.tab,
+                backgroundColor: active ? '#316F8A' : '#cedae0',
+              }}
+              key={i}
+              onPress={() => {
+                setSelectedTabHash({
+                  [k.id as number]: !(selectedTabHash[k.id as number] || false),
+                });
+                const picked = tabsList.find(x => x.id == k.id);
+                setSelectedTab(picked as TabsProps);
+              }}>
+              <Text
+                style={{
+                  ...styles.tabText,
+                  color: active ? '#FFFFFF' : '#333333',
+                }}>
+                {k.tab}
+              </Text>
             </TouchableOpacity>
           );
         })}
@@ -181,10 +207,6 @@ const Rolodex = ({navigation}: Props) => {
           keyboardShouldPersistTaps="handled">
           <View style={styles.rolodexContainer}>
             <View style={styles.categoriesView}>
-              {/* <TouchableOpacity style={[styles.addNewChip, {width: 87, borderColor: '#316F8A'}]}>
-                <Plus />
-                <Text style={styles.addNewText}>Add New</Text>
-              </TouchableOpacity> */}
               <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}>
@@ -215,14 +237,6 @@ const Rolodex = ({navigation}: Props) => {
                 })}
               </ScrollView>
             </View>
-
-            {/* <RolodexScrollList
-              distanceBetweenItem={12}
-              data={cardsList}
-              keyExtractor={(item: any, index: number) => index.toString()}
-              renderItem={renderItem}
-            /> */}
-
             <FlatList
               data={cardsList}
               keyExtractor={(item, index) => index.toString()}
@@ -398,7 +412,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#cedae0',
     marginRight: 10,
   },
 
@@ -406,7 +419,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'normal',
     fontFamily: 'Poppins',
-    color: '#333333',
     fontStyle: 'normal',
   },
 
