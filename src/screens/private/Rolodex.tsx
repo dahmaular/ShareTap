@@ -24,6 +24,7 @@ import Twitter from '../../assets/svg/twitter.svg';
 import EmptyCard from '../../assets/svg/EmptyCard.svg';
 import cards from '../../mock/CarouselList';
 import tabs from '../../mock/Tabs';
+import ReminderAndCalendarModal from '../../components/ReminderAndCalendarModal';
 
 type RolodexProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -50,6 +51,7 @@ interface TabsProps {
 const {width} = Dimensions.get('screen');
 
 const Rolodex = ({navigation}: Props) => {
+  const [modal, setModal] = useState(false);
   const [categories] = useState<CategoryProps[]>(cats);
 
   const [tabsList] = useState<TabsProps[]>(tabs);
@@ -190,6 +192,14 @@ const Rolodex = ({navigation}: Props) => {
 
   return (
     <View style={{flex: 1}}>
+      {modal && (
+        <ReminderAndCalendarModal
+          visible={modal}
+          onBackButtonPress={() => setModal(true)}
+          onBackdropPress={() => setModal(true)}
+          onClose={() => setModal(false)}
+        />
+      )}
       <Header
         title="Rolodex"
         titleColor="#FFFFFF"
@@ -197,7 +207,7 @@ const Rolodex = ({navigation}: Props) => {
         leftSvg={<Back />}
         leftOnPress={() => navigation.goBack()}
         rightSvg={<More />}
-        rightOnPress={() => <></>}
+        rightOnPress={() => setModal(true)}
       />
       <View style={styles.container}>
         <ScrollView
