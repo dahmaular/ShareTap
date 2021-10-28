@@ -32,6 +32,7 @@ import {getUserIdService} from '../../services/userService';
 import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
+import {copilot, walkthroughable, CopilotStep} from 'react-native-copilot';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -42,7 +43,9 @@ type Props = {
 
 const {width} = Dimensions.get('screen');
 
-const Home = ({navigation}: Props) => {
+const CopilotText = walkthroughable(Text);
+
+const Home = ({navigation, start}: any) => {
   const [message, setMessage] = useState('');
   const [scrollViewWidth, setScrollViewWidth] = useState(0);
   const [modal, setModal] = useState(false);
@@ -62,6 +65,8 @@ const Home = ({navigation}: Props) => {
   const confirmToVerify = () => {
     setCardModal(false);
   };
+
+  
 
   const selectCardModal = () => {
     return (
@@ -134,6 +139,9 @@ const Home = ({navigation}: Props) => {
       .then(id => dispatch(fetchUserCards(id)))
       .catch(() => hubDispatch('navigation', 'loggedIn'));
   }, [dispatch]);
+  useEffect(() => {
+    start();
+  }, []);
 
   return (
     <View style={{flex: 1}}>
@@ -249,13 +257,18 @@ const Home = ({navigation}: Props) => {
                 )}
               />
             </View>
-
-            <TouchableOpacity
-              style={styles.tap}
-              onPress={() => setCardModal(true)}>
-              <Tap />
-              <Text style={styles.tapText}>TAP TO SHARE</Text>
-            </TouchableOpacity>
+            <CopilotStep
+              text="This is a hello world example!"
+              order={1}
+              name="hello">
+              <TouchableOpacity
+                style={styles.tap}
+                onPress={() => setCardModal(true)}>
+                <Tap />
+                <Text style={styles.tapText}>TAP TO SHARE</Text>
+              </TouchableOpacity>
+              {/* <CopilotText>Hello world!</CopilotText> */}
+            </CopilotStep>
           </View>
         </ScrollView>
       </View>
@@ -263,7 +276,10 @@ const Home = ({navigation}: Props) => {
   );
 };
 
-export default Home;
+export default copilot({
+  overlay: 'svg', // or 'view'
+  animated: true, // or false
+})(Home as any);
 
 const styles = StyleSheet.create({
   badgeStyle: {
