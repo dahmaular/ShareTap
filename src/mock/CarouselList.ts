@@ -1,7 +1,7 @@
 export default [
   {
     id: 1,
-    name: 'Magical Chris',
+    name: 'Magical Mayor',
     phone: '124-675-8744',
     email: 'chris@gmail.com',
     profession: 'Marketing',
