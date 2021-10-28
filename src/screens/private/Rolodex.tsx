@@ -5,24 +5,24 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   Dimensions,
   TouchableOpacity,
   ListRenderItem,
-  FlatList,
+  Animated,
+  ScrollView,
 } from 'react-native';
 import Header from '../../components/Header';
 import Back from '../../assets/svg/back.svg';
 import More from '../../assets/svg/more.svg';
 import {BACKGROUND_COLOR} from '../../core/color';
 import cats from '../../mock/Categories';
-import {AuthenticatedRoutesParamsList, CardProps} from '../../types/navigation';
+import {AuthenticatedRoutesParamsList} from '../../types/navigation';
 import {Menu} from 'react-native-paper';
 import Link from '../../assets/svg/link_02.svg';
 import Facebook from '../../assets/svg/facebook.svg';
 import Twitter from '../../assets/svg/twitter.svg';
 import EmptyCard from '../../assets/svg/EmptyCard.svg';
-import cards from '../../mock/CarouselList';
+import cardssss from '../../mock/CarouselList';
 import tabs from '../../mock/Tabs';
 import ReminderAndCalendarModal from '../../components/ReminderAndCalendarModal';
 
@@ -50,12 +50,23 @@ interface TabsProps {
 
 const {width} = Dimensions.get('screen');
 
+const deviceHeight = Dimensions.get('window').height;
+const cardHeight = 250;
+const cardAmount = 5;
+const cardVisibleHeight = 191;
+const cardVisibleHeightCollapsed = 10;
+const cardVisibleDelta = cardVisibleHeight - cardVisibleHeightCollapsed;
+const topOffset = 150;
+const stackHeight = cardVisibleDelta * cardAmount - cardVisibleDelta;
+const scrollHeight =
+  deviceHeight + cardVisibleDelta * cardAmount - cardVisibleDelta;
+
 const Rolodex = ({navigation}: Props) => {
   const [modal, setModal] = useState(false);
   const [categories] = useState<CategoryProps[]>(cats);
 
   const [tabsList] = useState<TabsProps[]>(tabs);
-  const [cardsList] = useState(cards);
+  const [cardsList] = useState(cardssss);
 
   const [visible, setVisible] = React.useState(false);
 
@@ -80,6 +91,113 @@ const Rolodex = ({navigation}: Props) => {
     id: '',
     tab: '',
   });
+
+  const [scrollY] = useState(new Animated.Value(0));
+  let offsetY = 0;
+  const [pressed, setPressed] = useState(0);
+
+  const onPress = (e: any) => {
+    const pressY = e.nativeEvent.pageY;
+    const currentStackHeight =
+      stackHeight -
+      offsetY +
+      cardHeight +
+      (cardAmount - 1) * cardVisibleHeightCollapsed;
+
+    let y = topOffset;
+
+    if (pressY < y || pressY > currentStackHeight + topOffset) {
+      return false;
+    }
+
+    const collapsedCount = Math.floor(offsetY / cardVisibleDelta);
+    const expanedCount = cardAmount - collapsedCount - 2;
+
+    for (let i = 0; i <= cardAmount; i++) {
+      // if a collapsed card
+      if (i < collapsedCount) y += cardVisibleHeightCollapsed;
+      // if the last card
+      else if (i === cardAmount - 1) y += cardHeight;
+      // if a collapsing card
+      else if (i === collapsedCount)
+        y +=
+          currentStackHeight -
+          cardHeight -
+          collapsedCount * cardVisibleHeightCollapsed -
+          expanedCount * cardVisibleHeight;
+      // if an expanded card
+      else y += cardVisibleHeight;
+
+      if (pressY < y) {
+        return setPressed(i);
+      }
+    }
+  };
+
+  const cardTransform = (i: number) => {
+    if (!i) return {transform: [{translateY: topOffset}]};
+
+    const translateY = scrollY.interpolate({
+      inputRange: [
+        -100,
+        0,
+        cardVisibleDelta * i,
+        stackHeight,
+        stackHeight + 100,
+      ],
+      outputRange: [
+        topOffset + i * 100,
+        topOffset,
+        topOffset - cardVisibleDelta * i,
+        topOffset - cardVisibleDelta * i,
+        topOffset - cardVisibleDelta * i - i * 5,
+      ],
+    });
+
+    return {transform: [{translateY}]};
+  };
+
+  let cards = [];
+
+  for (let i = 0; i < cardAmount; i++) {
+    cards.push(
+      <Animated.View
+        key={`card-${i}`}
+        style={[
+          styles.animatedCard,
+          cardTransform(i),
+          {
+            top: i * cardVisibleHeight,
+          },
+        ]}>
+        <TouchableOpacity style={{...styles.touchable}}>
+          <Text style={styles.name}>Samuel</Text>
+          <Text style={styles.profession}>Software Engineer</Text>
+          <Text style={styles.email}>adeyemosamuel@gmail.com</Text>
+          <View style={styles.telSocial}>
+            <View>
+              <Text style={styles.telephone}>08066738373</Text>
+            </View>
+
+            <View style={styles.rowCenter}>
+              <TouchableOpacity style={{marginRight: 10}} onPress={() => <></>}>
+                <Link />
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{marginRight: 10}} onPress={() => <></>}>
+                <Facebook />
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{marginRight: 10}} onPress={() => <></>}>
+                <Twitter />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.bottomLine}></View>
+      </Animated.View>,
+    );
+  }
 
   const ListEmptyView = () => {
     return (
@@ -210,55 +328,54 @@ const Rolodex = ({navigation}: Props) => {
         rightOnPress={() => setModal(true)}
       />
       <View style={styles.container}>
-        <ScrollView
-          contentContainerStyle={{flexGrow: 1}}
-          alwaysBounceVertical={false}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled">
-          <View style={styles.rolodexContainer}>
-            <View style={styles.categoriesView}>
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-                {categories.map((k, i) => {
-                  const active = selectedCategoryHash[k.id as number];
-                  return (
-                    <TouchableOpacity
-                      style={{
-                        ...styles.addNewChip,
-                        width: 70,
-                        borderColor: active
-                          ? '#316F8A'
-                          : 'rgba(51, 51, 51, 0.51)',
-                      }}
-                      key={i}
-                      onPress={() => {
-                        setSelectedCategoryHash({
-                          [k.id as number]: !(
-                            selectedCategoryHash[k.id as number] || false
-                          ),
-                        });
-                        const picked = categories.find(x => x.id == k.id);
-                        setSelectedCategory(picked as CategoryProps);
-                      }}>
-                      <Text style={styles.addNewText}>{k.catName}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </ScrollView>
-            </View>
-            <FlatList
-              data={cardsList}
-              keyExtractor={(item, index) => index.toString()}
-              showsVerticalScrollIndicator={false}
-              ListEmptyComponent={ListEmptyView}
-              style={styles.flatList}
-              contentContainerStyle={{flexGrow: 1}}
-              renderItem={renderItem}
-              ListHeaderComponent={ListHeader}
-            />
-          </View>
-        </ScrollView>
+        <View style={styles.categoriesView}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {categories.map((k, i) => {
+              const active = selectedCategoryHash[k.id as number];
+              return (
+                <TouchableOpacity
+                  style={{
+                    ...styles.addNewChip,
+                    width: 70,
+                    borderColor: active ? '#316F8A' : 'rgba(51, 51, 51, 0.51)',
+                  }}
+                  key={i}
+                  onPress={() => {
+                    setSelectedCategoryHash({
+                      [k.id as number]: !(
+                        selectedCategoryHash[k.id as number] || false
+                      ),
+                    });
+                    const picked = categories.find(x => x.id == k.id);
+                    setSelectedCategory(picked as CategoryProps);
+                  }}>
+                  <Text style={styles.addNewText}>{k.catName}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+
+        <>{ListHeader()}</>
+
+        <View style={{flex: 1}}>
+          <View>{cards}</View>
+
+          <Animated.ScrollView
+            onScroll={Animated.event(
+              [{nativeEvent: {contentOffset: {y: scrollY}}}],
+              {
+                useNativeDriver: true,
+                listener: (e: any) => (offsetY = e.nativeEvent.contentOffset.y),
+              },
+            )}
+            scrollEventThrottle={24}
+            showsVerticalScrollIndicator={false}>
+            <TouchableOpacity
+              onPress={onPress}
+              style={[{height: scrollHeight}]}></TouchableOpacity>
+          </Animated.ScrollView>
+        </View>
       </View>
     </View>
   );
@@ -284,6 +401,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 24,
     height: 35,
+    paddingHorizontal: 20,
   },
 
   addNewChip: {
@@ -306,13 +424,25 @@ const styles = StyleSheet.create({
 
   // Card
 
+  card: {
+    position: 'absolute',
+    borderWidth: 5,
+    borderColor: 'black',
+    backgroundColor: 'white',
+    left: 20,
+    right: 20,
+    height: cardHeight,
+    borderRadius: 10,
+  },
+
   animatedCard: {
+    position: 'absolute',
     height: 191,
-    width: width,
+    left: 20,
+    right: 20,
     borderWidth: 1,
     borderColor: 'rgba(49, 111, 138, 0.16)',
     backgroundColor: '#FFFFFF',
-    marginBottom: 30,
   },
 
   touchable: {
@@ -413,7 +543,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  flatList: {width: '100%', marginBottom: 40, marginTop: 40},
+  flatList: {
+    width: '100%',
+    marginBottom: 40,
+    marginTop: 40,
+  },
 
   tab: {
     width: 44,
@@ -432,5 +566,11 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
   },
 
-  tabsView: {width: '100%', flexDirection: 'row', alignItems: 'flex-start'},
+  tabsView: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingHorizontal: 20,
+    marginTop: 20,
+  },
 });
