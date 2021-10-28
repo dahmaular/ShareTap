@@ -5,15 +5,26 @@
 export const createCard = /* GraphQL */ `
   mutation CreateCard($card: CreateCardInput!) {
     createCard(card: $card) {
-      id
-      email
-      createdAt
-      businessProfileId
-      userId
-      profession
-      status
-      color
-      category
+      card {
+        id
+        name
+        role
+        email
+        phone
+        address
+        website
+        facebook
+        twitter
+        linkedIn
+        createdAt
+        businessProfileId
+        userId
+        cardTemplateId
+        status
+        color
+        category
+      }
+      error
     }
   }
 `;
@@ -31,17 +42,11 @@ export const createBusinessProfile = /* GraphQL */ `
     ) {
       businessProfile {
         id
-        name
+        companyName
         role
-        phone
-        website
         category
-        address
-        socialLinks {
-          facebook
-          twitter
-          linkedIn
-        }
+        startDate
+        endDate
         userId
       }
       error
@@ -60,17 +65,11 @@ export const updateBusinessProfile = /* GraphQL */ `
     updateBusinessProfile(businessProfilePayload: $businessProfilePayload) {
       businessProfile {
         id
-        name
+        companyName
         role
-        phone
-        website
         category
-        address
-        socialLinks {
-          facebook
-          twitter
-          linkedIn
-        }
+        startDate
+        endDate
         userId
       }
       error
@@ -153,5 +152,17 @@ export const signUp = /* GraphQL */ `
 export const confirmSignUp = /* GraphQL */ `
   mutation ConfirmSignUp($confirmSignUpPayload: ConfirmSignUpPayload) {
     confirmSignUp(confirmSignUpPayload: $confirmSignUpPayload)
+  }
+`;
+export const createCardTemplate = /* GraphQL */ `
+  mutation CreateCardTemplate($cardTemplatePayload: CardTemplateInput) {
+    createCardTemplate(cardTemplatePayload: $cardTemplatePayload) {
+      cardTemplate {
+        id
+        backgroundColor
+        borderBottomColor
+      }
+      error
+    }
   }
 `;

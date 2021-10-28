@@ -77,6 +77,7 @@ export const fetchUserCards =
 
       dispatch(fetchUserCardsSuccess(data));
     } catch (error) {
+      console.log(error);
       dispatch(fetchUserCardsFailure());
     }
   };

@@ -3,20 +3,42 @@
 //  This file was automatically generated and should not be edited.
 
 export type CreateCardInput = {
-  userId?: string | null;
+  name?: string | null;
+  role?: string | null;
   email?: string | null;
-  profession?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  website?: string | null;
+  facebook?: string | null;
+  twitter?: string | null;
+  linkedIn?: string | null;
+  userId?: string | null;
   businessProfileId?: string | null;
+  cardTemplateId?: string | null;
+};
+
+export type CreateCardPayload = {
+  __typename: 'CreateCardPayload';
+  card?: Card | null;
+  error?: string | null;
 };
 
 export type Card = {
   __typename: 'Card';
   id: string;
+  name?: string | null;
+  role?: string | null;
   email?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  website?: string | null;
+  facebook?: string | null;
+  twitter?: string | null;
+  linkedIn?: string | null;
   createdAt?: string | null;
   businessProfileId: string;
   userId?: string | null;
-  profession?: string | null;
+  cardTemplateId?: string | null;
   status?: string | null;
   color?: string | null;
   category?: string | null;
@@ -29,23 +51,12 @@ export type ShareCardPayload = {
 };
 
 export type BusinessProfilePayload = {
-  name?: string | null;
+  companyName?: string | null;
   role?: string | null;
-  phone?: string | null;
-  website?: string | null;
   category?: string | null;
-  address?: string | null;
-  socialLinks?: SocialLinks | null;
-  city?: string | null;
-  country?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
   userId?: string | null;
-  services?: Array<string | null> | null;
-};
-
-export type SocialLinks = {
-  facebook?: string | null;
-  twitter?: string | null;
-  linkedIn?: string | null;
 };
 
 export type BusinessProfileResponse = {
@@ -57,32 +68,21 @@ export type BusinessProfileResponse = {
 export type BusinessProfile = {
   __typename: 'BusinessProfile';
   id?: string | null;
-  name?: string | null;
+  companyName?: string | null;
   role?: string | null;
-  phone?: string | null;
-  website?: string | null;
   category?: string | null;
-  address?: string | null;
-  socialLinks?: SocialLinksResponse | null;
+  startDate?: string | null;
+  endDate?: string | null;
   userId?: string | null;
-};
-
-export type SocialLinksResponse = {
-  __typename: 'SocialLinksResponse';
-  facebook?: string | null;
-  twitter?: string | null;
-  linkedIn?: string | null;
 };
 
 export type UpdateBusinessProfilePayload = {
   id?: string | null;
-  name?: string | null;
+  companyName?: string | null;
   role?: string | null;
-  phone?: string | null;
-  website?: string | null;
   category?: string | null;
-  address?: string | null;
-  socialLinks?: SocialLinks | null;
+  startDate?: string | null;
+  endDate?: string | null;
 };
 
 export type CreateSubscriptionSessionPayload = {
@@ -145,6 +145,24 @@ export type ConfirmSignUpPayload = {
   confirmationCode?: string | null;
 };
 
+export type CardTemplateInput = {
+  backgroundColor?: string | null;
+  borderBottomColor?: string | null;
+};
+
+export type CardTemplateResponse = {
+  __typename: 'CardTemplateResponse';
+  cardTemplate?: CardTemplate | null;
+  error?: string | null;
+};
+
+export type CardTemplate = {
+  __typename: 'CardTemplate';
+  id?: string | null;
+  backgroundColor?: string | null;
+  borderBottomColor?: string | null;
+};
+
 export type CardsPayload = {
   __typename: 'CardsPayload';
   cards?: Array<CardResponse | null> | null;
@@ -154,7 +172,7 @@ export type CardsPayload = {
 export type CardResponse = {
   __typename: 'CardResponse';
   cardDetails?: Card | null;
-  businessProfile?: BusinessProfile | null;
+  cardTemplate?: CardTemplate | null;
 };
 
 export type UsersPayload = {
@@ -242,22 +260,40 @@ export type ListCategoriesPayload = {
   error?: string | null;
 };
 
+export type ListCardTemplatesPayload = {
+  __typename: 'ListCardTemplatesPayload';
+  cardTemplates?: Array<CardTemplate | null> | null;
+  error?: string | null;
+};
+
 export type CreateCardMutationVariables = {
   card: CreateCardInput;
 };
 
 export type CreateCardMutation = {
   createCard?: {
-    __typename: 'Card';
-    id: string;
-    email?: string | null;
-    createdAt?: string | null;
-    businessProfileId: string;
-    userId?: string | null;
-    profession?: string | null;
-    status?: string | null;
-    color?: string | null;
-    category?: string | null;
+    __typename: 'CreateCardPayload';
+    card?: {
+      __typename: 'Card';
+      id: string;
+      name?: string | null;
+      role?: string | null;
+      email?: string | null;
+      phone?: string | null;
+      address?: string | null;
+      website?: string | null;
+      facebook?: string | null;
+      twitter?: string | null;
+      linkedIn?: string | null;
+      createdAt?: string | null;
+      businessProfileId: string;
+      userId?: string | null;
+      cardTemplateId?: string | null;
+      status?: string | null;
+      color?: string | null;
+      category?: string | null;
+    } | null;
+    error?: string | null;
   } | null;
 };
 
@@ -279,18 +315,11 @@ export type CreateBusinessProfileMutation = {
     businessProfile?: {
       __typename: 'BusinessProfile';
       id?: string | null;
-      name?: string | null;
+      companyName?: string | null;
       role?: string | null;
-      phone?: string | null;
-      website?: string | null;
       category?: string | null;
-      address?: string | null;
-      socialLinks?: {
-        __typename: 'SocialLinksResponse';
-        facebook?: string | null;
-        twitter?: string | null;
-        linkedIn?: string | null;
-      } | null;
+      startDate?: string | null;
+      endDate?: string | null;
       userId?: string | null;
     } | null;
     error?: string | null;
@@ -315,18 +344,11 @@ export type UpdateBusinessProfileMutation = {
     businessProfile?: {
       __typename: 'BusinessProfile';
       id?: string | null;
-      name?: string | null;
+      companyName?: string | null;
       role?: string | null;
-      phone?: string | null;
-      website?: string | null;
       category?: string | null;
-      address?: string | null;
-      socialLinks?: {
-        __typename: 'SocialLinksResponse';
-        facebook?: string | null;
-        twitter?: string | null;
-        linkedIn?: string | null;
-      } | null;
+      startDate?: string | null;
+      endDate?: string | null;
       userId?: string | null;
     } | null;
     error?: string | null;
@@ -439,6 +461,23 @@ export type ConfirmSignUpMutation = {
   confirmSignUp?: string | null;
 };
 
+export type CreateCardTemplateMutationVariables = {
+  cardTemplatePayload?: CardTemplateInput | null;
+};
+
+export type CreateCardTemplateMutation = {
+  createCardTemplate?: {
+    __typename: 'CardTemplateResponse';
+    cardTemplate?: {
+      __typename: 'CardTemplate';
+      id?: string | null;
+      backgroundColor?: string | null;
+      borderBottomColor?: string | null;
+    } | null;
+    error?: string | null;
+  } | null;
+};
+
 export type ListReceivedCardsQueryVariables = {
   userId?: string | null;
 };
@@ -451,25 +490,28 @@ export type ListReceivedCardsQuery = {
       cardDetails?: {
         __typename: 'Card';
         id: string;
+        name?: string | null;
+        role?: string | null;
         email?: string | null;
+        phone?: string | null;
+        address?: string | null;
+        website?: string | null;
+        facebook?: string | null;
+        twitter?: string | null;
+        linkedIn?: string | null;
         createdAt?: string | null;
         businessProfileId: string;
         userId?: string | null;
-        profession?: string | null;
+        cardTemplateId?: string | null;
         status?: string | null;
         color?: string | null;
         category?: string | null;
       } | null;
-      businessProfile?: {
-        __typename: 'BusinessProfile';
+      cardTemplate?: {
+        __typename: 'CardTemplate';
         id?: string | null;
-        name?: string | null;
-        role?: string | null;
-        phone?: string | null;
-        website?: string | null;
-        category?: string | null;
-        address?: string | null;
-        userId?: string | null;
+        backgroundColor?: string | null;
+        borderBottomColor?: string | null;
       } | null;
     } | null> | null;
     error?: string | null;
@@ -488,25 +530,28 @@ export type ListUserCardsQuery = {
       cardDetails: {
         __typename: 'Card';
         id: string;
-        email: string;
+        name?: string | null;
+        role?: string | null;
+        email?: string | null;
+        phone?: string | null;
+        address?: string | null;
+        website?: string | null;
+        facebook?: string | null;
+        twitter?: string | null;
+        linkedIn?: string | null;
         createdAt?: string | null;
         businessProfileId: string;
         userId?: string | null;
-        profession?: string | null;
+        cardTemplateId?: string | null;
         status?: string | null;
         color?: string | null;
         category?: string | null;
       };
-      businessProfile: {
-        __typename: 'BusinessProfile';
+      cardTemplate: {
+        __typename: 'CardTemplate';
         id?: string | null;
-        name?: string | null;
-        role?: string | null;
-        phone?: string | null;
-        website?: string | null;
-        category?: string | null;
-        address?: string | null;
-        userId?: string | null;
+        backgroundColor?: string | null;
+        borderBottomColor?: string | null;
       };
     }>;
     error?: string | null;
@@ -525,25 +570,28 @@ export type ListSharedCardsQuery = {
       cardDetails?: {
         __typename: 'Card';
         id: string;
+        name?: string | null;
+        role?: string | null;
         email?: string | null;
+        phone?: string | null;
+        address?: string | null;
+        website?: string | null;
+        facebook?: string | null;
+        twitter?: string | null;
+        linkedIn?: string | null;
         createdAt?: string | null;
         businessProfileId: string;
         userId?: string | null;
-        profession?: string | null;
+        cardTemplateId?: string | null;
         status?: string | null;
         color?: string | null;
         category?: string | null;
       } | null;
-      businessProfile?: {
-        __typename: 'BusinessProfile';
+      cardTemplate?: {
+        __typename: 'CardTemplate';
         id?: string | null;
-        name?: string | null;
-        role?: string | null;
-        phone?: string | null;
-        website?: string | null;
-        category?: string | null;
-        address?: string | null;
-        userId?: string | null;
+        backgroundColor?: string | null;
+        borderBottomColor?: string | null;
       } | null;
     } | null> | null;
     error?: string | null;
@@ -626,18 +674,11 @@ export type ListUserBusinessProfilesQuery = {
     businessProfiles?: Array<{
       __typename: 'BusinessProfile';
       id?: string | null;
-      name?: string | null;
+      companyName?: string | null;
       role?: string | null;
-      phone?: string | null;
-      website?: string | null;
       category?: string | null;
-      address?: string | null;
-      socialLinks?: {
-        __typename: 'SocialLinksResponse';
-        facebook?: string | null;
-        twitter?: string | null;
-        linkedIn?: string | null;
-      } | null;
+      startDate?: string | null;
+      endDate?: string | null;
       userId?: string | null;
     } | null> | null;
     error?: string | null;
@@ -654,18 +695,11 @@ export type GetBusinessProfileByIdQuery = {
     businessProfile?: {
       __typename: 'BusinessProfile';
       id?: string | null;
-      name?: string | null;
+      companyName?: string | null;
       role?: string | null;
-      phone?: string | null;
-      website?: string | null;
       category?: string | null;
-      address?: string | null;
-      socialLinks?: {
-        __typename: 'SocialLinksResponse';
-        facebook?: string | null;
-        twitter?: string | null;
-        linkedIn?: string | null;
-      } | null;
+      startDate?: string | null;
+      endDate?: string | null;
       userId?: string | null;
     } | null;
     error?: string | null;
@@ -684,25 +718,28 @@ export type ListCardsByBusinessProfileIdQuery = {
       cardDetails?: {
         __typename: 'Card';
         id: string;
+        name?: string | null;
+        role?: string | null;
         email?: string | null;
+        phone?: string | null;
+        address?: string | null;
+        website?: string | null;
+        facebook?: string | null;
+        twitter?: string | null;
+        linkedIn?: string | null;
         createdAt?: string | null;
         businessProfileId: string;
         userId?: string | null;
-        profession?: string | null;
+        cardTemplateId?: string | null;
         status?: string | null;
         color?: string | null;
         category?: string | null;
       } | null;
-      businessProfile?: {
-        __typename: 'BusinessProfile';
+      cardTemplate?: {
+        __typename: 'CardTemplate';
         id?: string | null;
-        name?: string | null;
-        role?: string | null;
-        phone?: string | null;
-        website?: string | null;
-        category?: string | null;
-        address?: string | null;
-        userId?: string | null;
+        backgroundColor?: string | null;
+        borderBottomColor?: string | null;
       } | null;
     } | null> | null;
     error?: string | null;
@@ -742,43 +779,6 @@ export type ListAllUsersQuery = {
   } | null;
 };
 
-export type ViewUserCardsForAdminQueryVariables = {
-  userId?: string | null;
-};
-
-export type ViewUserCardsForAdminQuery = {
-  viewUserCardsForAdmin?: {
-    __typename: 'CardsPayload';
-    cards?: Array<{
-      __typename: 'CardResponse';
-      cardDetails?: {
-        __typename: 'Card';
-        id: string;
-        email?: string | null;
-        createdAt?: string | null;
-        businessProfileId: string;
-        userId?: string | null;
-        profession?: string | null;
-        status?: string | null;
-        color?: string | null;
-        category?: string | null;
-      } | null;
-      businessProfile?: {
-        __typename: 'BusinessProfile';
-        id?: string | null;
-        name?: string | null;
-        role?: string | null;
-        phone?: string | null;
-        website?: string | null;
-        category?: string | null;
-        address?: string | null;
-        userId?: string | null;
-      } | null;
-    } | null> | null;
-    error?: string | null;
-  } | null;
-};
-
 export type MostSharedCardsQueryVariables = {
   userId?: string | null;
 };
@@ -791,25 +791,28 @@ export type MostSharedCardsQuery = {
       cardDetails?: {
         __typename: 'Card';
         id: string;
+        name?: string | null;
+        role?: string | null;
         email?: string | null;
+        phone?: string | null;
+        address?: string | null;
+        website?: string | null;
+        facebook?: string | null;
+        twitter?: string | null;
+        linkedIn?: string | null;
         createdAt?: string | null;
         businessProfileId: string;
         userId?: string | null;
-        profession?: string | null;
+        cardTemplateId?: string | null;
         status?: string | null;
         color?: string | null;
         category?: string | null;
       } | null;
-      businessProfile?: {
-        __typename: 'BusinessProfile';
+      cardTemplate?: {
+        __typename: 'CardTemplate';
         id?: string | null;
-        name?: string | null;
-        role?: string | null;
-        phone?: string | null;
-        website?: string | null;
-        category?: string | null;
-        address?: string | null;
-        userId?: string | null;
+        backgroundColor?: string | null;
+        borderBottomColor?: string | null;
       } | null;
     } | null> | null;
     error?: string | null;
@@ -901,25 +904,28 @@ export type ListDisabledUserCardsQuery = {
       cardDetails?: {
         __typename: 'Card';
         id: string;
+        name?: string | null;
+        role?: string | null;
         email?: string | null;
+        phone?: string | null;
+        address?: string | null;
+        website?: string | null;
+        facebook?: string | null;
+        twitter?: string | null;
+        linkedIn?: string | null;
         createdAt?: string | null;
         businessProfileId: string;
         userId?: string | null;
-        profession?: string | null;
+        cardTemplateId?: string | null;
         status?: string | null;
         color?: string | null;
         category?: string | null;
       } | null;
-      businessProfile?: {
-        __typename: 'BusinessProfile';
+      cardTemplate?: {
+        __typename: 'CardTemplate';
         id?: string | null;
-        name?: string | null;
-        role?: string | null;
-        phone?: string | null;
-        website?: string | null;
-        category?: string | null;
-        address?: string | null;
-        userId?: string | null;
+        backgroundColor?: string | null;
+        borderBottomColor?: string | null;
       } | null;
     } | null> | null;
     error?: string | null;
@@ -930,6 +936,36 @@ export type ListBusinessCategoriesQuery = {
   listBusinessCategories?: {
     __typename: 'ListCategoriesPayload';
     categories?: Array<string | null> | null;
+    error?: string | null;
+  } | null;
+};
+
+export type ListCardTemplatesQuery = {
+  listCardTemplates?: {
+    __typename: 'ListCardTemplatesPayload';
+    cardTemplates?: Array<{
+      __typename: 'CardTemplate';
+      id?: string | null;
+      backgroundColor?: string | null;
+      borderBottomColor?: string | null;
+    } | null> | null;
+    error?: string | null;
+  } | null;
+};
+
+export type GetCardTemplateByIdQueryVariables = {
+  id?: string | null;
+};
+
+export type GetCardTemplateByIdQuery = {
+  getCardTemplateById?: {
+    __typename: 'CardTemplateResponse';
+    cardTemplate?: {
+      __typename: 'CardTemplate';
+      id?: string | null;
+      backgroundColor?: string | null;
+      borderBottomColor?: string | null;
+    } | null;
     error?: string | null;
   } | null;
 };

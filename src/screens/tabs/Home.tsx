@@ -146,7 +146,7 @@ const Home = ({navigation}: Props) => {
         />
       )}
 
-      {cardModal && selectCardModal()}
+      {cardModal && selectCardModal}
       <Header
         title="HOME"
         titleColor="#FFFFFF"

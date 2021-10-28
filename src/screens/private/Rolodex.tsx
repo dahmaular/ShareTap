@@ -356,18 +356,6 @@ const styles = StyleSheet.create({
   },
 
   // Card
-
-  // card: {
-  //   position: 'absolute',
-  //   borderWidth: 5,
-  //   borderColor: 'black',
-  //   backgroundColor: 'white',
-  //   left: 20,
-  //   right: 20,
-  //   height: cardHeight,
-  //   borderRadius: 10,
-  // },
-
   animatedCard: {
     position: 'absolute',
     height: 191,
