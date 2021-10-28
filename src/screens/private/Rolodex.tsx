@@ -7,7 +7,6 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
-  ListRenderItem,
   Animated,
   ScrollView,
 } from 'react-native';
@@ -215,37 +214,40 @@ const Rolodex = ({navigation}: Props) => {
         rightOnPress={() => <></>}
       />
       <View style={styles.container}>
-        <View style={styles.categoriesView}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {categories.map((k, i) => {
-              const active = selectedCategoryHash[k.id as number];
-              return (
-                <TouchableOpacity
-                  style={{
-                    ...styles.addNewChip,
-                    width: 70,
-                    borderColor: active ? '#316F8A' : 'rgba(51, 51, 51, 0.51)',
-                  }}
-                  key={i}
-                  onPress={() => {
-                    setSelectedCategoryHash({
-                      [k.id as number]: !(
-                        selectedCategoryHash[k.id as number] || false
-                      ),
-                    });
-                    const picked = categories.find(x => x.id == k.id);
-                    setSelectedCategory(picked as CategoryProps);
-                  }}>
-                  <Text style={styles.addNewText}>{k.catName}</Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
-
-        <>{ListHeader()}</>
-
         <View style={{flex: 1}}>
+          <View style={styles.categoriesView}>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              {categories.map((k, i) => {
+                const active = selectedCategoryHash[k.id as number];
+                return (
+                  <TouchableOpacity
+                    style={{
+                      ...styles.addNewChip,
+                      width: 70,
+                      borderColor: active
+                        ? '#316F8A'
+                        : 'rgba(51, 51, 51, 0.51)',
+                    }}
+                    key={i}
+                    onPress={() => {
+                      setSelectedCategoryHash({
+                        [k.id as number]: !(
+                          selectedCategoryHash[k.id as number] || false
+                        ),
+                      });
+                      const picked = categories.find(x => x.id == k.id);
+                      setSelectedCategory(picked as CategoryProps);
+                    }}>
+                    <Text style={styles.addNewText}>{k.catName}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+
+          <>{ListHeader()}</>
           <View>
             {cardsList.map((item, index) => {
               return (
@@ -256,6 +258,7 @@ const Rolodex = ({navigation}: Props) => {
                     cardTransform(index),
                     {
                       top: index * cardVisibleHeight,
+                      marginTop: -150,
                     },
                   ]}>
                   <TouchableOpacity style={{...styles.touchable}}>
