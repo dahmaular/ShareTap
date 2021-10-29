@@ -11,10 +11,10 @@ import {
 import Header from '../../components/Header';
 import ArrowLeft from '../../assets/svg/thin_big_left.svg';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {UnauthenticatedRoutesParamsList} from '../../types';
 import {BACKGROUND_COLOR} from '../../core/color';
 import ProfileTypes from '../../mock/ProfileTypes';
 import Button from '../../components/Button';
+import { UnauthenticatedRoutesParamsList } from '../../types/navigation';
 
 const {width} = Dimensions.get('screen');
 

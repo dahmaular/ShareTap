@@ -14,7 +14,7 @@ import Phone from '../../assets/svg/phone.svg';
 import Empty from '../../assets/svg/empty.svg';
 import LottieView from 'lottie-react-native';
 import Modal from 'react-native-modal';
-import {ConnectProps} from '../../types';
+import {ConnectProps} from '../../types/navigation';
 import connects from '../../mock/Connects';
 
 const {width} = Dimensions.get('screen');

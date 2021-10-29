@@ -26,12 +26,12 @@ import Message from '../../components/Message';
 import cards from '../../mock/CarouselList';
 import Card from '../../components/Card';
 import NotificationModal from '../../components/NotificationModal';
+import Modal from 'react-native-modal';
+import Close from '../../assets/svg/phone-verif-close-icon.svg';
 import {getUserIdService} from '../../services/userService';
 import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
-import Modal from 'react-native-modal';
-import Close from '../../assets/svg/phone-verif-close-icon.svg';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -62,79 +62,81 @@ const Home = ({navigation}: Props) => {
     setModal(true);
   };
 
+  const confirmToVerify = () => {
+    setCardModal(false);
+  };
+
+  const selectCardModal = () => {
+    return (
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.bottomModal}
+        isVisible={cardModal}
+        onBackdropPress={() => setCardModal(false)}
+        onBackButtonPress={() => setCardModal(false)}>
+        <TouchableOpacity
+          onPress={() => setCardModal(false)}
+          style={styles.modalCloseBtn}>
+          <Close />
+        </TouchableOpacity>
+        <View style={styles.modal}>
+          <View style={styles.modalContentWrap}>
+            <View style={{marginTop: 23}}>
+              <Text style={styles.selectCardText}>Select Card</Text>
+            </View>
+            <FlatList
+              horizontal
+              data={user.cards}
+              contentContainerStyle={{paddingVertical: 5, marginTop: 43}}
+              contentInsetAdjustmentBehavior="never"
+              snapToAlignment="center"
+              decelerationRate="fast"
+              automaticallyAdjustContentInsets={false}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
+              scrollEventThrottle={1}
+              snapToInterval={boxWidth}
+              contentInset={{
+                left: halfBoxDistance,
+                right: halfBoxDistance,
+              }}
+              contentOffset={{x: halfBoxDistance * -1, y: 0}}
+              onLayout={e => {
+                setScrollViewWidth(e.nativeEvent.layout.width);
+              }}
+              onScroll={Animated.event(
+                [{nativeEvent: {contentOffset: {x: pan.x}}}],
+                {
+                  useNativeDriver: false,
+                },
+              )}
+              keyExtractor={(item, index) => `${index}-${item}`}
+              renderItem={({item, index}) => (
+                <Card
+                  item={item}
+                  index={index}
+                  boxWidth={boxWidth}
+                  halfBoxDistance={halfBoxDistance}
+                  pan={pan}
+                />
+              )}
+            />
+          </View>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => confirmToVerify()}>
+            <Text style={styles.modalBtnText}>CONTINUE</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  };
   useEffect(() => {
     getUserIdService()
       .then(id => dispatch(fetchUserCards(id)))
       .catch(() => hubDispatch('navigation', 'loggedIn'));
   }, [dispatch]);
-  const confirmToVerify = () => {
-    setCardModal(false);
-  };
-
-  const selectCardModal = (
-    <Modal
-      avoidKeyboard
-      propagateSwipe={true}
-      style={styles.bottomModal}
-      isVisible={cardModal}
-      onBackdropPress={() => setCardModal(false)}
-      onBackButtonPress={() => setCardModal(false)}>
-      <TouchableOpacity
-        onPress={() => setCardModal(false)}
-        style={styles.modalCloseBtn}>
-        <Close />
-      </TouchableOpacity>
-      <View style={styles.modal}>
-        <View style={styles.modalContentWrap}>
-          <View style={{marginTop: 23}}>
-            <Text style={styles.selectCardText}>Select Card</Text>
-          </View>
-          <FlatList
-            horizontal
-            data={user.cards}
-            contentContainerStyle={{paddingVertical: 5, marginTop: 43}}
-            contentInsetAdjustmentBehavior="never"
-            snapToAlignment="center"
-            decelerationRate="fast"
-            automaticallyAdjustContentInsets={false}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            scrollEventThrottle={1}
-            snapToInterval={boxWidth}
-            contentInset={{
-              left: halfBoxDistance,
-              right: halfBoxDistance,
-            }}
-            contentOffset={{x: halfBoxDistance * -1, y: 0}}
-            onLayout={e => {
-              setScrollViewWidth(e.nativeEvent.layout.width);
-            }}
-            onScroll={Animated.event(
-              [{nativeEvent: {contentOffset: {x: pan.x}}}],
-              {
-                useNativeDriver: false,
-              },
-            )}
-            keyExtractor={(item, index) => `${index}-${item}`}
-            renderItem={({item, index}) => (
-              <Card
-                item={item}
-                index={index}
-                boxWidth={boxWidth}
-                halfBoxDistance={halfBoxDistance}
-                pan={pan}
-              />
-            )}
-          />
-        </View>
-        <TouchableOpacity
-          style={styles.modalButton}
-          onPress={() => confirmToVerify()}>
-          <Text style={styles.modalBtnText}>CONTINUE</Text>
-        </TouchableOpacity>
-      </View>
-    </Modal>
-  );
 
   return (
     <View style={{flex: 1}}>
@@ -237,6 +239,7 @@ const Home = ({navigation}: Props) => {
                     useNativeDriver: false,
                   },
                 )}
+                onScrollEndDrag={() => console.log('Animation ended')}
                 keyExtractor={(item, index) => `${index}-${item}`}
                 ListEmptyComponent={() => (
                   <View>
