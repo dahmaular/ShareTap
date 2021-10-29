@@ -7,7 +7,6 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
-  ListRenderItem,
   Animated,
   ScrollView,
 } from 'react-native';
@@ -51,15 +50,6 @@ interface TabsProps {
 const {width} = Dimensions.get('screen');
 
 const deviceHeight = Dimensions.get('window').height;
-const cardHeight = 250;
-const cardAmount = 5;
-const cardVisibleHeight = 191;
-const cardVisibleHeightCollapsed = 10;
-const cardVisibleDelta = cardVisibleHeight - cardVisibleHeightCollapsed;
-const topOffset = 150;
-const stackHeight = cardVisibleDelta * cardAmount - cardVisibleDelta;
-const scrollHeight =
-  deviceHeight + cardVisibleDelta * cardAmount - cardVisibleDelta;
 
 const Rolodex = ({navigation}: Props) => {
   const [modal, setModal] = useState(false);
@@ -67,6 +57,16 @@ const Rolodex = ({navigation}: Props) => {
 
   const [tabsList] = useState<TabsProps[]>(tabs);
   const [cardsList] = useState(cardssss);
+
+  const cardHeight = 250;
+  const cardAmount = cardsList.length;
+  const cardVisibleHeight = 191;
+  const cardVisibleHeightCollapsed = 60;
+  const cardVisibleDelta = cardVisibleHeight - cardVisibleHeightCollapsed;
+  const topOffset = 150;
+  const stackHeight = cardVisibleDelta * cardAmount - cardVisibleDelta;
+  const scrollHeight =
+    deviceHeight + cardVisibleDelta * cardAmount - cardVisibleDelta;
 
   const [visible, setVisible] = React.useState(false);
 
@@ -157,48 +157,6 @@ const Rolodex = ({navigation}: Props) => {
     return {transform: [{translateY}]};
   };
 
-  let cards = [];
-
-  for (let i = 0; i < cardAmount; i++) {
-    cards.push(
-      <Animated.View
-        key={`card-${i}`}
-        style={[
-          styles.animatedCard,
-          cardTransform(i),
-          {
-            top: i * cardVisibleHeight,
-          },
-        ]}>
-        <TouchableOpacity style={{...styles.touchable}}>
-          <Text style={styles.name}>Samuel</Text>
-          <Text style={styles.profession}>Software Engineer</Text>
-          <Text style={styles.email}>adeyemosamuel@gmail.com</Text>
-          <View style={styles.telSocial}>
-            <View>
-              <Text style={styles.telephone}>08066738373</Text>
-            </View>
-
-            <View style={styles.rowCenter}>
-              <TouchableOpacity style={{marginRight: 10}} onPress={() => <></>}>
-                <Link />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={{marginRight: 10}} onPress={() => <></>}>
-                <Facebook />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={{marginRight: 10}} onPress={() => <></>}>
-                <Twitter />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </TouchableOpacity>
-        <View style={styles.bottomLine}></View>
-      </Animated.View>,
-    );
-  }
-
   const ListEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
@@ -246,68 +204,6 @@ const Rolodex = ({navigation}: Props) => {
     );
   };
 
-  const renderItem: ListRenderItem<any> = ({item, index}) => {
-    return (
-      <TouchableOpacity
-        style={{
-          ...styles.animatedCard,
-        }}
-        key={index}>
-        <Menu
-          visible={visible}
-          onDismiss={closeMenu}
-          style={styles.menu}
-          anchor={
-            <TouchableOpacity
-              style={{...styles.touchable, width: width}}
-              onLongPress={openMenu}>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.profession}>{item.profession}</Text>
-              <Text style={styles.email}>{item.email}</Text>
-              <View style={styles.telSocial}>
-                <View>
-                  <Text style={styles.telephone}>{item.phone}</Text>
-                </View>
-
-                <View style={styles.rowCenter}>
-                  <TouchableOpacity
-                    style={{marginRight: 10}}
-                    onPress={() => <></>}>
-                    <Link />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={{marginRight: 10}}
-                    onPress={() => <></>}>
-                    <Facebook />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={{marginRight: 10}}
-                    onPress={() => <></>}>
-                    <Twitter />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </TouchableOpacity>
-          }>
-          <Menu.Item
-            titleStyle={styles.text}
-            onPress={() => {}}
-            title="Share"
-          />
-          <Menu.Item titleStyle={styles.text} onPress={() => {}} title="Edit" />
-          <Menu.Item
-            titleStyle={styles.deleteText}
-            onPress={() => {}}
-            title="Delete"
-          />
-        </Menu>
-        <View style={styles.bottomLine}></View>
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <View style={{flex: 1}}>
       {modal && (
@@ -328,38 +224,88 @@ const Rolodex = ({navigation}: Props) => {
         rightOnPress={() => setModal(true)}
       />
       <View style={styles.container}>
-        <View style={styles.categoriesView}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {categories.map((k, i) => {
-              const active = selectedCategoryHash[k.id as number];
+        <View style={{flex: 1}}>
+          <View style={styles.categoriesView}>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              {categories.map((k, i) => {
+                const active = selectedCategoryHash[k.id as number];
+                return (
+                  <TouchableOpacity
+                    style={{
+                      ...styles.addNewChip,
+                      width: 70,
+                      borderColor: active
+                        ? '#316F8A'
+                        : 'rgba(51, 51, 51, 0.51)',
+                    }}
+                    key={i}
+                    onPress={() => {
+                      setSelectedCategoryHash({
+                        [k.id as number]: !(
+                          selectedCategoryHash[k.id as number] || false
+                        ),
+                      });
+                      const picked = categories.find(x => x.id == k.id);
+                      setSelectedCategory(picked as CategoryProps);
+                    }}>
+                    <Text style={styles.addNewText}>{k.catName}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+
+          <>{ListHeader()}</>
+          <View>
+            {cardsList.map((item, index) => {
               return (
-                <TouchableOpacity
-                  style={{
-                    ...styles.addNewChip,
-                    width: 70,
-                    borderColor: active ? '#316F8A' : 'rgba(51, 51, 51, 0.51)',
-                  }}
-                  key={i}
-                  onPress={() => {
-                    setSelectedCategoryHash({
-                      [k.id as number]: !(
-                        selectedCategoryHash[k.id as number] || false
-                      ),
-                    });
-                    const picked = categories.find(x => x.id == k.id);
-                    setSelectedCategory(picked as CategoryProps);
-                  }}>
-                  <Text style={styles.addNewText}>{k.catName}</Text>
-                </TouchableOpacity>
+                <Animated.View
+                  key={index}
+                  style={[
+                    styles.animatedCard,
+                    cardTransform(index),
+                    {
+                      top: index * cardVisibleHeight,
+                      marginTop: -150,
+                    },
+                  ]}>
+                  <TouchableOpacity style={{...styles.touchable}}>
+                    <Text style={styles.name}>{item.name}</Text>
+                    <Text style={styles.profession}>{item.profession}</Text>
+                    <Text style={styles.email}>{item.email}</Text>
+                    <View style={styles.telSocial}>
+                      <View>
+                        <Text style={styles.telephone}>{item.phone}</Text>
+                      </View>
+
+                      <View style={styles.rowCenter}>
+                        <TouchableOpacity
+                          style={{marginRight: 10}}
+                          onPress={() => <></>}>
+                          <Link />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          style={{marginRight: 10}}
+                          onPress={() => <></>}>
+                          <Facebook />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          style={{marginRight: 10}}
+                          onPress={() => <></>}>
+                          <Twitter />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={styles.bottomLine}></View>
+                </Animated.View>
               );
             })}
-          </ScrollView>
-        </View>
-
-        <>{ListHeader()}</>
-
-        <View style={{flex: 1}}>
-          <View>{cards}</View>
+          </View>
 
           <Animated.ScrollView
             onScroll={Animated.event(
@@ -423,18 +369,6 @@ const styles = StyleSheet.create({
   },
 
   // Card
-
-  card: {
-    position: 'absolute',
-    borderWidth: 5,
-    borderColor: 'black',
-    backgroundColor: 'white',
-    left: 20,
-    right: 20,
-    height: cardHeight,
-    borderRadius: 10,
-  },
-
   animatedCard: {
     position: 'absolute',
     height: 191,

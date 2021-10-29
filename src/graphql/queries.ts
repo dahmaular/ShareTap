@@ -8,24 +8,27 @@ export const listReceivedCards = /* GraphQL */ `
       cards {
         cardDetails {
           id
+          name
+          role
           email
+          phone
+          address
+          website
+          facebook
+          twitter
+          linkedIn
           createdAt
           businessProfileId
           userId
-          profession
+          cardTemplateId
           status
           color
           category
         }
-        businessProfile {
+        cardTemplate {
           id
-          name
-          role
-          phone
-          website
-          category
-          address
-          userId
+          backgroundColor
+          borderBottomColor
         }
       }
       error
@@ -38,24 +41,27 @@ export const listUserCards = /* GraphQL */ `
       cards {
         cardDetails {
           id
+          name
+          role
           email
+          phone
+          address
+          website
+          facebook
+          twitter
+          linkedIn
           createdAt
           businessProfileId
           userId
-          profession
+          cardTemplateId
           status
           color
           category
         }
-        businessProfile {
+        cardTemplate {
           id
-          name
-          role
-          phone
-          website
-          category
-          address
-          userId
+          backgroundColor
+          borderBottomColor
         }
       }
       error
@@ -68,24 +74,27 @@ export const listSharedCards = /* GraphQL */ `
       cards {
         cardDetails {
           id
+          name
+          role
           email
+          phone
+          address
+          website
+          facebook
+          twitter
+          linkedIn
           createdAt
           businessProfileId
           userId
-          profession
+          cardTemplateId
           status
           color
           category
         }
-        businessProfile {
+        cardTemplate {
           id
-          name
-          role
-          phone
-          website
-          category
-          address
-          userId
+          backgroundColor
+          borderBottomColor
         }
       }
       error
@@ -148,17 +157,11 @@ export const listUserBusinessProfiles = /* GraphQL */ `
     listUserBusinessProfiles(userId: $userId) {
       businessProfiles {
         id
-        name
+        companyName
         role
-        phone
-        website
         category
-        address
-        socialLinks {
-          facebook
-          twitter
-          linkedIn
-        }
+        startDate
+        endDate
         userId
       }
       error
@@ -170,17 +173,11 @@ export const getBusinessProfileById = /* GraphQL */ `
     getBusinessProfileById(id: $id) {
       businessProfile {
         id
-        name
+        companyName
         role
-        phone
-        website
         category
-        address
-        socialLinks {
-          facebook
-          twitter
-          linkedIn
-        }
+        startDate
+        endDate
         userId
       }
       error
@@ -193,24 +190,27 @@ export const listCardsByBusinessProfileId = /* GraphQL */ `
       cards {
         cardDetails {
           id
+          name
+          role
           email
+          phone
+          address
+          website
+          facebook
+          twitter
+          linkedIn
           createdAt
           businessProfileId
           userId
-          profession
+          cardTemplateId
           status
           color
           category
         }
-        businessProfile {
+        cardTemplate {
           id
-          name
-          role
-          phone
-          website
-          category
-          address
-          userId
+          backgroundColor
+          borderBottomColor
         }
       }
       error
@@ -249,60 +249,33 @@ export const listAllUsers = /* GraphQL */ `
     }
   }
 `;
-export const viewUserCardsForAdmin = /* GraphQL */ `
-  query ViewUserCardsForAdmin($userId: String) {
-    viewUserCardsForAdmin(userId: $userId) {
-      cards {
-        cardDetails {
-          id
-          email
-          createdAt
-          businessProfileId
-          userId
-          profession
-          status
-          color
-          category
-        }
-        businessProfile {
-          id
-          name
-          role
-          phone
-          website
-          category
-          address
-          userId
-        }
-      }
-      error
-    }
-  }
-`;
 export const mostSharedCards = /* GraphQL */ `
   query MostSharedCards($userId: String) {
     mostSharedCards(userId: $userId) {
       cards {
         cardDetails {
           id
+          name
+          role
           email
+          phone
+          address
+          website
+          facebook
+          twitter
+          linkedIn
           createdAt
           businessProfileId
           userId
-          profession
+          cardTemplateId
           status
           color
           category
         }
-        businessProfile {
+        cardTemplate {
           id
-          name
-          role
-          phone
-          website
-          category
-          address
-          userId
+          backgroundColor
+          borderBottomColor
         }
       }
       error
@@ -373,24 +346,27 @@ export const listDisabledUserCards = /* GraphQL */ `
       cards {
         cardDetails {
           id
+          name
+          role
           email
+          phone
+          address
+          website
+          facebook
+          twitter
+          linkedIn
           createdAt
           businessProfileId
           userId
-          profession
+          cardTemplateId
           status
           color
           category
         }
-        businessProfile {
+        cardTemplate {
           id
-          name
-          role
-          phone
-          website
-          category
-          address
-          userId
+          backgroundColor
+          borderBottomColor
         }
       }
       error
@@ -401,6 +377,30 @@ export const listBusinessCategories = /* GraphQL */ `
   query ListBusinessCategories {
     listBusinessCategories {
       categories
+      error
+    }
+  }
+`;
+export const listCardTemplates = /* GraphQL */ `
+  query ListCardTemplates {
+    listCardTemplates {
+      cardTemplates {
+        id
+        backgroundColor
+        borderBottomColor
+      }
+      error
+    }
+  }
+`;
+export const getCardTemplateById = /* GraphQL */ `
+  query GetCardTemplateById($id: String) {
+    getCardTemplateById(id: $id) {
+      cardTemplate {
+        id
+        backgroundColor
+        borderBottomColor
+      }
       error
     }
   }

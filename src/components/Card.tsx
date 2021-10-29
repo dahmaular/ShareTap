@@ -35,8 +35,9 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: item.cardDetails.email,
+        message: item.cardDetails.email as string,
       });
+
       console.log('Result', result);
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -76,12 +77,12 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
           <TouchableOpacity
             style={{...styles.touchable, width: boxWidth}}
             onLongPress={openMenu}>
-            <Text style={styles.name}>{item.businessProfile.name}</Text>
-            <Text style={styles.profession}>{item.cardDetails.profession}</Text>
+            <Text style={styles.name}>{item.cardDetails.name}</Text>
+            <Text style={styles.profession}>{item.cardDetails.role}</Text>
             <Text style={styles.email}>{item.cardDetails.email}</Text>
             <View style={styles.telSocial}>
               <View>
-                <Text style={styles.telephone}>{item.businessProfile.phone}</Text>
+                <Text style={styles.telephone}>{item.cardDetails.phone}</Text>
               </View>
 
               <View style={styles.rowCenter}>
@@ -100,7 +101,11 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
             </View>
           </TouchableOpacity>
         }>
-        <Menu.Item titleStyle={styles.text} onPress={() => {}} title="Share" />
+        <Menu.Item
+          titleStyle={styles.text}
+          onPress={() => console.log('sdfv')}
+          title="Share"
+        />
         <Menu.Item titleStyle={styles.text} onPress={() => {}} title="Edit" />
         <Menu.Item
           titleStyle={styles.deleteText}

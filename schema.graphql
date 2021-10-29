@@ -1,27 +1,20 @@
 type BusinessProfile {
 	id: String
-	name: String
+	companyName: String
 	role: String
-	phone: String
-	website: String
 	category: String
-	address: String
-	socialLinks: SocialLinksResponse
+	startDate: String
+	endDate: String
 	userId: String
 }
 
 input BusinessProfilePayload {
-	name: String
+	companyName: String
 	role: String
-	phone: String
-	website: String
 	category: String
-	address: String
-	socialLinks: SocialLinks
-	city: String
-	country: String
+	startDate: String
+	endDate: String
 	userId: String
-	services: [String]
 }
 
 type BusinessProfileResponse {
@@ -41,11 +34,19 @@ type CancelUserSubscriptionResponse {
 
 type Card {
 	id: ID!
+	name: String
+	role: String
 	email: String
+	phone: String
+	address: String
+	website: String
+	facebook: String
+	twitter: String
+	linkedIn: String
 	createdAt: String
 	businessProfileId: String!
 	userId: String
-	profession: String
+	cardTemplateId: String
 	status: String
 	color: String
 	category: String
@@ -53,7 +54,23 @@ type Card {
 
 type CardResponse {
 	cardDetails: Card
-	businessProfile: BusinessProfile
+	cardTemplate: CardTemplate
+}
+
+type CardTemplate {
+	id: String
+	backgroundColor: String
+	borderBottomColor: String
+}
+
+input CardTemplateInput {
+	backgroundColor: String
+	borderBottomColor: String
+}
+
+type CardTemplateResponse {
+	cardTemplate: CardTemplate
+	error: String
 }
 
 type CardVersion {
@@ -73,15 +90,33 @@ input ConfirmSignUpPayload {
 }
 
 input CreateCardInput {
-	userId: String
+	name: String
+	role: String
 	email: String
-	profession: String
+	phone: String
+	address: String
+	website: String
+	facebook: String
+	twitter: String
+	linkedIn: String
+	userId: String
 	businessProfileId: String
+	cardTemplateId: String
+}
+
+type CreateCardPayload {
+	card: Card
+	error: String
 }
 
 input CreateSubscriptionSessionPayload {
 	userId: String!
 	customerPlan: String!
+}
+
+type ListCardTemplatesPayload {
+	cardTemplates: [CardTemplate]
+	error: String
 }
 
 type ListCategoriesPayload {
@@ -109,7 +144,7 @@ type ListUsersPayload {
 }
 
 type Mutation {
-	createCard(card: CreateCardInput!): Card
+	createCard(card: CreateCardInput!): CreateCardPayload
 	shareCard(shareCardPayload: ShareCardPayload): String
 	createBusinessProfile(createBusinessProfilePayload: BusinessProfilePayload): BusinessProfileResponse
 	deleteBusinessProfile(id: String): String
@@ -124,6 +159,7 @@ type Mutation {
 	disableUserCard(cardId: String): String
 	signUp(signUpPayload: SignupPayload): String
 	confirmSignUp(confirmSignUpPayload: ConfirmSignUpPayload): String
+	createCardTemplate(cardTemplatePayload: CardTemplateInput): CardTemplateResponse
 }
 
 type Query {
@@ -138,7 +174,6 @@ type Query {
 	listCardsByBusinessProfileId(businessProfileId: String): CardsPayload
 	adminDashboard: adminDashboardPayload
 	listAllUsers: ListUsersPayload
-	viewUserCardsForAdmin(userId: String): CardsPayload
 	mostSharedCards(userId: String): CardsPayload
 	countUserCards(userId: String): Int
 	listSubscriptionPlans: SubscriptionPlansPayload
@@ -146,6 +181,8 @@ type Query {
 	getUsersBySubscriptionPlan(plan: String): ListUsersPayload
 	listDisabledUserCards(userId: String): CardsPayload
 	listBusinessCategories: ListCategoriesPayload
+	listCardTemplates: ListCardTemplatesPayload
+	getCardTemplateById(id: String): CardTemplateResponse
 }
 
 input ShareCardPayload {
@@ -159,18 +196,6 @@ input SignupPayload {
 	email: AWSEmail!
 	username: String!
 	password: String!
-}
-
-input SocialLinks {
-	facebook: String
-	twitter: String
-	linkedIn: String
-}
-
-type SocialLinksResponse {
-	facebook: String
-	twitter: String
-	linkedIn: String
 }
 
 type SubscriptionDetails {
@@ -204,13 +229,11 @@ type SubscriptionSessionPayload {
 
 input UpdateBusinessProfilePayload {
 	id: String
-	name: String
+	companyName: String
 	role: String
-	phone: String
-	website: String
 	category: String
-	address: String
-	socialLinks: SocialLinks
+	startDate: String
+	endDate: String
 }
 
 input UpdateUserSubscriptionPayload {
