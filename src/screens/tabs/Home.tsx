@@ -32,20 +32,24 @@ import {getUserIdService} from '../../services/userService';
 import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
-import {copilot, walkthroughable, CopilotStep} from 'react-native-copilot';
+import {
+  copilot,
+  walkthroughable,
+  CopilotStep,
+  CopilotWrappedComponentProps,
+} from 'react-native-copilot';
 
 type Props = {
   navigation: CompositeNavigationProp<
     StackNavigationProp<TabNavigatorParamsList, 'Home'>,
     StackNavigationProp<AuthenticatedRoutesParamsList>
   >;
+  start: CopilotWrappedComponentProps;
 };
 
 const {width} = Dimensions.get('screen');
 
-const CopilotText = walkthroughable(Text);
-
-const Home = ({navigation, start}: any) => {
+const Home = ({navigation, start}: Props) => {
   const [message, setMessage] = useState('');
   const [scrollViewWidth, setScrollViewWidth] = useState(0);
   const [modal, setModal] = useState(false);
@@ -66,7 +70,16 @@ const Home = ({navigation, start}: any) => {
     setCardModal(false);
   };
 
-  
+  const TapToShareButton = ({copilot}: CopilotWrappedComponentProps) => {
+    return (
+      <View {...copilot}>
+        <TouchableOpacity style={styles.tap} onPress={() => setCardModal(true)}>
+          <Tap />
+          <Text style={styles.tapText}>TAP TO SHARE</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   const selectCardModal = () => {
     return (
@@ -139,6 +152,7 @@ const Home = ({navigation, start}: any) => {
       .then(id => dispatch(fetchUserCards(id)))
       .catch(() => hubDispatch('navigation', 'loggedIn'));
   }, [dispatch]);
+
   useEffect(() => {
     start();
   }, []);
@@ -258,16 +272,10 @@ const Home = ({navigation, start}: any) => {
               />
             </View>
             <CopilotStep
-              text="This is a hello world example!"
+              text="Tap the logo icon to exchange cards with another user via a hotspot connection."
               order={1}
               name="hello">
-              <TouchableOpacity
-                style={styles.tap}
-                onPress={() => setCardModal(true)}>
-                <Tap />
-                <Text style={styles.tapText}>TAP TO SHARE</Text>
-              </TouchableOpacity>
-              {/* <CopilotText>Hello world!</CopilotText> */}
+              <TapToShareButton />
             </CopilotStep>
           </View>
         </ScrollView>
@@ -375,7 +383,13 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
 
-  tap: {width: '100%', marginTop: 20, alignItems: 'center', marginBottom: 120},
+  tap: {
+    width: '100%',
+    height: 40,
+    marginTop: 20,
+    alignItems: 'center',
+    marginBottom: 120,
+  },
 
   tapText: {
     fontFamily: 'Poppins',
