@@ -14,7 +14,10 @@ import Message from '../components/Message';
 export type LoggedInState = 'initializing' | 'loggedIn' | 'loggedOut';
 
 const SwitchNavigator = () => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState<{
+    type: 'regular' | 'error';
+    text: string;
+  }>({type: 'regular', text: ''});
   const [isUserLoggedIn, setUserLoggedIn] =
     useState<LoggedInState>('loggedOut');
 
@@ -61,12 +64,12 @@ const SwitchNavigator = () => {
         {isUserLoggedIn === 'loggedIn' && <AuthenticatedRoutes />}
         {isUserLoggedIn === 'loggedOut' && <UnauthenticatedRoutes />}
       </NavigationContainer>
-      {message != '' && (
+      {message.text != '' && (
         <View style={styles.toastView}>
           <Message
             message={message}
             onHide={() => {
-              setMessage('');
+              setMessage({...message, text: ''});
             }}
           />
         </View>

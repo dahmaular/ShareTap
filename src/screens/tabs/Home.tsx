@@ -43,7 +43,10 @@ type Props = {
 const {width} = Dimensions.get('screen');
 
 const Home = ({navigation}: Props) => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState<{
+    type: 'regular' | 'error';
+    text: string;
+  }>({type: 'regular', text: ''});
   const [scrollViewWidth, setScrollViewWidth] = useState(0);
   const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
@@ -170,12 +173,12 @@ const Home = ({navigation}: Props) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled">
           <View style={styles.homeContainer}>
-            {message != '' && (
+            {message.text != '' && (
               <View style={styles.toastView}>
                 <Message
                   message={message}
                   onHide={() => {
-                    setMessage('');
+                    setMessage({...message, text: ''});
                   }}
                 />
               </View>
@@ -235,6 +238,11 @@ const Home = ({navigation}: Props) => {
                   },
                 )}
                 keyExtractor={(item, index) => `${index}-${item}`}
+                ListEmptyComponent={() => (
+                  <View>
+                    <Text>Empty</Text>
+                  </View>
+                )}
                 renderItem={({item, index}) => (
                   <Card
                     item={item}
