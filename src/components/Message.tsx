@@ -2,9 +2,14 @@ import React, {useRef, useEffect} from 'react';
 import {StyleSheet, Text, Animated} from 'react-native';
 import Close from '../assets/svg/close.svg';
 
+interface Message {
+  type: 'regular' | 'error';
+  text: string;
+}
+
 interface MessageProps {
   onHide: () => void;
-  message: string;
+  message: Message;
 }
 
 const Message = ({onHide, message}: MessageProps) => {
@@ -31,6 +36,10 @@ const Message = ({onHide, message}: MessageProps) => {
     <Animated.View
       style={{
         ...styles.animatedView,
+        backgroundColor:
+          message.type === 'regular'
+            ? 'rgba(251, 188, 5, 0.1)'
+            : 'rgba(235, 87, 87, 0.1)',
         opacity,
         transform: [
           {
@@ -41,7 +50,13 @@ const Message = ({onHide, message}: MessageProps) => {
           },
         ],
       }}>
-      <Text style={styles.animatedText}>{message}</Text>
+      <Text
+        style={{
+          ...styles.animatedText,
+          color: message.type === 'regular' ? '#F2994A' : '#EB5757',
+        }}>
+        {message.text}
+      </Text>
       <Close />
     </Animated.View>
   );

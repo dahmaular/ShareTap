@@ -29,15 +29,18 @@ type Props = {
 };
 
 const SwitchNavigator = ({navigation}: Props) => {
-  const linking = {
-    prefixes: ['https://tap2me.com', 'tapiolla://'],
-  };
-
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState<{
+    type: 'regular' | 'error';
+    text: string;
+  }>({type: 'regular', text: ''});
   const [isUserLoggedIn, setUserLoggedIn] =
     useState<LoggedInState>('loggedOut');
 
   const navigationRef = useNavigationContainerRef();
+
+  const linking = {
+    prefixes: ['https://tap2me.com', 'tapiolla://'],
+  };
 
   useEffect(() => {
     getUserIdService()
@@ -98,12 +101,12 @@ const SwitchNavigator = ({navigation}: Props) => {
         {isUserLoggedIn === 'loggedIn' && <AuthenticatedRoutes />}
         {isUserLoggedIn === 'loggedOut' && <UnauthenticatedRoutes />}
       </NavigationContainer>
-      {message != '' && (
+      {message.text != '' && (
         <View style={styles.toastView}>
           <Message
             message={message}
             onHide={() => {
-              setMessage('');
+              setMessage({...message, text: ''});
             }}
           />
         </View>

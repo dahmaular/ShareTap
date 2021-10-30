@@ -70,7 +70,7 @@ const ResetPassword = ({navigation, route}: Props) => {
 
       hubDispatch('navigation', 'loggedIn'); //Route to homepage
     } catch (error: any) {
-      hubDispatch('alert', error.message);
+      hubDispatch('alert', {type: 'error', text: error.message});
     } finally {
       setLoading(false);
     }
