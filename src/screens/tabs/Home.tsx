@@ -32,21 +32,25 @@ import {getUserIdService} from '../../services/userService';
 import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
+import {
+  copilot,
+  walkthroughable,
+  CopilotStep,
+  CopilotWrappedComponentProps,
+} from 'react-native-copilot';
 
 type Props = {
   navigation: CompositeNavigationProp<
     StackNavigationProp<TabNavigatorParamsList, 'Home'>,
     StackNavigationProp<AuthenticatedRoutesParamsList>
   >;
+  start: CopilotWrappedComponentProps;
 };
 
 const {width} = Dimensions.get('screen');
 
-const Home = ({navigation}: Props) => {
-  const [message, setMessage] = useState<{
-    type: 'regular' | 'error';
-    text: string;
-  }>({type: 'regular', text: ''});
+const Home = ({navigation, start}: Props) => {
+  const [message, setMessage] = useState('');
   const [scrollViewWidth, setScrollViewWidth] = useState(0);
   const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
@@ -64,6 +68,17 @@ const Home = ({navigation}: Props) => {
 
   const confirmToVerify = () => {
     setCardModal(false);
+  };
+
+  const TapToShareButton = ({copilot}: CopilotWrappedComponentProps) => {
+    return (
+      <View {...copilot}>
+        <TouchableOpacity style={styles.tap} onPress={() => setCardModal(true)}>
+          <Tap />
+          <Text style={styles.tapText}>TAP TO SHARE</Text>
+        </TouchableOpacity>
+      </View>
+    );
   };
 
   const selectCardModal = () => {
@@ -137,6 +152,10 @@ const Home = ({navigation}: Props) => {
       .then(id => dispatch(fetchUserCards(id)))
       .catch(() => hubDispatch('navigation', 'loggedIn'));
   }, [dispatch]);
+
+  useEffect(() => {
+    start();
+  }, []);
 
   return (
     <View style={{flex: 1}}>
@@ -257,13 +276,12 @@ const Home = ({navigation}: Props) => {
                 )}
               />
             </View>
-
-            <TouchableOpacity
-              style={styles.tap}
-              onPress={() => setCardModal(true)}>
-              <Tap />
-              <Text style={styles.tapText}>TAP TO SHARE</Text>
-            </TouchableOpacity>
+            <CopilotStep
+              text="Tap the logo icon to exchange cards with another user via a hotspot connection."
+              order={1}
+              name="hello">
+              <TapToShareButton />
+            </CopilotStep>
           </View>
         </ScrollView>
       </View>
@@ -271,7 +289,10 @@ const Home = ({navigation}: Props) => {
   );
 };
 
-export default Home;
+export default copilot({
+  overlay: 'svg', // or 'view'
+  animated: true, // or false
+})(Home as any);
 
 const styles = StyleSheet.create({
   badgeStyle: {
@@ -367,7 +388,13 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
 
-  tap: {width: '100%', marginTop: 20, alignItems: 'center', marginBottom: 120},
+  tap: {
+    width: '100%',
+    height: 40,
+    marginTop: 20,
+    alignItems: 'center',
+    marginBottom: 120,
+  },
 
   tapText: {
     fontFamily: 'Poppins',

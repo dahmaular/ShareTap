@@ -6517,6 +6517,13 @@
   "resolved" "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.8.tgz"
   "version" "4.2.8"
 
+"graphql@^14.0.0":
+  "integrity" "sha512-l0xWZpoPKpppFzMfvVyFmp9vLN7w/ZZJPefUicMCepfJeQ8sMcztloGYY9DfjVPo6tIUDzU5Hw3MUbIjj9AVVA=="
+  "resolved" "https://registry.npmjs.org/graphql/-/graphql-14.7.0.tgz"
+  "version" "14.7.0"
+  dependencies:
+    "iterall" "^1.2.2"
+
 "graphql@14.0.0":
   "integrity" "sha512-HGVcnO6B25YZcSt6ZsH6/N+XkYuPA7yMqJmlJ4JWxWlS4Tr8SHI56R1Ocs8Eor7V7joEZPRXPDH8RRdll1w44Q=="
   "resolved" "https://registry.npmjs.org/graphql/-/graphql-14.0.0.tgz"
@@ -9263,6 +9270,14 @@
     "flow-parser" "^0.121.0"
     "jscodeshift" "^0.11.0"
     "nullthrows" "^1.1.1"
+
+"react-native-copilot@^2.5.1":
+  "integrity" "sha512-THo7rFV35Ffnwz+2vS01H8PXUXc5IAk+CLD5Rd3kWTNla+cBww8hhxKxJc8pJF7xj+o8NZqCDPy+R6LjtFuBLQ=="
+  "resolved" "https://registry.npmjs.org/react-native-copilot/-/react-native-copilot-2.5.1.tgz"
+  "version" "2.5.1"
+  dependencies:
+    "hoist-non-react-statics" "^3.0.1"
+    "mitt" "^1.1.3"
 
 "react-native-country-picker-modal@^2.0.0":
   "integrity" "sha512-p0wfkKx1mOCEkn3Qm2/FA8TrxSdUw/nqaCcT6KYvIGmPtPdia1Ce+iWh5G0j2hZcDs6yJSkYAx+7lrZ0HwixAw=="
