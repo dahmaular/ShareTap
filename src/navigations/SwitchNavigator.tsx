@@ -29,9 +29,9 @@ type Props = {
 };
 
 const SwitchNavigator = ({navigation}: Props) => {
-  // const linking = {
-  //   prefixes: ['https://google.com', 'tapiolla://'],
-  // };
+  const linking = {
+    prefixes: ['https://tap2me.com', 'tapiolla://'],
+  };
 
   const [message, setMessage] = useState('');
   const [isUserLoggedIn, setUserLoggedIn] =
@@ -93,10 +93,7 @@ const SwitchNavigator = ({navigation}: Props) => {
 
   return (
     <>
-      <NavigationContainer
-        ref={navigationRef}
-        // linking={linking}
-      >
+      <NavigationContainer ref={navigationRef} linking={linking}>
         {isUserLoggedIn === 'initializing' && <Splash />}
         {isUserLoggedIn === 'loggedIn' && <AuthenticatedRoutes />}
         {isUserLoggedIn === 'loggedOut' && <UnauthenticatedRoutes />}
