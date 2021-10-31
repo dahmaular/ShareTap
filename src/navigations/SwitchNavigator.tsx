@@ -39,7 +39,7 @@ const SwitchNavigator = ({navigation}: Props) => {
   const navigationRef = useNavigationContainerRef();
 
   const linking = {
-    prefixes: ['https://mobile.tap2me.com/', 'tapiolla://'],
+    prefixes: ['https://mobile.tap2me.com', 'tapiolla://'],
   };
 
   useEffect(() => {
