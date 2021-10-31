@@ -28,6 +28,7 @@
 		B2CB133EE07F4D1AA317238D /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E809598951414EE0A6F51B8F /* Poppins-ExtraBold.ttf */; };
 		B8A419FE31634FC499C001C3 /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 73ECCDD48BC24991B0301DD1 /* Poppins-ThinItalic.ttf */; };
 		C6020E4F5DC64218BF98F8C8 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B50CD3574144A2FBEDB86D4 /* Poppins-Bold.ttf */; };
+		CE047CBA272ED1D300DFF7A7 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE047CB9272ED1D300DFF7A7 /* BootSplash.storyboard */; };
 		CE79096D27204D7B009AA3C5 /* libswiftWebKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE79096C27204D7B009AA3C5 /* libswiftWebKit.tbd */; };
 		CE79096F27204E12009AA3C5 /* libswiftFileProvider.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE79096E27204E12009AA3C5 /* libswiftFileProvider.tbd */; };
 		CE79097127204E27009AA3C5 /* libswiftDataDetection.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE79097027204E27009AA3C5 /* libswiftDataDetection.tbd */; };
@@ -92,6 +93,7 @@
 		C0A881CF5CF3F2B244570E2A /* Pods-Tapiolla.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tapiolla.debug.xcconfig"; path = "Target Support Files/Pods-Tapiolla/Pods-Tapiolla.debug.xcconfig"; sourceTree = "<group>"; };
 		C76D2C27695F4A4381700139 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		C86B6CA3DAAB4A098D91FD99 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		CE047CB9272ED1D300DFF7A7 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = Tapiolla/BootSplash.storyboard; sourceTree = "<group>"; };
 		CE08048C272D97E70011194C /* Tapiolla.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Tapiolla.entitlements; path = Tapiolla/Tapiolla.entitlements; sourceTree = "<group>"; };
 		CE79096C27204D7B009AA3C5 /* libswiftWebKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftWebKit.tbd; path = usr/lib/swift/libswiftWebKit.tbd; sourceTree = SDKROOT; };
 		CE79096E27204E12009AA3C5 /* libswiftFileProvider.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftFileProvider.tbd; path = usr/lib/swift/libswiftFileProvider.tbd; sourceTree = SDKROOT; };
@@ -151,6 +153,7 @@
 				CE08048C272D97E70011194C /* Tapiolla.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				CE047CB9272ED1D300DFF7A7 /* BootSplash.storyboard */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -356,6 +359,7 @@
 				46D744F8E96041F59176FE61 /* Poppins-BlackItalic.ttf in Resources */,
 				C6020E4F5DC64218BF98F8C8 /* Poppins-Bold.ttf in Resources */,
 				1571FF7C965249C39271EED3 /* Poppins-BoldItalic.ttf in Resources */,
+				CE047CBA272ED1D300DFF7A7 /* BootSplash.storyboard in Resources */,
 				B2CB133EE07F4D1AA317238D /* Poppins-ExtraBold.ttf in Resources */,
 				83699C465A624678A56D4829 /* Poppins-ExtraBoldItalic.ttf in Resources */,
 				E1209DC5ACDD454E96405232 /* Poppins-ExtraLight.ttf in Resources */,
@@ -611,7 +615,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Tapiolla/Tapiolla.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = V38L344XFF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Tapiolla/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -643,7 +647,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Tapiolla/Tapiolla.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = V38L344XFF;
 				INFOPLIST_FILE = Tapiolla/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

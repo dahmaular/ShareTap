@@ -26,9 +26,10 @@ import {Provider} from 'react-redux';
 import rootReducer from './src/slices';
 import {configureStore} from '@reduxjs/toolkit';
 import SwitchNavigator from './src/navigations/SwitchNavigator';
-import { awsConfig } from './src/core/awsExports';
+import {awsConfig} from './src/core/awsExports';
 import Amplify from 'aws-amplify';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
+import RNBootSplash from 'react-native-bootsplash';
 
 const theme = {
   ...DefaultTheme,
@@ -66,7 +67,7 @@ const store = configureStore({
 
 let persistor = persistStore(store);
 
-const urlOpener= async(url: string, redirectUrl: string) =>{
+const urlOpener = async (url: string, redirectUrl: string) => {
   await InAppBrowser.isAvailable();
   const res = await InAppBrowser.openAuth(url, redirectUrl, {
     showTitle: false,
@@ -78,7 +79,7 @@ const urlOpener= async(url: string, redirectUrl: string) =>{
   if (res.type === 'success') {
     Linking.openURL(res.url);
   }
-}
+};
 
 Amplify.configure({
   ...awsConfig,
@@ -89,6 +90,20 @@ Amplify.configure({
 });
 
 const App: FC = () => {
+
+  useEffect(() => {
+    const init = async () => {
+      RNBootSplash.show();
+    };
+
+    init().finally(async () => {
+      await RNBootSplash.hide({fade: true});
+    });
+
+    return () => {
+      init();
+    };
+  }, []);
   return (
     <Provider store={store}>
       <PaperProvider theme={theme}>

@@ -351,7 +351,7 @@ PODS:
     - React-perflogger (= 0.65.1)
   - RNAWSCognito (5.2.0):
     - React-Core
-  - RNBootSplash (3.2.5):
+  - RNBootSplash (3.2.6):
     - React-Core
   - RNCAsyncStorage (1.15.8):
     - React-Core
@@ -628,7 +628,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 85187f19dd9c47a7c102f9994f9d14e4dc2110de
   ReactCommon: eafed38eec7b591c31751bfa7494801618460459
   RNAWSCognito: 97f1dbed4b9f42d61adfbcfe58e053843df532f6
-  RNBootSplash: b204961cfe4f0bb5bf94d019b4e546b062e46f92
+  RNBootSplash: 00f99e3c05fb44af3613e6088406de4be0a8eca3
   RNCAsyncStorage: 0f655864a81214d1c5a9bf0faf79d86dc25c383e
   RNCCheckbox: 7d36e3a79b7301e8b126c5136cc449af65d9cdab
   RNCClipboard: 5e299c6df8e0c98f3d7416b86ae563d3a9f768a3

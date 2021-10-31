@@ -17,16 +17,16 @@
         android:exported="true"
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize">
-        <intent-filter>
+        <!-- <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+        </intent-filter> -->
 
          <intent-filter android:autoVerify="true">
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="https" android:host="tap2me.com" />
+            <data android:scheme="https" android:host="mobile.tap2me.com/" />
       </intent-filter>
 
       <intent-filter>
@@ -37,5 +37,18 @@
       </intent-filter>
 
       </activity>
+
+          <!-- add the following lines (use the theme you created at step 2) -->
+    <activity
+      android:name="com.zoontek.rnbootsplash.RNBootSplashActivity"
+      android:theme="@style/BootTheme"
+      android:launchMode="singleTask">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+
+    <!-- … -->
     </application>
 </manifest>
