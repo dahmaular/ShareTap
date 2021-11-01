@@ -26,9 +26,7 @@
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="https"/>
-            <data android:host="www.tap2me.com"/>
-            <data android:host="mobile.tap2me.com" />
+             <data android:scheme="https" android:host="mobile.tap2me.com" android:pathPrefix="/rolodex" />
 
       </intent-filter>
 
@@ -36,7 +34,7 @@
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="tapiolla" />
+            <data android:scheme="tapiolla" android:host="rolodex"/>
       </intent-filter>
       </activity>
 

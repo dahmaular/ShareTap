@@ -18,6 +18,8 @@ target 'Tapiolla' do
 
   pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
 
+  pod 'React-RCTLinking', :path => '../node_modules/react-native/Libraries/LinkingIOS'
+
   target 'TapiollaTests' do
     inherit! :complete
     # Pods for testing

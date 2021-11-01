@@ -38,8 +38,23 @@ const SwitchNavigator = ({navigation}: Props) => {
 
   const navigationRef = useNavigationContainerRef();
 
+  const config = {
+    screens: {
+      Rolodex: 'rolodex',
+      Search: 'search',
+      Root: 'root',
+      // Profile: {
+      //   path: "profile/:id",
+      //   parse: {
+      //     id: (id) => `${id}`,
+      //   },
+      // },
+    },
+  };
+
   const linking = {
     prefixes: ['https://mobile.tap2me.com', 'tapiolla://'],
+    config,
   };
 
   useEffect(() => {
@@ -85,14 +100,19 @@ const SwitchNavigator = ({navigation}: Props) => {
         return;
       }
 
-      if (initialUrl.includes('Rolodex')) {
-        Alert.alert(initialUrl);
+      if (initialUrl.includes('rolodex')) {
         navigation.navigate('Rolodex');
       }
     };
-
     getUrl();
-  });
+
+    // Linking.addEventListener('url', ({url}) => {
+    // });
+
+    // return () => {
+    //   Linking.removeAllListeners('url');
+    // };
+  }, []);
 
   return (
     <>
