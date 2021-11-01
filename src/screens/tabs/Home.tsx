@@ -70,6 +70,7 @@ const Home = ({navigation, start}: Props) => {
     setCardModal(false);
   };
 
+  // ?TAP TO SHARE BUTTON
   const TapToShareButton = ({copilot}: CopilotWrappedComponentProps) => {
     return (
       <View {...copilot}>
@@ -77,6 +78,52 @@ const Home = ({navigation, start}: Props) => {
           <Tap />
           <Text style={styles.tapText}>TAP TO SHARE</Text>
         </TouchableOpacity>
+      </View>
+    );
+  };
+
+  // ?CARD FLATLIST
+  const UserCardSlider = ({copilot}: CopilotWrappedComponentProps) => {
+    return (
+      <View style={styles.flatlistView} {...copilot}>
+        <FlatList
+          horizontal
+          data={user.cards}
+          contentContainerStyle={{paddingVertical: 5}}
+          contentInsetAdjustmentBehavior="never"
+          snapToAlignment="center"
+          decelerationRate="fast"
+          automaticallyAdjustContentInsets={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={1}
+          snapToInterval={boxWidth}
+          contentInset={{
+            left: halfBoxDistance,
+            right: halfBoxDistance,
+          }}
+          contentOffset={{x: halfBoxDistance * -1, y: 0}}
+          onLayout={e => {
+            setScrollViewWidth(e.nativeEvent.layout.width);
+          }}
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {x: pan.x}}}],
+            {
+              useNativeDriver: false,
+            },
+          )}
+          onScrollEndDrag={() => console.log('Animation ended')}
+          keyExtractor={(item, index) => `${index}-${item}`}
+          renderItem={({item, index}) => (
+            <Card
+              item={item}
+              index={index}
+              boxWidth={boxWidth}
+              halfBoxDistance={halfBoxDistance}
+              pan={pan}
+            />
+          )}
+        />
       </View>
     );
   };
@@ -231,50 +278,16 @@ const Home = ({navigation, start}: Props) => {
                 View all
               </Text>
             </View>
-            <View style={styles.flatlistView}>
-              <FlatList
-                horizontal
-                data={user.cards}
-                contentContainerStyle={{paddingVertical: 5}}
-                contentInsetAdjustmentBehavior="never"
-                snapToAlignment="center"
-                decelerationRate="fast"
-                automaticallyAdjustContentInsets={false}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                scrollEventThrottle={1}
-                snapToInterval={boxWidth}
-                contentInset={{
-                  left: halfBoxDistance,
-                  right: halfBoxDistance,
-                }}
-                contentOffset={{x: halfBoxDistance * -1, y: 0}}
-                onLayout={e => {
-                  setScrollViewWidth(e.nativeEvent.layout.width);
-                }}
-                onScroll={Animated.event(
-                  [{nativeEvent: {contentOffset: {x: pan.x}}}],
-                  {
-                    useNativeDriver: false,
-                  },
-                )}
-                onScrollEndDrag={() => console.log('Animation ended')}
-                keyExtractor={(item, index) => `${index}-${item}`}
-                renderItem={({item, index}) => (
-                  <Card
-                    item={item}
-                    index={index}
-                    boxWidth={boxWidth}
-                    halfBoxDistance={halfBoxDistance}
-                    pan={pan}
-                  />
-                )}
-              />
-            </View>
+            <CopilotStep
+              text="Tap a card to view options"
+              order={2}
+              name="card slider">
+              <UserCardSlider />
+            </CopilotStep>
             <CopilotStep
               text="Tap the logo icon to exchange cards with another user via a hotspot connection."
               order={1}
-              name="hello">
+              name="tap to share">
               <TapToShareButton />
             </CopilotStep>
           </View>
@@ -287,6 +300,13 @@ const Home = ({navigation, start}: Props) => {
 export default copilot({
   overlay: 'svg', // or 'view'
   animated: true, // or false
+  // labels: {
+  //   previous: "Vorheriger",
+  //   next: "Nächster",
+  //   skip: "Überspringen",
+  //   finish: "Beenden"
+  // }
+
 })(Home as any);
 
 const styles = StyleSheet.create({
