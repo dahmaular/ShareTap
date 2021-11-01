@@ -47,7 +47,7 @@ const Verification = ({navigation, route}: Props) => {
 
       hubDispatch('navigation', 'loggedIn');
     } catch (error: any) {
-      hubDispatch('alert', error.message);
+      hubDispatch('alert', {type: 'error', text: error.message});
     } finally {
       setLoading(false);
     }

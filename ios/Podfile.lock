@@ -351,7 +351,7 @@ PODS:
     - React-perflogger (= 0.65.1)
   - RNAWSCognito (5.2.0):
     - React-Core
-  - RNBootSplash (3.2.5):
+  - RNBootSplash (3.2.6):
     - React-Core
   - RNCAsyncStorage (1.15.8):
     - React-Core
@@ -369,7 +369,7 @@ PODS:
     - React-Core
   - RNInAppBrowser (3.6.3):
     - React-Core
-  - RNReanimated (1.13.2):
+  - RNReanimated (1.13.3):
     - React-Core
   - RNScreens (3.7.2):
     - React-Core
@@ -628,7 +628,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 85187f19dd9c47a7c102f9994f9d14e4dc2110de
   ReactCommon: eafed38eec7b591c31751bfa7494801618460459
   RNAWSCognito: 97f1dbed4b9f42d61adfbcfe58e053843df532f6
-  RNBootSplash: b204961cfe4f0bb5bf94d019b4e546b062e46f92
+  RNBootSplash: 00f99e3c05fb44af3613e6088406de4be0a8eca3
   RNCAsyncStorage: 0f655864a81214d1c5a9bf0faf79d86dc25c383e
   RNCCheckbox: 7d36e3a79b7301e8b126c5136cc449af65d9cdab
   RNCClipboard: 5e299c6df8e0c98f3d7416b86ae563d3a9f768a3
@@ -637,13 +637,13 @@ SPEC CHECKSUMS:
   RNDateTimePicker: c9911be59b1f8670b9f244b85af3a7c295e175ed
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNInAppBrowser: 5672feb84e731411f6911979c71649c240a90202
-  RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
+  RNReanimated: 514a11da3a2bcc6c3dfd9de32b38e2b9bf101926
   RNScreens: 0591543e343c7444ea1756b6265d81a4295922c9
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Yoga: aa0cb45287ebe1004c02a13f279c55a95f1572f4
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: ca194eb6022739166672917fa1a8855ec81c1d4e
+PODFILE CHECKSUM: 133d2626c0dbaf6c1583d7ba9b033e9f3991e95f
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2

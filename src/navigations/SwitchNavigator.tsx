@@ -2,23 +2,60 @@ import React, {useEffect, useState} from 'react';
 import {Hub, HubCapsule} from '@aws-amplify/core';
 import {
   NavigationContainer,
+  RouteProp,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import {StyleSheet, View, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, Linking, Alert} from 'react-native';
 import AuthenticatedRoutes from './Authenticated';
 import UnauthenticatedRoutes from './Public';
 import Splash from '../screens/public/Splash';
 import {getUserIdService} from '../services/userService';
 import Message from '../components/Message';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {AuthenticatedRoutesParamsList} from '../types/navigation';
 
 export type LoggedInState = 'initializing' | 'loggedIn' | 'loggedOut';
 
-const SwitchNavigator = () => {
-  const [message, setMessage] = useState('');
+type RolodexProps = NativeStackNavigationProp<
+  AuthenticatedRoutesParamsList,
+  'Rolodex'
+>;
+
+type RolodexRouteProp = RouteProp<AuthenticatedRoutesParamsList, 'Rolodex'>;
+
+type Props = {
+  navigation: RolodexProps;
+  route: RolodexRouteProp;
+};
+
+const SwitchNavigator = ({navigation}: Props) => {
+  const [message, setMessage] = useState<{
+    type: 'regular' | 'error';
+    text: string;
+  }>({type: 'regular', text: ''});
   const [isUserLoggedIn, setUserLoggedIn] =
     useState<LoggedInState>('loggedOut');
 
   const navigationRef = useNavigationContainerRef();
+
+  const config = {
+    screens: {
+      Rolodex: 'rolodex',
+      Search: 'search',
+      Root: 'root',
+      // Profile: {
+      //   path: "profile/:id",
+      //   parse: {
+      //     id: (id) => `${id}`,
+      //   },
+      // },
+    },
+  };
+
+  const linking = {
+    prefixes: ['https://mobile.tap2me.com', 'tapiolla://'],
+    config,
+  };
 
   useEffect(() => {
     getUserIdService()
@@ -54,19 +91,42 @@ const SwitchNavigator = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Get the deep link used to open the app
+    const getUrl = async () => {
+      const initialUrl = await Linking.getInitialURL();
+
+      if (initialUrl === null) {
+        return;
+      }
+
+      if (initialUrl.includes('rolodex')) {
+        navigation.navigate('Rolodex');
+      }
+    };
+    getUrl();
+
+    // Linking.addEventListener('url', ({url}) => {
+    // });
+
+    // return () => {
+    //   Linking.removeAllListeners('url');
+    // };
+  }, []);
+
   return (
     <>
-      <NavigationContainer ref={navigationRef}>
+      <NavigationContainer ref={navigationRef} linking={linking}>
         {isUserLoggedIn === 'initializing' && <Splash />}
         {isUserLoggedIn === 'loggedIn' && <AuthenticatedRoutes />}
         {isUserLoggedIn === 'loggedOut' && <UnauthenticatedRoutes />}
       </NavigationContainer>
-      {message != '' && (
+      {message.text != '' && (
         <View style={styles.toastView}>
           <Message
             message={message}
             onHide={() => {
-              setMessage('');
+              setMessage({...message, text: ''});
             }}
           />
         </View>

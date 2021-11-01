@@ -40,7 +40,12 @@ export const awsConfig = {
 
 export const hubDispatch = (
   channel: 'navigation' | 'alert',
-  data: string | LoggedInState,
+  data:
+    | {
+        type: 'regular' | 'error';
+        text: string;
+      }
+    | LoggedInState,
 ) => {
   Hub.dispatch(channel, {
     event: '',
