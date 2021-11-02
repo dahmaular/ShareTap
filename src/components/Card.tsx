@@ -7,6 +7,7 @@ import {
   Animated,
   Dimensions,
   Share,
+  Linking,
 } from 'react-native';
 
 import {Menu} from 'react-native-paper';
@@ -35,10 +36,8 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: item.cardDetails.email as string,
+        message: 'https://mobile.tap2me.com/rolodex',
       });
-
-      console.log('Result', result);
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // shared with activity type of result.activityType
@@ -47,6 +46,7 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
         }
       } else if (result.action === Share.dismissedAction) {
         // dismissed
+        closeMenu();
       }
     } catch (error) {}
   };
@@ -86,15 +86,27 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
               </View>
 
               <View style={styles.rowCenter}>
-                <TouchableOpacity style={{marginRight: 10}} onPress={onShare}>
+                <TouchableOpacity
+                  style={{marginRight: 10}}
+                  onPress={() =>
+                    Linking.openURL(item.cardDetails.website as string)
+                  }>
                   <Link />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{marginRight: 10}} onPress={onShare}>
+                <TouchableOpacity
+                  style={{marginRight: 10}}
+                  onPress={() =>
+                    Linking.openURL(item.cardDetails.facebook as string)
+                  }>
                   <Facebook />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{marginRight: 10}} onPress={onShare}>
+                <TouchableOpacity
+                  style={{marginRight: 10}}
+                  onPress={() =>
+                    Linking.openURL(item.cardDetails.twitter as string)
+                  }>
                   <Twitter />
                 </TouchableOpacity>
               </View>
@@ -103,7 +115,7 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
         }>
         <Menu.Item
           titleStyle={styles.text}
-          onPress={() => console.log('sdfv')}
+          onPress={() => onShare()}
           title="Share"
         />
         <Menu.Item titleStyle={styles.text} onPress={() => {}} title="Edit" />

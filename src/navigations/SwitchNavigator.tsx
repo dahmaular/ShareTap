@@ -5,7 +5,7 @@ import {
   RouteProp,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import {StyleSheet, View, Linking, Alert} from 'react-native';
+import {StyleSheet, View, Linking, AppState} from 'react-native';
 import AuthenticatedRoutes from './Authenticated';
 import UnauthenticatedRoutes from './Public';
 import Splash from '../screens/public/Splash';
@@ -37,6 +37,8 @@ const SwitchNavigator = ({navigation}: Props) => {
     useState<LoggedInState>('loggedOut');
 
   const navigationRef = useNavigationContainerRef();
+
+  const [initialised, setInitialised] = useState(false);
 
   const config = {
     screens: {
@@ -113,6 +115,33 @@ const SwitchNavigator = ({navigation}: Props) => {
     //   Linking.removeAllListeners('url');
     // };
   }, []);
+
+  // useEffect(() => {
+  //   const getUrl = async () => {
+  //     const initialUrl = await Linking.getInitialURL();
+  //     if (initialUrl) handleLinkingUrl(initialUrl);
+  //   };
+
+  //   getUrl();
+
+  //   Linking.addEventListener('url', ({url}) => {
+  //     handleLinkingUrl(url);
+  //   });
+
+  //   return () => {
+  //     Linking.removeAllListeners('url');
+  //   };
+  // }, []);
+
+  // const handleLinkingUrl = (url: string | string[] | null) => {
+  //   if (url === null) {
+  //     return;
+  //   }
+
+  //   if (url.includes('rolodex')) {
+  //     navigation.navigate('Rolodex');
+  //   }
+  // };
 
   return (
     <>

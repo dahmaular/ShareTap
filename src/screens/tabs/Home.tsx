@@ -230,7 +230,9 @@ const Home = ({navigation, start}: Props) => {
               <Text style={styles.yourCardsText}>Your Cards (4)</Text>
               <Text
                 style={styles.viewAll}
-                onPress={() => navigation.navigate('Search')}>
+                onPress={() => {
+                  // navigation.navigate('Search')
+                }}>
                 View all
               </Text>
             </View>
