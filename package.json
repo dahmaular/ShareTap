@@ -36,7 +36,6 @@
     "react": "17.0.2",
     "react-native": "0.65.1",
     "react-native-bootsplash": "^3.2.6",
-    "react-native-copilot": "^2.5.1",
     "react-native-document-picker": "^6.0.4",
     "react-native-dotenv": "^3.2.0",
     "react-native-gesture-handler": "^1.10.3",
@@ -61,6 +60,7 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
+    "rn-tourguide": "^3.2.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {

@@ -32,24 +32,17 @@ import {getUserIdService} from '../../services/userService';
 import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
-import {
-  copilot,
-  walkthroughable,
-  CopilotStep,
-  CopilotWrappedComponentProps,
-} from 'react-native-copilot';
 
 type Props = {
   navigation: CompositeNavigationProp<
     StackNavigationProp<TabNavigatorParamsList, 'Home'>,
     StackNavigationProp<AuthenticatedRoutesParamsList>
   >;
-  start: CopilotWrappedComponentProps;
 };
 
 const {width} = Dimensions.get('screen');
 
-const Home = ({navigation, start}: Props) => {
+const Home = ({navigation}: Props) => {
   const [message, setMessage] = useState<{
     type: 'regular' | 'error';
     text: string;
@@ -73,13 +66,60 @@ const Home = ({navigation, start}: Props) => {
     setCardModal(false);
   };
 
-  const TapToShareButton = ({copilot}: CopilotWrappedComponentProps) => {
+  // ?TAP TO SHARE BUTTON
+  const TapToShareButton = () => {
     return (
-      <View {...copilot}>
+      <View>
         <TouchableOpacity style={styles.tap} onPress={() => setCardModal(true)}>
           <Tap />
           <Text style={styles.tapText}>TAP TO SHARE</Text>
         </TouchableOpacity>
+      </View>
+    );
+  };
+
+  // ?CARD FLATLIST
+  const UserCardSlider = () => {
+    return (
+      <View style={styles.flatlistView}>
+        <FlatList
+          horizontal
+          data={user.cards}
+          contentContainerStyle={{paddingVertical: 5}}
+          contentInsetAdjustmentBehavior="never"
+          snapToAlignment="center"
+          decelerationRate="fast"
+          automaticallyAdjustContentInsets={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={1}
+          snapToInterval={boxWidth}
+          contentInset={{
+            left: halfBoxDistance,
+            right: halfBoxDistance,
+          }}
+          contentOffset={{x: halfBoxDistance * -1, y: 0}}
+          onLayout={e => {
+            setScrollViewWidth(e.nativeEvent.layout.width);
+          }}
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {x: pan.x}}}],
+            {
+              useNativeDriver: false,
+            },
+          )}
+          onScrollEndDrag={() => console.log('Animation ended')}
+          keyExtractor={(item, index) => `${index}-${item}`}
+          renderItem={({item, index}) => (
+            <Card
+              item={item}
+              index={index}
+              boxWidth={boxWidth}
+              halfBoxDistance={halfBoxDistance}
+              pan={pan}
+            />
+          )}
+        />
       </View>
     );
   };
@@ -156,9 +196,9 @@ const Home = ({navigation, start}: Props) => {
       .catch(() => hubDispatch('navigation', 'loggedIn'));
   }, [dispatch]);
 
-  useEffect(() => {
-    start();
-  }, []);
+  // useEffect(() => {
+  //   start();
+  // }, []);
 
   return (
     <View style={{flex: 1}}>
@@ -236,57 +276,10 @@ const Home = ({navigation, start}: Props) => {
                 View all
               </Text>
             </View>
-            <View style={styles.flatlistView}>
-              <FlatList
-                horizontal
-                data={user.cards}
-                contentContainerStyle={{paddingVertical: 5}}
-                contentInsetAdjustmentBehavior="never"
-                snapToAlignment="center"
-                decelerationRate="fast"
-                automaticallyAdjustContentInsets={false}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                scrollEventThrottle={1}
-                snapToInterval={boxWidth}
-                contentInset={{
-                  left: halfBoxDistance,
-                  right: halfBoxDistance,
-                }}
-                contentOffset={{x: halfBoxDistance * -1, y: 0}}
-                onLayout={e => {
-                  setScrollViewWidth(e.nativeEvent.layout.width);
-                }}
-                onScroll={Animated.event(
-                  [{nativeEvent: {contentOffset: {x: pan.x}}}],
-                  {
-                    useNativeDriver: false,
-                  },
-                )}
-                onScrollEndDrag={() => console.log('Animation ended')}
-                keyExtractor={(item, index) => `${index}-${item}`}
-                ListEmptyComponent={() => (
-                  <View>
-                    <Text>Empty</Text>
-                  </View>
-                )}
-                renderItem={({item, index}) => (
-                  <Card
-                    item={item}
-                    index={index}
-                    boxWidth={boxWidth}
-                    halfBoxDistance={halfBoxDistance}
-                    pan={pan}
-                  />
-                )}
-              />
-            </View>
-            <CopilotStep
-              text="Tap the logo icon to exchange cards with another user via a hotspot connection."
-              order={1}
-              name="hello">
-              <TapToShareButton />
-            </CopilotStep>
+
+            <UserCardSlider />
+
+            <TapToShareButton />
           </View>
         </ScrollView>
       </View>
@@ -294,10 +287,7 @@ const Home = ({navigation, start}: Props) => {
   );
 };
 
-export default copilot({
-  overlay: 'svg', // or 'view'
-  animated: true, // or false
-})(Home as any);
+export default Home;
 
 const styles = StyleSheet.create({
   badgeStyle: {
