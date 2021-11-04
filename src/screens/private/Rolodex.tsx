@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
   },
 
   touchable: {
-    height: 184,
+    height: 191,
     paddingHorizontal: 20,
     paddingVertical: 20,
     justifyContent: 'space-between',
