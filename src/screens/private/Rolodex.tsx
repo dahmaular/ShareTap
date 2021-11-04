@@ -24,6 +24,7 @@ import EmptyCard from '../../assets/svg/EmptyCard.svg';
 import cardssss from '../../mock/CarouselList';
 import tabs from '../../mock/Tabs';
 import ReminderAndCalendarModal from '../../components/ReminderAndCalendarModal';
+import ReminderModal from '../../components/ReminderModal';
 
 type RolodexProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -52,6 +53,8 @@ const {width} = Dimensions.get('screen');
 const deviceHeight = Dimensions.get('window').height;
 
 const Rolodex = ({navigation}: Props) => {
+  const [reminderModal, setReminderModal] = useState(false);
+  const [reminderCalenderModal, setReminderCalenderModal] = useState(false);
   const [modal, setModal] = useState(false);
   const [categories] = useState<CategoryProps[]>(cats);
 
@@ -204,16 +207,27 @@ const Rolodex = ({navigation}: Props) => {
     );
   };
 
+  const handleNextModal = () => {
+    setReminderCalenderModal(false)
+    setReminderModal(true)
+  };
+
   return (
     <View style={{flex: 1}}>
-      {modal && (
-        <ReminderAndCalendarModal
-          visible={modal}
-          onBackButtonPress={() => setModal(true)}
-          onBackdropPress={() => setModal(true)}
-          onClose={() => setModal(false)}
-        />
-      )}
+      <ReminderAndCalendarModal
+        visible={reminderCalenderModal}
+        onBackButtonPress={() => setReminderCalenderModal(true)}
+        onBackdropPress={() => setReminderCalenderModal(true)}
+        onClose={() => setReminderCalenderModal(false)}
+        onOpenNextModal={handleNextModal}
+      />
+
+      <ReminderModal
+        visible={reminderModal}
+        onBackButtonPress={() => setReminderModal(true)}
+        onBackdropPress={() => setReminderModal(true)}
+        onClose={() => setReminderModal(false)}
+      />
       <Header
         title="Rolodex"
         titleColor="#FFFFFF"
@@ -221,7 +235,7 @@ const Rolodex = ({navigation}: Props) => {
         leftSvg={<Back />}
         leftOnPress={() => navigation.goBack()}
         rightSvg={<More />}
-        rightOnPress={() => setModal(true)}
+        rightOnPress={() => setReminderCalenderModal(true)}
       />
       <View style={styles.container}>
         <View style={{flex: 1}}>

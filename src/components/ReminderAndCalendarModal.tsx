@@ -2,56 +2,58 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import Close from '../assets/svg/phone-verif-close-icon.svg';
-import Mail from '../assets/svg/modal-bell.svg';
 import Calendar from '../assets/svg/calendar-icon.svg';
 import Clock from '../assets/svg/clock-icon.svg';
 import {PRIMARY_COLOR} from '../core/color';
+import ReminderModal from './ReminderModal';
 
 type Props = {
   visible: boolean;
   onBackdropPress: Function;
   onBackButtonPress: Function;
   onClose: Function;
+  onOpenNextModal: Function;
 };
 
-const NotificationModal = ({
+const ReminderAndCalendarModal = ({
   visible,
   onBackdropPress,
   onBackButtonPress,
   onClose,
+  onOpenNextModal,
 }: Props) => {
-  const [modal] = useState(visible);
-
-  const closeModal = () => {
-    onClose();
-  };
-
   return (
-    <Modal
-      avoidKeyboard
-      propagateSwipe={true}
-      style={styles.bottomModal}
-      isVisible={modal}
-      onBackdropPress={() => onBackdropPress()}
-      onBackButtonPress={() => onBackButtonPress()}>
-      <TouchableOpacity onPress={() => onClose()} style={styles.modalCloseBtn}>
-        <Close />
-      </TouchableOpacity>
-      <View style={styles.modal}>
-        <TouchableOpacity style={styles.modalActionButton}>
-          <Calendar height={24} width={24} />
-          <Text style={styles.modalActionButtonText}>Schedule a Message</Text>
+    <View>
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.bottomModal}
+        isVisible={visible}
+        onBackdropPress={() => onBackdropPress()}
+        onBackButtonPress={() => onBackButtonPress()}>
+        <TouchableOpacity
+          onPress={() => onClose()}
+          style={styles.modalCloseBtn}>
+          <Close />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.modalActionButton}>
-          <Clock height={24} width={24} />
-          <Text style={styles.modalActionButtonText}>Set Reminder</Text>
-        </TouchableOpacity>
-      </View>
-    </Modal>
+        <View style={styles.modal}>
+          <TouchableOpacity style={styles.modalActionButton}>
+            <Calendar height={24} width={24} />
+            <Text style={styles.modalActionButtonText}>Schedule a Message</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.modalActionButton}
+            onPress={() => onOpenNextModal()}>
+            <Clock height={24} width={24} />
+            <Text style={styles.modalActionButtonText}>Set Reminder</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
-export default NotificationModal;
+export default ReminderAndCalendarModal;
 
 const styles = StyleSheet.create({
   bottomModal: {
