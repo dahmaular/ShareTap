@@ -238,6 +238,7 @@ const Rolodex = ({navigation}: Props) => {
         rightOnPress={() => setReminderCalenderModal(true)}
       />
       <View style={styles.container}>
+
         <View style={{flex: 1}}>
           <View style={styles.categoriesView}>
             <ScrollView
@@ -394,7 +395,7 @@ const styles = StyleSheet.create({
   },
 
   touchable: {
-    height: 191,
+    height: 184,
     paddingHorizontal: 20,
     paddingVertical: 20,
     justifyContent: 'space-between',

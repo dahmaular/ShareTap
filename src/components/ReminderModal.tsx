@@ -3,10 +3,12 @@ import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import Close from '../assets/svg/phone-verif-close-icon.svg';
 import DownArrow from '../assets/svg/caret-down-icon.svg';
+import Moment from 'moment';
 
 import TextInputs from '../components/TextInput';
 import {TextInput} from 'react-native-paper';
 import {PRIMARY_COLOR} from '../core/color';
+import DateSelect from './DatePicker';
 
 type Props = {
   visible: boolean;
@@ -29,6 +31,7 @@ const ReminderModal = ({
 
   const [reminder, setreminder] = useState({value: '', error: ''});
   const [reminderFocus, setreminderFocus] = useState(false);
+  const [selectDate, setSelectedDate] = useState(Moment(new Date()).format('lll'));
 
   const validateFields = () => {};
 
@@ -75,10 +78,15 @@ const ReminderModal = ({
             }}
           />
 
-          <TouchableOpacity style={styles.dateTimeButton}>
-            <Text style={styles.dateTimeButtonText}>Select Date</Text>
-            <DownArrow />
-          </TouchableOpacity>
+          <DateSelect
+            name="doe"
+            placeholder="Select Date"
+            dateValue={Moment(selectDate).format('lll')}
+            onValueChange={(itemValue: any) => {
+              console.log({itemValue})
+              setSelectedDate(itemValue)
+            }}
+          />
         </View>
 
         <TouchableOpacity style={styles.modalButton}>
