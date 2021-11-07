@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:mobile.tap2me.com</string>
+		<string>applinks:tapiolla.page.link</string>
 	</array>
 </dict>
 </plist>

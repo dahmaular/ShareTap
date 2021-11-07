@@ -29,7 +29,7 @@
 			<string>com.tapiolla.app</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>tapiolla</string>
+				<string>com.tapiolla.app</string>
 			</array>
 		</dict>
 	</array>
@@ -92,6 +92,10 @@
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
+	</array>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>https://tapiolla.page.link/6RQi</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

@@ -13,6 +13,7 @@ import {getUserIdService} from '../services/userService';
 import Message from '../components/Message';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AuthenticatedRoutesParamsList} from '../types/navigation';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 export type LoggedInState = 'initializing' | 'loggedIn' | 'loggedOut';
 
@@ -38,26 +39,24 @@ const SwitchNavigator = ({navigation}: Props) => {
 
   const navigationRef = useNavigationContainerRef();
 
-  const [initialised, setInitialised] = useState(false);
+  // const config = {
+  //   screens: {
+  //     Rolodex: 'rolodex',
+  //     Search: 'search',
+  //     Root: 'root',
+  //     // Profile: {
+  //     //   path: "profile/:id",
+  //     //   parse: {
+  //     //     id: (id) => `${id}`,
+  //     //   },
+  //     // },
+  //   },
+  // };
 
-  const config = {
-    screens: {
-      Rolodex: 'rolodex',
-      Search: 'search',
-      Root: 'root',
-      // Profile: {
-      //   path: "profile/:id",
-      //   parse: {
-      //     id: (id) => `${id}`,
-      //   },
-      // },
-    },
-  };
-
-  const linking = {
-    prefixes: ['https://mobile.tap2me.com', 'tapiolla://'],
-    config,
-  };
+  // const linking = {
+  //   prefixes: ['https://mobile.tap2me.com', 'tapiolla://'],
+  //   config,
+  // };
 
   useEffect(() => {
     getUserIdService()
@@ -93,28 +92,29 @@ const SwitchNavigator = ({navigation}: Props) => {
     };
   }, []);
 
-  useEffect(() => {
-    // Get the deep link used to open the app
-    const getUrl = async () => {
-      const initialUrl = await Linking.getInitialURL();
+  // useEffect(() => {
+  //   // Get the deep link used to open the app
+  //   const getUrl = async () => {
+  //     const initialUrl = await Linking.getInitialURL();
 
-      if (initialUrl === null) {
-        return;
-      }
+  //     if (initialUrl === null) {
+  //       return;
+  //     }
 
-      if (initialUrl.includes('rolodex')) {
-        navigation.navigate('Rolodex');
-      }
-    };
-    getUrl();
+  //     if (initialUrl.includes('rolodex')) {
+  //       navigation.navigate('Rolodex');
+  //     }
+  //   };
+  //   getUrl();
 
-    // Linking.addEventListener('url', ({url}) => {
-    // });
+  //   Linking.addEventListener('url', ({url}) => {
+  //     console.log('URL', url);
+  //   });
 
-    // return () => {
-    //   Linking.removeAllListeners('url');
-    // };
-  }, []);
+  //   return () => {
+  //     Linking.removeAllListeners('url');
+  //   };
+  // }, []);
 
   // useEffect(() => {
   //   const getUrl = async () => {
@@ -143,9 +143,37 @@ const SwitchNavigator = ({navigation}: Props) => {
   //   }
   // };
 
+  const handleDynamicLink = (link: any) => {
+    console.log('link url ++++', link);
+    if (!!link?.url) {
+      let getId = link.url?.split('=').pop();
+      console.log('ID in the link', getId);
+      // navigation.navigate('Rolodex')
+      // setTimeout(()=>{
+      //   // add ID to the navigation params later
+      //   // navigation.navigate('Rolodex');
+      // }, 1000)
+    }
+  };
+
+  useEffect(() => {
+    dynamicLinks()
+      .getInitialLink()
+      .then(link => {
+        handleDynamicLink(link);
+      });
+    const linkListener = dynamicLinks().onLink(handleDynamicLink);
+    return () => {
+      linkListener();
+    };
+  }, []);
+
   return (
     <>
-      <NavigationContainer ref={navigationRef} linking={linking}>
+      <NavigationContainer
+        ref={navigationRef}
+        // linking={linking}
+      >
         {isUserLoggedIn === 'initializing' && <Splash />}
         {isUserLoggedIn === 'loggedIn' && <AuthenticatedRoutes />}
         {isUserLoggedIn === 'loggedOut' && <UnauthenticatedRoutes />}

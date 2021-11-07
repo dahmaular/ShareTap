@@ -15,6 +15,7 @@ import Link from '../assets/svg/link_02.svg';
 import Facebook from '../assets/svg/facebook.svg';
 import Twitter from '../assets/svg/twitter.svg';
 const {width} = Dimensions.get('window');
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 import {ListUserCardsResponse} from '../services/userService';
 
@@ -29,14 +30,42 @@ export interface CardProps {
 const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
   const [visible, setVisible] = React.useState(false);
 
+  const userId = 2
+
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
 
+  const generateLink = async () => {
+    try {
+      var link = await dynamicLinks().buildShortLink(
+        {
+          link: `https://tapiolla.page.link/6RQi?id=${userId}`,
+          domainUriPrefix: 'https://tapiolla.page.link',
+          android: {
+            packageName: 'com.tapiolla',
+            minimumVersion: '21',
+          },
+          ios: {
+            appStoreId: '1593089449',
+            bundleId: 'com.tapiolla.app',
+            minimumVersion: '21',
+          },
+        },
+        dynamicLinks.ShortLinkType.DEFAULT,
+      );
+      return link;
+    } catch (error) {
+      console.log('Error raised', error);
+    }
+  };
+
   const onShare = async () => {
+    const getLink: any = await generateLink();
+    console.log('Link to be shared', getLink);
     try {
       const result = await Share.share({
-        message: 'https://mobile.tap2me.com/rolodex',
+        message: getLink,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {

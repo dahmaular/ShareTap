@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "510181688673",
+    "project_id": "tapiolla-24f6d",
+    "storage_bucket": "tapiolla-24f6d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510181688673:android:9b0b805173e746e29c7120",
+        "android_client_info": {
+          "package_name": "com.tapiolla"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510181688673-5bemdud6r9aja0im87fdpjjegait2nrq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tapiolla",
+            "certificate_hash": "b375b9789aa93164f1a7cba8f89e630402f5e849"
+          }
+        },
+        {
+          "client_id": "510181688673-rjrgnbi4vm4c9od0dq63ghhhreojrao9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAivCbRqTKgRu5wXKv9SlCchaFCOT2A51w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510181688673-rjrgnbi4vm4c9od0dq63ghhhreojrao9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "510181688673-97huhhlus81n2c6244o9ard4ug1kpdel.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tapiolla.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

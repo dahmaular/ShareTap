@@ -20,6 +20,8 @@ target 'Tapiolla' do
 
   pod 'React-RCTLinking', :path => '../node_modules/react-native/Libraries/LinkingIOS'
 
+  pod 'Firebase/Analytics'
+
   target 'TapiollaTests' do
     inherit! :complete
     # Pods for testing

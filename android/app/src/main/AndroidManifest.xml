@@ -9,7 +9,9 @@
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+      android:usesCleartextTraffic="true"
+      >
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -22,7 +24,7 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter> -->
 
-            <intent-filter android:autoVerify="true">
+            <!-- <intent-filter android:autoVerify="true">
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
@@ -35,7 +37,14 @@
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="tapiolla" android:host="rolodex"/>
-      </intent-filter>
+      </intent-filter> -->
+
+      <intent-filter android:autoVerify="true">
+    <action android:name="android.intent.action.VIEW"/>
+    <category android:name="android.intent.category.DEFAULT"/>
+    <category android:name="android.intent.category.BROWSABLE"/>
+    <data android:host="tapiolla.page.link" android:scheme="https"/>
+</intent-filter>
       </activity>
 
           <!-- add the following lines (use the theme you created at step 2) -->
