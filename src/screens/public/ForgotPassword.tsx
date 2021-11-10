@@ -73,7 +73,7 @@ const ForgotPassword = ({navigation}: Props) => {
           navigation={navigation}
           email={email.value}
         />
-      )}
+      )} 
       <Header
         title=""
         titleColor="#000000"

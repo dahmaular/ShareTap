@@ -33,7 +33,7 @@ const ReminderAndCalendarModal = ({
         onBackButtonPress={() => onBackButtonPress()}>
         <TouchableOpacity
           onPress={() => onClose()}
-          style={styles.modalCloseBtn}>
+          style={styles.modalCloseBtn}> 
           <Close />
         </TouchableOpacity>
         <View style={styles.modal}>
@@ -43,7 +43,11 @@ const ReminderAndCalendarModal = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.modalActionButton}
-            onPress={() => onOpenNextModal()}>
+            onPress={() => {
+             
+              onClose()
+               onOpenNextModal()
+            }}>
             <Clock height={24} width={24} />
             <Text style={styles.modalActionButtonText}>Set Reminder</Text>
           </TouchableOpacity>

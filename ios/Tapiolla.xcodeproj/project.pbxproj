@@ -29,7 +29,7 @@
 		B8A419FE31634FC499C001C3 /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 73ECCDD48BC24991B0301DD1 /* Poppins-ThinItalic.ttf */; };
 		C6020E4F5DC64218BF98F8C8 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B50CD3574144A2FBEDB86D4 /* Poppins-Bold.ttf */; };
 		CE047CBA272ED1D300DFF7A7 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE047CB9272ED1D300DFF7A7 /* BootSplash.storyboard */; };
-		CE27085727395DF4007FF4BE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE27085627395DF4007FF4BE /* GoogleService-Info.plist */; };
+		CE6C2E28273C105F00CAD950 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE6C2E27273C105E00CAD950 /* GoogleService-Info.plist */; };
 		CE79096D27204D7B009AA3C5 /* libswiftWebKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE79096C27204D7B009AA3C5 /* libswiftWebKit.tbd */; };
 		CE79096F27204E12009AA3C5 /* libswiftFileProvider.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE79096E27204E12009AA3C5 /* libswiftFileProvider.tbd */; };
 		CE79097127204E27009AA3C5 /* libswiftDataDetection.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE79097027204E27009AA3C5 /* libswiftDataDetection.tbd */; };
@@ -96,7 +96,7 @@
 		C86B6CA3DAAB4A098D91FD99 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		CE047CB9272ED1D300DFF7A7 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = Tapiolla/BootSplash.storyboard; sourceTree = "<group>"; };
 		CE08048C272D97E70011194C /* Tapiolla.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Tapiolla.entitlements; path = Tapiolla/Tapiolla.entitlements; sourceTree = "<group>"; };
-		CE27085627395DF4007FF4BE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../src/assets/json/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CE6C2E27273C105E00CAD950 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../src/assets/json/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CE79096C27204D7B009AA3C5 /* libswiftWebKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftWebKit.tbd; path = usr/lib/swift/libswiftWebKit.tbd; sourceTree = SDKROOT; };
 		CE79096E27204E12009AA3C5 /* libswiftFileProvider.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftFileProvider.tbd; path = usr/lib/swift/libswiftFileProvider.tbd; sourceTree = SDKROOT; };
 		CE79097027204E27009AA3C5 /* libswiftDataDetection.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftDataDetection.tbd; path = usr/lib/swift/libswiftDataDetection.tbd; sourceTree = SDKROOT; };
@@ -152,7 +152,7 @@
 		13B07FAE1A68108700A75B9A /* Tapiolla */ = {
 			isa = PBXGroup;
 			children = (
-				CE27085627395DF4007FF4BE /* GoogleService-Info.plist */,
+				CE6C2E27273C105E00CAD950 /* GoogleService-Info.plist */,
 				CE08048C272D97E70011194C /* Tapiolla.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -376,7 +376,7 @@
 				530C4A80F96644338D1B1228 /* Poppins-Regular.ttf in Resources */,
 				0055B3915AAB45D7A02726B4 /* Poppins-SemiBold.ttf in Resources */,
 				702CA44C575F41CB9E2D2CE9 /* Poppins-SemiBoldItalic.ttf in Resources */,
-				CE27085727395DF4007FF4BE /* GoogleService-Info.plist in Resources */,
+				CE6C2E28273C105F00CAD950 /* GoogleService-Info.plist in Resources */,
 				F42083EDB3CF45F9A331DE02 /* Poppins-Thin.ttf in Resources */,
 				B8A419FE31634FC499C001C3 /* Poppins-ThinItalic.ttf in Resources */,
 			);

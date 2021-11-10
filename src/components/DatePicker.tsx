@@ -45,6 +45,7 @@ const DateSelect = (props: any) => {
         onConfirm={handleConfirm}
         onCancel={hidePicker}
         date={dateNow}
+        display="inline"
       />
     </View>
   );

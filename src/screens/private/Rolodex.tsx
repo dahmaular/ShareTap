@@ -13,18 +13,23 @@ import {
 import Header from '../../components/Header';
 import Back from '../../assets/svg/back.svg';
 import More from '../../assets/svg/more.svg';
-import {BACKGROUND_COLOR} from '../../core/color';
+import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
 import cats from '../../mock/Categories';
 import {AuthenticatedRoutesParamsList} from '../../types/navigation';
+import TextInputs from '../../components/TextInput';
+import DateSelect from '../../components/DatePicker';
 import {Menu} from 'react-native-paper';
+import Modal from 'react-native-modal';
+import Close from '../../assets/svg/phone-verif-close-icon.svg';
+import Calendar from '../../assets/svg/calendar-icon.svg';
+import Clock from '../../assets/svg/clock-icon.svg';
 import Link from '../../assets/svg/link_02.svg';
 import Facebook from '../../assets/svg/facebook.svg';
 import Twitter from '../../assets/svg/twitter.svg';
 import EmptyCard from '../../assets/svg/EmptyCard.svg';
 import cardssss from '../../mock/CarouselList';
 import tabs from '../../mock/Tabs';
-import ReminderAndCalendarModal from '../../components/ReminderAndCalendarModal';
-import ReminderModal from '../../components/ReminderModal';
+import Moment from 'moment';
 
 type RolodexProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -55,6 +60,17 @@ const deviceHeight = Dimensions.get('window').height;
 const Rolodex = ({navigation}: Props) => {
   const [reminderModal, setReminderModal] = useState(false);
   const [reminderCalenderModal, setReminderCalenderModal] = useState(false);
+  const [reminder, setreminder] = useState({value: '', error: ''});
+  const [reminderFocus, setreminderFocus] = useState(false);
+  const [selectDate, setSelectedDate] = useState(
+    Moment(new Date()).format('lll'),
+  );
+
+  const validateFields = () => {};
+
+  const handlereminderBlur = () => {
+    setreminderFocus(true);
+  };
   const [modal, setModal] = useState(false);
   const [categories] = useState<CategoryProps[]>(cats);
 
@@ -207,27 +223,113 @@ const Rolodex = ({navigation}: Props) => {
     );
   };
 
-  const handleNextModal = () => {
-    setReminderCalenderModal(false)
-    setReminderModal(true)
+  const ReminderAndCalendarModal = () => {
+    return (
+      <View>
+        <Modal
+          avoidKeyboard
+          propagateSwipe={true}
+          style={styles.bottomModal}
+          isVisible={reminderCalenderModal}
+          onBackdropPress={() => setReminderCalenderModal(false)}
+          onBackButtonPress={() => setReminderCalenderModal(false)}>
+          <TouchableOpacity
+            onPress={() => setReminderCalenderModal(false)}
+            style={styles.modalCloseBtn}>
+            <Close />
+          </TouchableOpacity>
+          <View style={styles.modal}>
+            <TouchableOpacity style={styles.modalActionButton}>
+              <Calendar height={24} width={24} />
+              <Text style={styles.modalActionButtonText}>
+                Schedule a Message
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalActionButton}
+              onPress={() => {
+                setReminderCalenderModal(false);
+                setReminderModal(true);
+                // setTimeout(() => {
+                //   console.log('I was called')
+                //   setReminderModal(true);
+                // }, 1000);
+              }}>
+              <Clock height={24} width={24} />
+              <Text style={styles.modalActionButtonText}>Set Reminder</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+      </View>
+    );
+  };
+
+  const ReminderModal = () => {
+    return (
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.bottomModal}
+        isVisible={reminderModal}
+        onBackdropPress={() => setReminderModal(false)}
+        onBackButtonPress={() => setReminderModal(false)}>
+        <TouchableOpacity
+          onPress={() => setReminderModal(false)}
+          style={styles.reminderModalCloseBtn}>
+          <Close />
+        </TouchableOpacity>
+        <View style={styles.reminderModal}>
+          <View style={styles.modalContentWrap}>
+            <Text style={styles.reminderHeader}>Set Reminder</Text>
+            <Text style={styles.reminderText}>
+              Ensure the recipient has clicked on the tap {'\n'}to share button
+              on
+            </Text>
+
+            <TextInputs
+              label="Remind me of"
+              returnKeyType="next"
+              placeholderTextColor="rgba(90, 89, 89, 0.55)"
+              placeholder="Remind me of"
+              value={reminder.value}
+              onChangeText={text => setreminder({value: text, error: ''})}
+              error={!!reminder.error}
+              errorText={reminder.error}
+              autoCapitalize="none"
+              autoCompleteType="name"
+              textContentType="familyName"
+              keyboardType="name-phone-pad"
+              onFocus={() => setreminderFocus(true)}
+              onBlur={handlereminderBlur}
+              style={{
+                backgroundColor: reminderFocus ? '#FFFFFF' : '#d8d9d9',
+                marginBottom: 14,
+              }}
+            />
+
+            <DateSelect
+              placeholder="Select Date"
+              dateValue={Moment(selectDate).format('lll')}
+              onValueChange={(itemValue: any) => {
+                console.log({itemValue});
+                setSelectedDate(itemValue);
+              }}
+            /> 
+          </View>
+
+          <TouchableOpacity style={styles.modalButton}>
+            <Text style={styles.modalBtnText}>CONTINUE</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
   };
 
   return (
     <View style={{flex: 1}}>
-      <ReminderAndCalendarModal
-        visible={reminderCalenderModal}
-        onBackButtonPress={() => setReminderCalenderModal(true)}
-        onBackdropPress={() => setReminderCalenderModal(true)}
-        onClose={() => setReminderCalenderModal(false)}
-        onOpenNextModal={handleNextModal}
-      />
+      {reminderModal && ReminderModal()}
+      {reminderCalenderModal && ReminderAndCalendarModal()}
 
-      <ReminderModal
-        visible={reminderModal}
-        onBackButtonPress={() => setReminderModal(true)}
-        onBackdropPress={() => setReminderModal(true)}
-        onClose={() => setReminderModal(false)}
-      />
       <Header
         title="Rolodex"
         titleColor="#FFFFFF"
@@ -235,10 +337,12 @@ const Rolodex = ({navigation}: Props) => {
         leftSvg={<Back />}
         leftOnPress={() => navigation.goBack()}
         rightSvg={<More />}
-        rightOnPress={() => setReminderCalenderModal(true)}
+        rightOnPress={() => {
+          console.log('I got Pressed');
+          setReminderCalenderModal(true);
+        }}
       />
       <View style={styles.container}>
-
         <View style={{flex: 1}}>
           <View style={styles.categoriesView}>
             <ScrollView
@@ -521,5 +625,133 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingHorizontal: 20,
     marginTop: 20,
+  },
+
+  // Reminder $ Calendar Modal
+
+  bottomModal: {
+    justifyContent: 'flex-end',
+    paddingBottom: 20,
+  },
+
+  modal: {
+    width: '100%',
+    height: 121,
+    backgroundColor: '#FFFFFF',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    paddingTop: 23,
+    paddingBottom: 26,
+    paddingHorizontal: 32,
+    alignItems: 'flex-start',
+  },
+
+  modalCloseBtn: {
+    marginBottom: 24,
+    alignSelf: 'flex-end',
+  },
+
+  modalActionButton: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: 26,
+  },
+
+  modalActionButtonText: {
+    marginLeft: 18,
+    fontFamily: 'Poppins',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    color: '#333333',
+    letterSpacing: 0.2,
+    lineHeight: 24,
+  },
+
+  // Reminder  Modal
+
+  reminderModal: {
+    width: '100%',
+    height: 390,
+    backgroundColor: '#ffffff',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    paddingBottom: 26,
+    alignItems: 'flex-start',
+  },
+
+  modalContentWrap: {
+    height: 317,
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingTop: 23,
+  },
+
+  reminderModalCloseBtn: {
+    marginBottom: 24,
+    alignSelf: 'flex-end',
+  },
+
+  reminderHeader: {
+    fontFamily: 'Poppins',
+    fontSize: 20,
+    lineHeight: 24,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    color: PRIMARY_COLOR,
+    letterSpacing: 0.2,
+    marginBottom: 16,
+  },
+  reminderText: {
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    lineHeight: 20,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    color: '#8C8C8C',
+    letterSpacing: 0.2,
+    marginBottom: 16,
+  },
+
+  dateTimeButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    height: 55,
+    backgroundColor: '#D9D9D9',
+    paddingHorizontal: 14,
+    borderRadius: 4,
+  },
+
+  dateTimeButtonText: {
+    color: 'rgba(90, 89, 89, 0.55)',
+    fontFamily: 'Poppins',
+    fontSize: 16,
+    lineHeight: 24,
+    letterSpacing: 0.2,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+  },
+
+  modalButton: {
+    height: 73,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: PRIMARY_COLOR,
+  },
+
+  modalBtnText: {
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    color: '#FFFFFF',
+    letterSpacing: 0.2,
   },
 });

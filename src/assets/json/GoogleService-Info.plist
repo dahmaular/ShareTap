@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>510181688673-97huhhlus81n2c6244o9ard4ug1kpdel.apps.googleusercontent.com</string>
+	<string>772953221188-78b1kfar5nlqcrhocmsnefeeukufci01.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.510181688673-97huhhlus81n2c6244o9ard4ug1kpdel</string>
+	<string>com.googleusercontent.apps.772953221188-78b1kfar5nlqcrhocmsnefeeukufci01</string>
 	<key>API_KEY</key>
-	<string>AIzaSyD9s1EhmzdOuRR_q4Bfusxz5nuSlX7ZGsM</string>
+	<string>AIzaSyBLT7PS0vftR7MUOTyBhBfCjm9KwRjCQN8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>510181688673</string>
+	<string>772953221188</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.tapiolla.app</string>
 	<key>PROJECT_ID</key>
-	<string>tapiolla-24f6d</string>
+	<string>tapiolla-802701</string>
 	<key>STORAGE_BUCKET</key>
-	<string>tapiolla-24f6d.appspot.com</string>
+	<string>tapiolla-802701.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:510181688673:ios:c77376f4ae67a6fb9c7120</string>
+	<string>1:772953221188:ios:5cf337bf9544c84919f411</string>
+	<key>DATABASE_URL</key>
+	<string>https://tapiolla-802701.firebaseio.com</string>
 </dict>
 </plist>
