@@ -28,7 +28,8 @@ const DateSelect = (props: any) => {
     }-${newDate.getDate()}`;
     setDateNow(date);
     setDisplay(newDate);
-    props.onValueChange(Moment(date).format('lll'));
+    console.log('Raw Date', date);
+    props.onValueChange(Moment(date).format('ll'));
   };
 
   return (

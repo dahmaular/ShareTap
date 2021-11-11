@@ -1,21 +1,15 @@
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import {StyleSheet, Text, View, Dimensions, ScrollView} from 'react-native';
 import TextInputs from '../../components/TextInput';
 import Header from '../../components/Header';
 import Back from '../../assets/svg/back.svg';
 import {BACKGROUND_COLOR} from '../../core/color';
 import {AuthenticatedRoutesParamsList} from '../../types/navigation';
 import Moment from 'moment';
-
+import DateSelect from '../../components/DatePicker';
+import Button from '../../components/Button';
 
 type SetReminderProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -37,7 +31,11 @@ const {width} = Dimensions.get('screen');
 const SetReminder = ({navigation}: Props) => {
   const [reminder, setreminder] = useState({value: '', error: ''});
   const [reminderFocus, setreminderFocus] = useState(false);
-  const [selectDate, setSelectedDate] = useState(Moment(new Date()).format('lll'));
+  // const [selectDate, setSelectedDate] = useState(
+  //   Moment(new Date()).format('LLLL'),
+  // );
+
+  const [selectDate, setSelectedDate] = useState(new Date());
 
   const handlereminderBlur = () => {
     setreminderFocus(true);
@@ -94,6 +92,25 @@ const SetReminder = ({navigation}: Props) => {
               // height: 120,
             }}
           />
+
+          <DateSelect
+            name="doe"
+            placeholder="Select Date"
+            dateValue={Moment(selectDate).format('LLLL')}
+            onValueChange={(itemValue: any) => {
+              console.log({itemValue});
+              setSelectedDate(itemValue);
+            }}
+          />
+
+          <View style={styles.buttonView}>
+            <Button
+              disabled={false}
+              loading={false}
+              label="CONTINUE"
+              onPress={() => console.log('Next')}
+            />
+          </View>
         </ScrollView>
       </View>
     </View>
@@ -133,5 +150,13 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'normal',
     color: 'rgba(51, 51, 51, 0.51)',
+  },
+
+  buttonView: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    marginTop: 144,
   },
 });
