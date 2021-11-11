@@ -37,6 +37,7 @@ export type AuthenticatedRoutesParamsList = {
   Root: undefined;
   Search: undefined;
   Rolodex: undefined;
+  SetReminder: undefined;
 };
 
 export interface AccountCreationRoute {

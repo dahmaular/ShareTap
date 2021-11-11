@@ -57,7 +57,7 @@ const ReminderModal = ({
             Ensure the recipient has clicked on the tap {'\n'}to share button on
           </Text>
 
-          <TextInputs
+          <TextInputs 
             label="Remind me of"
             returnKeyType="next"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"

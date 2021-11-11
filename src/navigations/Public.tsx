@@ -11,7 +11,7 @@ import {
   Verification,
   Welcome,
 } from '../screens/public';
-import {UnauthenticatedRoutesParamsList} from '../types';
+import {UnauthenticatedRoutesParamsList} from '../types/navigation';
 
 const Stack = createStackNavigator<UnauthenticatedRoutesParamsList>();
 

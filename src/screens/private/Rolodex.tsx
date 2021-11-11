@@ -249,11 +249,7 @@ const Rolodex = ({navigation}: Props) => {
               style={styles.modalActionButton}
               onPress={() => {
                 setReminderCalenderModal(false);
-                setReminderModal(true);
-                // setTimeout(() => {
-                //   console.log('I was called')
-                //   setReminderModal(true);
-                // }, 1000);
+                navigation.navigate('SetReminder');
               }}>
               <Clock height={24} width={24} />
               <Text style={styles.modalActionButtonText}>Set Reminder</Text>
@@ -314,7 +310,7 @@ const Rolodex = ({navigation}: Props) => {
                 console.log({itemValue});
                 setSelectedDate(itemValue);
               }}
-            /> 
+            />
           </View>
 
           <TouchableOpacity style={styles.modalButton}>

@@ -59,9 +59,10 @@ const SwitchNavigator = ({navigation}: Props) => {
   // };
 
   useEffect(() => {
-    getUserIdService()
-      .then(() => setUserLoggedIn('loggedIn')) //also dispatch redux action to get users
-      .catch(() => setUserLoggedIn('loggedOut'));
+    // getUserIdService()
+    //   .then(() => setUserLoggedIn('loggedIn')) //also dispatch redux action to get users
+    //   .catch(() => setUserLoggedIn('loggedOut'));
+    setUserLoggedIn('loggedIn')
   }, []);
 
   const hubListener = (data: HubCapsule) => {
