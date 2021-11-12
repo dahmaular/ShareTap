@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
@@ -7,7 +8,10 @@ import {
   Dimensions,
   TouchableOpacity,
   FlatList,
+  PermissionsAndroid,
 } from 'react-native';
+import WifiManager from 'react-native-wifi-reborn';
+
 import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
 import Close from '../../assets/svg/phone-verif-close-icon.svg';
 import Phone from '../../assets/svg/phone.svg';
@@ -16,6 +20,7 @@ import LottieView from 'lottie-react-native';
 import Modal from 'react-native-modal';
 import {ConnectProps} from '../../types/navigation';
 import connects from '../../mock/Connects';
+import {useNavigation} from '@react-navigation/native';
 
 const {width} = Dimensions.get('screen');
 
@@ -30,9 +35,19 @@ const Search = () => {
 
   const [resultsModal, setResultsModal] = useState(false);
 
-  const [transferring, setTransferring] = useState(true);
+  const [transferring, setTransferring] = useState(false);
 
   const [results] = useState<ConnectProps[]>(connects);
+  let navigation = useNavigation();
+
+  const [connected, setConnected] = useState({connected: false, ssid: 'S4N'});
+  const [ssid, setSsid] = useState('');
+  const password = 'damola-123';
+  const [available, setAvailable] = useState<
+    Array<{
+      value: string;
+    }>
+  >([]);
 
   const handleFinish = () => {
     setFinish(false);
@@ -50,6 +65,87 @@ const Search = () => {
     if (animation && animation.current) {
       animation.current.play();
     }
+  }, []);
+
+  const initWifi = async () => {
+    try {
+      const ssid = await WifiManager.getCurrentWifiSSID();
+      setSsid(ssid);
+      console.log('Your current connected wifi SSID is ' + ssid);
+    } catch (error) {
+      setSsid('Cannot get current SSID!' + error.message);
+      console.log('Cannot get current SSID!', {error});
+    }
+  };
+
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'React Native Wifi Reborn App Permission',
+          message:
+            'Location permission is required to connect with or scan for Wifi networks. ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        initWifi();
+        listAvailableWifi();
+      } else {
+        console.log('Location permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const connectWithWifi = async () => {
+    try {
+      const data = await WifiManager.connectToProtectedSSID(
+        ssid,
+        password,
+        false,
+      );
+      console.log('Connected successfully!', {data});
+      setConnected({connected: true, ssid});
+    } catch (error) {
+      setConnected({connected: false, error: error.message});
+      console.log('Connection failed!', {error});
+    }
+  };
+
+  const listAvailableWifi = async () => {
+    try {
+      const data = await WifiManager.loadWifiList();
+      console.log('Available Wifi!', data);
+      setAvailable(dat => [...dat, {value: ssid}]);
+      // setGoals((curGoals) => [...curGoals, { key: Math.random().toString(), value: input }])
+    } catch (error) {
+      // setConnected({connected: false, error: error.message});
+      console.log('Connection failed!', {error});
+    }
+  };
+
+  const enableWifi = async () => {
+    const enabled = await WifiManager.isEnabled();
+    console.log(enabled);
+    // WifiManager.setEnabled(false);
+  };
+
+  const scanExample = async () => {
+    try {
+      const data = await WifiManager.reScanAndLoadWifiList();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    requestLocationPermission();
   }, []);
 
   const ListEmptyView = () => {
@@ -185,7 +281,7 @@ const Search = () => {
             keyboardShouldPersistTaps="always">
             <View style={styles.modalContent}>
               <FlatList
-                data={results}
+                data={available}
                 keyExtractor={(item, index) => index.toString()}
                 showsVerticalScrollIndicator={false}
                 ListEmptyComponent={ListEmptyView}
@@ -194,13 +290,13 @@ const Search = () => {
                 renderItem={({item, index}) => (
                   <View style={{width: '100%'}} key={index}>
                     <View style={styles.connectLine}>
-                      <Text style={styles.connectName}>Andrea Kingsley</Text>
+                      <Text style={styles.connectName}>{item.value}</Text>
                       <TouchableOpacity style={styles.connect}>
                         <Text style={styles.connectText}>CONNECT</Text>
                       </TouchableOpacity>
                     </View>
 
-                    <View style={styles.border}></View>
+                    <View style={styles.border} />
                   </View>
                 )}
               />
@@ -229,6 +325,7 @@ const Search = () => {
                 // setErrorModal(true);
                 // setSuccessModal(true);
                 setResultsModal(true);
+                // navigation.goBack();
               }}>
               <Close />
             </TouchableOpacity>
@@ -276,7 +373,7 @@ const Search = () => {
                 <View style={styles.lottieView}>
                   <LottieView
                     source={require('../../assets/json/searching.json')}
-                    style={{width: 300, height: 300}}
+                    style={{width: 500, height: 500}}
                     loop={true}
                     autoPlay={true}
                     ref={animation}

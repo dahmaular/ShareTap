@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, {useState, useRef, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -32,6 +33,7 @@ import {getUserIdService} from '../../services/userService';
 import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
+import TurnOnHotspot from '../../components/TurnOnHotspot';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -57,6 +59,7 @@ const Home = ({navigation}: Props) => {
   const boxDistance = scrollViewWidth - boxWidth;
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
+  const [TurnOnHotspotModalState, showTurnOnHotspotModal] = useState(false);
 
   const _onNotificationPressed = () => {
     setModal(true);
@@ -70,7 +73,15 @@ const Home = ({navigation}: Props) => {
   const TapToShareButton = () => {
     return (
       <View>
-        <TouchableOpacity style={styles.tap} onPress={() => setCardModal(true)}>
+        <TouchableOpacity
+          style={styles.tap}
+          onPress={
+            // () => setCardModal(true)
+            // showTurnOnHotspotModal(true)
+            // enableWifi()
+            // scanExample()
+            () => navigation.navigate('Search')
+          }>
           <Tap />
           <Text style={styles.tapText}>TAP TO SHARE</Text>
         </TouchableOpacity>
@@ -271,7 +282,7 @@ const Home = ({navigation}: Props) => {
               <Text
                 style={styles.viewAll}
                 onPress={() => {
-                  // navigation.navigate('Search')
+                  navigation.navigate('Search');
                 }}>
                 View all
               </Text>
@@ -280,9 +291,20 @@ const Home = ({navigation}: Props) => {
             <UserCardSlider />
 
             <TapToShareButton />
+            {/* <Text style={styles.sectionDescription}>
+              {JSON.stringify(ssid)}
+            </Text>
+            <Text style={styles.sectionDescription}>
+              {JSON.stringify(connected)}
+            </Text> */}
           </View>
         </ScrollView>
       </View>
+      <Modal
+        isVisible={TurnOnHotspotModalState}
+        style={{justifyContent: 'flex-end', margin: 0}}>
+        <TurnOnHotspot showTurnOnHotspotModal={showTurnOnHotspotModal} />
+      </Modal>
     </View>
   );
 };
@@ -447,5 +469,16 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '600',
     color: '#316F8A',
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#000',
+  },
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
+    color: '#000',
   },
 });

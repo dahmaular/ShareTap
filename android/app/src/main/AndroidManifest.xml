@@ -2,6 +2,15 @@
   package="com.tapiolla">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+    android:required="true"
+    android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission
+    android:required="true"
+    android:name="android.permission.CHANGE_WIFI_STATE"/>
+<uses-permission
+    android:required="true"
+    android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
       android:name=".MainApplication"
