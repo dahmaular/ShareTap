@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useState} from 'react';
@@ -134,18 +135,25 @@ const Rolodex = ({navigation}: Props) => {
 
     for (let i = 0; i <= cardAmount; i++) {
       // if a collapsed card
-      if (i < collapsedCount) y += cardVisibleHeightCollapsed;
+      if (i < collapsedCount) {
+        y += cardVisibleHeightCollapsed;
+      }
       // if the last card
-      else if (i === cardAmount - 1) y += cardHeight;
+      else if (i === cardAmount - 1) {
+        y += cardHeight;
+      }
       // if a collapsing card
-      else if (i === collapsedCount)
+      else if (i === collapsedCount) {
         y +=
           currentStackHeight -
           cardHeight -
           collapsedCount * cardVisibleHeightCollapsed -
           expanedCount * cardVisibleHeight;
+      }
       // if an expanded card
-      else y += cardVisibleHeight;
+      else {
+        y += cardVisibleHeight;
+      }
 
       if (pressY < y) {
         return setPressed(i);
@@ -154,7 +162,9 @@ const Rolodex = ({navigation}: Props) => {
   };
 
   const cardTransform = (i: number) => {
-    if (!i) return {transform: [{translateY: topOffset}]};
+    if (!i) {
+      return {transform: [{translateY: topOffset}]};
+    }
 
     const translateY = scrollY.interpolate({
       inputRange: [
@@ -416,7 +426,7 @@ const Rolodex = ({navigation}: Props) => {
                       </View>
                     </View>
                   </TouchableOpacity>
-                  <View style={styles.bottomLine}></View>
+                  <View style={styles.bottomLine} />
                 </Animated.View>
               );
             })}
@@ -434,7 +444,8 @@ const Rolodex = ({navigation}: Props) => {
             showsVerticalScrollIndicator={false}>
             <TouchableOpacity
               onPress={onPress}
-              style={[{height: scrollHeight}]}></TouchableOpacity>
+              style={[{height: scrollHeight}]}
+            />
           </Animated.ScrollView>
         </View>
       </View>

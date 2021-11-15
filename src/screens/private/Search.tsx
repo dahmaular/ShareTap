@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
@@ -7,17 +8,29 @@ import {
   Dimensions,
   TouchableOpacity,
   FlatList,
+  PermissionsAndroid,
 } from 'react-native';
+import WifiManager from 'react-native-wifi-reborn';
+import {useNavigation} from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
+import Modal from 'react-native-modal';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
 import Close from '../../assets/svg/phone-verif-close-icon.svg';
 import Phone from '../../assets/svg/phone.svg';
 import Empty from '../../assets/svg/empty.svg';
-import LottieView from 'lottie-react-native';
-import Modal from 'react-native-modal';
 import {ConnectProps} from '../../types/navigation';
 import connects from '../../mock/Connects';
+import TextInputs from '../../components/TextInput';
+import {TextInput} from 'react-native-paper';
 
 const {width} = Dimensions.get('screen');
+
+interface WIFIUSER {
+  BSSID: string;
+  SSID: string;
+}
 
 const Search = () => {
   const animation = useRef<LottieView>(null);
@@ -29,10 +42,22 @@ const Search = () => {
   const [successModal, setSuccessModal] = useState(false);
 
   const [resultsModal, setResultsModal] = useState(false);
+  const [passwordModal, setPassModal] = useState(false);
+  const [password, setPassword] = useState({value: '', error: ''});
 
-  const [transferring, setTransferring] = useState(true);
+  const [passwordEntry, setPasswordEntry] = useState(true);
+  const [passwordFocus, setPasswordFocus] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+
+  const [transferring, setTransferring] = useState(false);
 
   const [results] = useState<ConnectProps[]>(connects);
+  let navigation = useNavigation();
+
+  const [connected, setConnected] = useState({connected: false, ssid: 'S4N'});
+  const [ssid, setSsid] = useState('');
+  const passwords = 'damola-123';
+  const [available, setAvailable] = useState<WIFIUSER[]>([]);
 
   const handleFinish = () => {
     setFinish(false);
@@ -40,7 +65,10 @@ const Search = () => {
 
   const retryButton = () => {
     setErrorModal(false);
+    scanExample();
   };
+
+  const wifiSelect = () => {};
 
   const proceedToContinue = () => {
     setSuccessModal(false);
@@ -50,6 +78,95 @@ const Search = () => {
     if (animation && animation.current) {
       animation.current.play();
     }
+  }, []);
+
+  const initWifi = async () => {
+    try {
+      const ssid = await WifiManager.getCurrentWifiSSID();
+      setSsid(ssid);
+      console.log('Your current connected wifi SSID is ' + ssid);
+    } catch (error) {
+      setSsid('Cannot get current SSID!' + error.message);
+      console.log('Cannot get current SSID!', {error});
+    }
+  };
+
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Tapiolla App Permission',
+          message:
+            'Location permission is required to connect with or scan for Wifi networks. ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        initWifi();
+        listAvailableWifi();
+      } else {
+        console.log('Location permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const connectWithWifi = async () => {
+    try {
+      const data = await WifiManager.connectToProtectedSSID(
+        ssid,
+        passwords,
+        false,
+      );
+      console.log('Connected successfully!', {data});
+      setConnected({connected: true, ssid});
+    } catch (error) {
+      setConnected({connected: false, error: error.message});
+      console.log('Connection failed!', {error});
+    }
+  };
+
+  const listAvailableWifi = async () => {
+    try {
+      const data = await WifiManager.loadWifiList();
+      console.log('Available Wifi!', data);
+      if (data.length > 0) {
+        setAvailable(data);
+        setResultsModal(true);
+      } else {
+        // setResultsModal(false);
+        setErrorModal(true);
+      }
+      // setGoals((curGoals) => [...curGoals, { key: Math.random().toString(), value: input }])
+    } catch (error) {
+      // setConnected({connected: false, error: error.message});
+      console.log('Connection failed!', {error});
+    }
+  };
+
+  const enableWifi = async () => {
+    // const enabled = await WifiManager.isEnabled();
+    // console.log(enabled);
+    // WifiManager.setEnabled(false);
+    // return WifiManager.setEnabled(false);
+  };
+
+  const scanExample = async () => {
+    try {
+      const data = await WifiManager.reScanAndLoadWifiList();
+      console.log(data);
+      setAvailable(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    requestLocationPermission();
   }, []);
 
   const ListEmptyView = () => {
@@ -112,6 +229,10 @@ const Search = () => {
       </Modal>
     );
   };
+
+  // const openPass = (name) => {
+
+  // }
 
   const shareSuccessModal = () => {
     return (
@@ -185,7 +306,7 @@ const Search = () => {
             keyboardShouldPersistTaps="always">
             <View style={styles.modalContent}>
               <FlatList
-                data={results}
+                data={available}
                 keyExtractor={(item, index) => index.toString()}
                 showsVerticalScrollIndicator={false}
                 ListEmptyComponent={ListEmptyView}
@@ -194,13 +315,148 @@ const Search = () => {
                 renderItem={({item, index}) => (
                   <View style={{width: '100%'}} key={index}>
                     <View style={styles.connectLine}>
-                      <Text style={styles.connectName}>Andrea Kingsley</Text>
-                      <TouchableOpacity style={styles.connect}>
+                      <Text style={styles.connectName}>{item.SSID}</Text>
+                      <TouchableOpacity
+                        style={styles.connect}
+                        onPress={
+                          () => openPass(item.SSID)
+                          // console.log(item.SSID)
+                        }>
+                        <Text style={styles.connectText}>CONNECT</Text>
+                      </TouchableOpacity>
+                    </View>
+                    {showPass ? (
+                      <TextInputs
+                        label="Password"
+                        placeholderTextColor="rgba(90, 89, 89, 0.55)"
+                        placeholder="Enter your password"
+                        value={password.value}
+                        onFocus={() => setPasswordFocus(true)}
+                        onChangeText={text =>
+                          setPassword({value: text, error: ''})
+                        }
+                        secureTextEntry={passwordEntry}
+                        style={{
+                          backgroundColor: passwordFocus
+                            ? '#FFFFFF'
+                            : '#EEEFEF',
+                        }}
+                        right={
+                          <TextInput.Icon
+                            name={() => (
+                              <TouchableOpacity
+                                style={styles.eyeView}
+                                onPress={() => setPasswordEntry(prev => !prev)}>
+                                <Ionicons
+                                  name={
+                                    passwordEntry
+                                      ? 'eye-outline'
+                                      : 'eye-off-outline'
+                                  }
+                                  size={17}
+                                  color="#000000"
+                                />
+                              </TouchableOpacity>
+                            )}
+                          />
+                        }
+                      />
+                    ) : (
+                      <></>
+                    )}
+
+                    <View style={styles.border} />
+                  </View>
+                )}
+              />
+            </View>
+          </ScrollView>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => retryButton()}>
+            <Text style={styles.modalBtnText}>RESCAN</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  };
+
+  const wifiPasswordModal = () => {
+    return (
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.resultsBottomModal}
+        isVisible={passwordModal}
+        onBackdropPress={() => setPassModal(false)}
+        onBackButtonPress={() => setPassModal(false)}>
+        <View style={styles.resultsModal}>
+          <View style={styles.modalHeader}>
+            <View>
+              <Text style={styles.searchResultText}>Password</Text>
+            </View>
+
+            <View style={{marginTop: 16}}>
+              <TextInputs
+                label="Password"
+                returnKeyType="next"
+                placeholderTextColor="rgba(90, 89, 89, 0.55)"
+                placeholder="Enter your password"
+                value={password.value}
+                onFocus={() => setPasswordFocus(true)}
+                onChangeText={text => setPassword({value: text, error: ''})}
+                secureTextEntry={passwordEntry}
+                style={{
+                  backgroundColor: passwordFocus ? '#FFFFFF' : '#EEEFEF',
+                }}
+                right={
+                  <TextInput.Icon
+                    name={() => (
+                      <TouchableOpacity
+                        style={styles.eyeView}
+                        onPress={() => setPasswordEntry(prev => !prev)}>
+                        <Ionicons
+                          name={
+                            passwordEntry ? 'eye-outline' : 'eye-off-outline'
+                          }
+                          size={17}
+                          color="#000000"
+                        />
+                      </TouchableOpacity>
+                    )}
+                  />
+                }
+              />
+              <Text style={styles.searchResultNote}>
+                Input the wifi password
+              </Text>
+            </View>
+          </View>
+          <ScrollView
+            contentContainerStyle={{flexGrow: 1}}
+            alwaysBounceVertical={false}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="always">
+            <View style={styles.modalContent}>
+              <FlatList
+                data={available}
+                keyExtractor={(item, index) => index.toString()}
+                showsVerticalScrollIndicator={false}
+                ListEmptyComponent={ListEmptyView}
+                style={styles.flatList}
+                contentContainerStyle={{flexGrow: 1}}
+                renderItem={({item, index}) => (
+                  <View style={{width: '100%'}} key={index}>
+                    <View style={styles.connectLine}>
+                      <Text style={styles.connectName}>{item.SSID}</Text>
+                      <TouchableOpacity
+                        style={styles.connect}
+                        onPress={() => enableWifi()}>
                         <Text style={styles.connectText}>CONNECT</Text>
                       </TouchableOpacity>
                     </View>
 
-                    <View style={styles.border}></View>
+                    <View style={styles.border} />
                   </View>
                 )}
               />
@@ -216,6 +472,7 @@ const Search = () => {
       {errorModal && searchErrorModal()}
       {successModal && shareSuccessModal()}
       {resultsModal && searchResultsModal()}
+      {passwordModal && wifiPasswordModal()}
       <View style={styles.container}>
         <ScrollView
           contentContainerStyle={{flexGrow: 1}}
@@ -228,7 +485,8 @@ const Search = () => {
               onPress={() => {
                 // setErrorModal(true);
                 // setSuccessModal(true);
-                setResultsModal(true);
+                // setResultsModal(true);
+                navigation.goBack();
               }}>
               <Close />
             </TouchableOpacity>
@@ -276,7 +534,7 @@ const Search = () => {
                 <View style={styles.lottieView}>
                   <LottieView
                     source={require('../../assets/json/searching.json')}
-                    style={{width: 300, height: 300}}
+                    style={{width: 500, height: 500}}
                     loop={true}
                     autoPlay={true}
                     ref={animation}
@@ -555,5 +813,10 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'normal',
     color: '#316F8A',
+  },
+  eyeView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
 });

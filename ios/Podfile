@@ -22,6 +22,8 @@ target 'Tapiolla' do
 
   pod 'Firebase/Analytics'
 
+  pod 'RNWifi', :path => '../node_modules/react-native-wifi-reborn'
+
   target 'TapiollaTests' do
     inherit! :complete
     # Pods for testing
