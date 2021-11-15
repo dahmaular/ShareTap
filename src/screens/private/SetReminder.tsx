@@ -31,11 +31,10 @@ const {width} = Dimensions.get('screen');
 const SetReminder = ({navigation}: Props) => {
   const [reminder, setreminder] = useState({value: '', error: ''});
   const [reminderFocus, setreminderFocus] = useState(false);
-  // const [selectDate, setSelectedDate] = useState(
-  //   Moment(new Date()).format('LLLL'),
-  // );
+  const [selectDate, setSelectedDate] = useState(
+    Moment(new Date()).format('LLLL'),
+  );
 
-  const [selectDate, setSelectedDate] = useState(new Date());
 
   const handlereminderBlur = () => {
     setreminderFocus(true);
@@ -105,10 +104,10 @@ const SetReminder = ({navigation}: Props) => {
 
           <View style={styles.buttonView}>
             <Button
-              disabled={false}
+              disabled={!reminder.value}
               loading={false}
               label="CONTINUE"
-              onPress={() => console.log('Next')}
+              onPress={() => navigation.navigate('ReminderCalendar')}
             />
           </View>
         </ScrollView>

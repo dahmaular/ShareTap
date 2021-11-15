@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Platform} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import DownArrow from '../assets/svg/caret-down-icon.svg';
 import Moment from 'moment';
@@ -46,7 +46,7 @@ const DateSelect = (props: any) => {
         onConfirm={handleConfirm}
         onCancel={hidePicker}
         date={dateNow}
-        display="inline"
+        display={Platform.OS ==='ios'? 'inline': 'default'}
       />
     </View>
   );

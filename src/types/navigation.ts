@@ -38,6 +38,8 @@ export type AuthenticatedRoutesParamsList = {
   Search: undefined;
   Rolodex: undefined;
   SetReminder: undefined;
+  ReminderCalendar: undefined;
+  Test: undefined
 };
 
 export interface AccountCreationRoute {
