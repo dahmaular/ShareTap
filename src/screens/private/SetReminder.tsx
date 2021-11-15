@@ -30,14 +30,21 @@ const {width} = Dimensions.get('screen');
 
 const SetReminder = ({navigation}: Props) => {
   const [reminder, setreminder] = useState({value: '', error: ''});
+  const [title, setTitle] = useState({value: '', error: ''});
   const [reminderFocus, setreminderFocus] = useState(false);
-  const [selectDate, setSelectedDate] = useState(
-    Moment(new Date()).format('LLLL'),
-  );
-
+  const [titleFocus, setTitleFocus] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  // const [startDate, setStartDate] = useState(
+  //   Moment(new Date()).format('LLLL'),
+  // );
 
   const handlereminderBlur = () => {
     setreminderFocus(true);
+  };
+
+  const handleTitleBlur = () => {
+    setTitleFocus(true);
   };
   return (
     <View style={{flex: 1}}>
@@ -66,6 +73,26 @@ const SetReminder = ({navigation}: Props) => {
           </View>
 
           <TextInputs
+            label="Title"
+            returnKeyType="next"
+            placeholderTextColor="rgba(90, 89, 89, 0.55)"
+            placeholder="Enter title"
+            value={title.value}
+            onChangeText={text => setTitle({value: text, error: ''})}
+            error={!!title.error}
+            errorText={title.error}
+            autoCapitalize="none"
+            autoCompleteType="name"
+            textContentType="none"
+            keyboardType="default"
+            onFocus={() => setTitleFocus(true)}
+            onBlur={handleTitleBlur}
+            style={{
+              backgroundColor: titleFocus ? '#FFFFFF' : '#d8d9d9',
+            }}
+          />
+
+          <TextInputs
             label="Remind me of"
             returnKeyType="next"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
@@ -84,30 +111,44 @@ const SetReminder = ({navigation}: Props) => {
             onBlur={handlereminderBlur}
             style={{
               backgroundColor: reminderFocus ? '#FFFFFF' : '#d8d9d9',
-              marginBottom: 14,
-              marginTop: 32,
               textAlignVertical: 'top',
               textAlign: 'left',
-              // height: 120,
             }}
           />
 
           <DateSelect
-            name="doe"
-            placeholder="Select Date"
-            dateValue={Moment(selectDate).format('LLLL')}
+            placeholder="Start Date"
+            dateValue={Moment(startDate).format('LL')}
             onValueChange={(itemValue: any) => {
               console.log({itemValue});
-              setSelectedDate(itemValue);
+              setStartDate(itemValue);
+            }}
+          />
+
+          <DateSelect
+            placeholder="End Date"
+            dateValue={endDate}
+            onValueChange={(itemValue: any) => {
+              console.log({itemValue});
+              setEndDate(itemValue);
             }}
           />
 
           <View style={styles.buttonView}>
             <Button
-              disabled={!reminder.value}
+              disabled={!reminder.value && !title.value}
               loading={false}
               label="CONTINUE"
-              onPress={() => navigation.navigate('ReminderCalendar')}
+              onPress={() =>
+                navigation.navigate('ReminderCalendar', {
+                  item: {
+                    title: title.value,
+                    description: reminder.value,
+                    startDate: startDate,
+                    endDate: endDate,
+                  },
+                })
+              }
             />
           </View>
         </ScrollView>

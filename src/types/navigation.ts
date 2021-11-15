@@ -38,8 +38,8 @@ export type AuthenticatedRoutesParamsList = {
   Search: undefined;
   Rolodex: undefined;
   SetReminder: undefined;
-  ReminderCalendar: undefined;
-  Test: undefined
+  ReminderCalendar:Record<'item', ReminderCalenderRoute>;
+  Test: undefined;
 };
 
 export interface AccountCreationRoute {
@@ -74,4 +74,11 @@ export interface ForgotPasswordRoute {
 export interface ResetPasswordRoute {
   code: string;
   email: string;
+}
+
+export interface ReminderCalenderRoute {
+  title: string;
+  description: string;
+  startDate: Date;
+  endDate: Date;
 }

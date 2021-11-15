@@ -18,12 +18,12 @@ import {RadioButton} from 'react-native-paper';
 
 type ReminderCalendarProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
-  'SetReminder'
+  'ReminderCalendar'
 >;
 
 type ReminderCalendarRouteProp = RouteProp<
   AuthenticatedRoutesParamsList,
-  'SetReminder'
+  'ReminderCalendar'
 >;
 
 type Props = {
@@ -44,13 +44,17 @@ interface CalendarProps {
 
 const {width} = Dimensions.get('screen');
 
-const ReminderCalendar = ({navigation}: Props) => {
+const ReminderCalendar = ({navigation, route}: Props) => {
   const [hasAccess, setHasAccess] = useState(false);
   const [calendarId, setCalendarId] = useState(null);
   const [calendars, setCalendars] = useState<CalendarProps[]>([]);
   const [state, setState] = useState({
     selectedCalendar: '',
   });
+
+  const {item} = route.params;
+
+  console.log('Route Items', item);
 
   const MY_CALENDAR = 'MY_CALENDAR';
   const _ = require('lodash');
