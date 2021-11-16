@@ -11,7 +11,7 @@ const DateSelect = (props: any) => {
   const [display, setDisplay] = useState(null);
 
   const showDatePicker = () => {
-    setPickerMode('date');
+    setPickerMode('datetime');
   };
 
   const hidePicker = () => {
@@ -28,8 +28,7 @@ const DateSelect = (props: any) => {
     }-${newDate.getDate()}`;
     setDateNow(date);
     setDisplay(newDate);
-    console.log('Raw Date', date);
-    props.onValueChange(Moment(date).format('ll'));
+    props.onValueChange(date.toISOString()); // toISOString to get the expected format by the Event calendar
   };
 
   return (
@@ -61,7 +60,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D9',
     paddingHorizontal: 14,
     borderRadius: 4,
-    marginTop: 30
+    marginTop: 30,
   },
 
   dateTimeButtonText: {
