@@ -9,6 +9,15 @@
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
+  "browser": {
+    "net": "react-native-tcp",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify"
+  },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.8",
     "@react-native-community/checkbox": "^0.5.8",
@@ -35,6 +44,7 @@
     "lottie-ios": "^3.2.3",
     "lottie-react-native": "^4.1.3",
     "moment": "^2.29.1",
+    "process": "^0.11.10",
     "react": "17.0.2",
     "react-native": "0.65.1",
     "react-native-bootsplash": "^3.2.6",
@@ -46,6 +56,7 @@
     "react-native-linear-gradient": "^2.5.6",
     "react-native-modal": "^13.0.0",
     "react-native-modal-datetime-picker": "^13.0.0",
+    "react-native-network-info": "^5.2.1",
     "react-native-paper": "^4.9.2",
     "react-native-phone-number-input": "^2.1.0",
     "react-native-picker-select": "^8.0.4",
@@ -57,16 +68,21 @@
     "react-native-svg": "^12.1.1",
     "react-native-svg-transformer": "^0.14.3",
     "react-native-tab-view": "^3.1.1",
+    "react-native-tcp": "^4.0.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-webview": "^11.13.0",
     "react-native-wifi-and-hotspot-wizard": "^1.0.6-beta.1",
     "react-native-wifi-reborn": "^4.4.1",
     "react-redux": "^7.2.5",
+    "readable-stream": "^1.0.33",
     "redux": "^4.1.1",
     "redux-devtools-extension": "^2.13.9",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "rn-tourguide": "^3.2.0",
+    "stream": "^0.0.2",
+    "stream-browserify": "^1.0.0",
+    "util": "^0.12.4",
     "yup": "^0.32.9"
   },
   "devDependencies": {
@@ -85,6 +101,7 @@
     "react-dom": "17.0.2",
     "react-native-codegen": "^0.0.7",
     "react-test-renderer": "17.0.2",
+    "rn-nodeify": "^7.0.1",
     "typescript": "^3.8.3"
   },
   "resolutions": {

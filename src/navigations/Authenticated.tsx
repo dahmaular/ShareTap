@@ -6,6 +6,8 @@ import DrawerContent from './DrawerContent';
 import {AuthenticatedRoutesParamsList} from '../types';
 import Search from '../screens/private/Search';
 import Rolodex from '../screens/private/Rolodex';
+import ClientScreen from '../screens/private/client';
+import ServerScreen from '../screens/private/server';
 
 const Drawer = createDrawerNavigator<AuthenticatedRoutesParamsList>();
 
