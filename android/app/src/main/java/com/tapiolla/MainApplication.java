@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.pusherman.networkinfo.RNNetworkInfoPackage;
+import com.peel.react.TcpSocketsModule;
 import com.reactlibrary.rnwifi.RNWifiPackage;
 import com.reactnativewifiandhotspotwizard.RNWifiAndHotspotWizardPackage;
 import com.airbnb.android.react.lottie.LottiePackage;

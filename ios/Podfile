@@ -24,6 +24,10 @@ target 'Tapiolla' do
 
   pod 'RNWifi', :path => '../node_modules/react-native-wifi-reborn'
 
+  pod 'TcpSockets', :path => '../node_modules/react-native-tcp'
+
+  pod 'react-native-network-info', :path => '../node_modules/react-native-network-info'
+
   target 'TapiollaTests' do
     inherit! :complete
     # Pods for testing
