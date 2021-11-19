@@ -38,6 +38,7 @@ export type AuthenticatedRoutesParamsList = {
   Search: undefined;
   Rolodex: undefined;
   SetReminder: undefined;
+  SetMessage: undefined;
   ReminderCalendar: Record<'item', ReminderCalenderRoute>;
 };
 

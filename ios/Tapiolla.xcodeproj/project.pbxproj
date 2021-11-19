@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0055B3915AAB45D7A02726B4 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 888A8EA68C454E759A322239 /* Poppins-SemiBold.ttf */; };
 		00E356F31AD99517003FC87E /* TapiollaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TapiollaTests.m */; };
+		098A23C6B1B2D61F6FF0A8A0 /* libPods-Tapiolla.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-Tapiolla.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -19,7 +20,6 @@
 		4317C038ACA34426BC5E8B5C /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93392FE63AA943178BF7CAF3 /* Poppins-Black.ttf */; };
 		46D744F8E96041F59176FE61 /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A82E5D6B1E94ACEA8AEB71E /* Poppins-BlackItalic.ttf */; };
 		530C4A80F96644338D1B1228 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C76D2C27695F4A4381700139 /* Poppins-Regular.ttf */; };
-		6172F2D35A4C3AA820D92908 /* libPods-Tapiolla.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-Tapiolla.a */; };
 		702CA44C575F41CB9E2D2CE9 /* Poppins-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 19672D5B6EA2445BA0E75465 /* Poppins-SemiBoldItalic.ttf */; };
 		7B08C16F3B1945D199812EE0 /* Poppins-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 155028215286402DBFBB4687 /* Poppins-LightItalic.ttf */; };
 		7EF68E3733C33B6898317E18 /* libPods-Tapiolla-TapiollaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-Tapiolla-TapiollaTests.a */; };
@@ -125,7 +125,7 @@
 				CE79097127204E27009AA3C5 /* libswiftDataDetection.tbd in Frameworks */,
 				CE79096F27204E12009AA3C5 /* libswiftFileProvider.tbd in Frameworks */,
 				CE79096D27204D7B009AA3C5 /* libswiftWebKit.tbd in Frameworks */,
-				6172F2D35A4C3AA820D92908 /* libPods-Tapiolla.a in Frameworks */,
+				098A23C6B1B2D61F6FF0A8A0 /* libPods-Tapiolla.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

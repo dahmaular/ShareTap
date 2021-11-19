@@ -374,6 +374,8 @@ PODS:
     - React-Core
   - react-native-netinfo (6.0.2):
     - React-Core
+  - react-native-network-info (5.2.1):
+    - React
   - react-native-safe-area-context (3.3.2):
     - React-Core
   - react-native-simple-toast (1.1.3):
@@ -537,6 +539,7 @@ DEPENDENCIES:
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-network-info (from `../node_modules/react-native-network-info`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -645,6 +648,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-network-info:
+    :path: "../node_modules/react-native-network-info"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-simple-toast:
@@ -761,6 +766,7 @@ SPEC CHECKSUMS:
   react-native-document-picker: 92adb1d337a6a7beed0110d29c9186565dab74d2
   react-native-image-picker: 7bda3c7297c3ea16f4f504ad6174aa7e548192ef
   react-native-netinfo: 8917788f12f8c422d16a56f840a1b06faa56e2b6
+  react-native-network-info: d1290ffc0bd0709e11436f5b8d7f605dcc5c4530
   react-native-safe-area-context: 5cf05f49df9d17261e40e518481f2e334c6cd4b5
   react-native-simple-toast: b986e6c1befdc211af3df1bae293278a44e32990
   react-native-webview: b176c6404ad40d10cfc818be41c053f85a72d751
@@ -798,6 +804,6 @@ SPEC CHECKSUMS:
   Yoga: aa0cb45287ebe1004c02a13f279c55a95f1572f4
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: f5a6d58450546e56965de296c48b49c49b893808
+PODFILE CHECKSUM: 8d6b2888506ab87bd2f58d7256b43a57d657bcbb
 
 COCOAPODS: 1.11.2

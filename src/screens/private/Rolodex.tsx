@@ -251,7 +251,10 @@ const Rolodex = ({navigation}: Props) => {
           <View style={styles.modal}>
             <TouchableOpacity style={styles.modalActionButton}>
               <Calendar height={24} width={24} />
-              <Text style={styles.modalActionButtonText}>
+              <Text style={styles.modalActionButtonText} onPress={() => {
+                setReminderCalenderModal(false);
+                navigation.navigate('SetMessage');
+              }}>
                 Schedule a Message
               </Text>
             </TouchableOpacity>

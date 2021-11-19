@@ -25,66 +25,67 @@ import connects from '../../mock/Connects';
 import TextInputs from '../../components/TextInput';
 import {TextInput} from 'react-native-paper';
 import {NetworkInfo} from 'react-native-network-info';
-var net = require('react-native-tcp');
 
-const createServer = (chats, setChats) => {
-  const server = net
-    .createServer(socket => {
-      console.log('server connected on ' + socket.address().address);
+// var net = require('react-native-tcp');
 
-      socket.on('data', data => {
-        let response = JSON.parse(data);
-        setChats([...chats, {id: chats.length + 1, msg: response.msg}]);
-        //   console.log('Server Received: ' + data);
-        //   socket.write('Echo server\r\n');
-      });
+// const createServer = (chats, setChats) => {
+//   const server = net
+//     .createServer(socket => {
+//       console.log('server connected on ' + socket.address().address);
 
-      socket.on('error', error => {
-        console.log('error ' + error);
-      });
+//       socket.on('data', data => {
+//         let response = JSON.parse(data);
+//         setChats([...chats, {id: chats.length + 1, msg: response.msg}]);
+//         //   console.log('Server Received: ' + data);
+//         //   socket.write('Echo server\r\n');
+//       });
 
-      socket.on('close', error => {
-        console.log('server client closed ' + (error ? error : ''));
-      });
-    })
-    .listen(6666, () => {
-      console.log('opened server on ' + JSON.stringify(server.address()));
-    });
+//       socket.on('error', error => {
+//         console.log('error ' + error);
+//       });
 
-  server.on('error', error => {
-    console.log('error ' + error);
-  });
+//       socket.on('close', error => {
+//         console.log('server client closed ' + (error ? error : ''));
+//       });
+//     })
+//     .listen(6666, () => {
+//       console.log('opened server on ' + JSON.stringify(server.address()));
+//     });
 
-  server.on('close', () => {
-    console.log('server close');
-  });
+//   server.on('error', error => {
+//     console.log('error ' + error);
+//   });
 
-  return server;
-};
+//   server.on('close', () => {
+//     console.log('server close');
+//   });
 
-const createClient = (ip, chats, setChats) => {
-  const client = net.createConnection(6666, ip, () => {
-    console.log('opened client on ' + JSON.stringify(client.address()));
-    // client.write('Hello, server! Love, Client.');
-  });
+//   return server;
+// };
 
-  client.on('data', data => {
-    setChats([...chats, {id: chats.length + 1, msg: data}]);
-    // console.log('Client Received: ' + data);
+// const createClient = (ip, chats, setChats) => {
+//   const client = net.createConnection(6666, ip, () => {
+//     console.log('opened client on ' + JSON.stringify(client.address()));
+//     // client.write('Hello, server! Love, Client.');
+//   });
 
-    // client.destroy(); // kill client after server's response
-    // this.server.close();
-  });
+//   client.on('data', data => {
+//     setChats([...chats, {id: chats.length + 1, msg: data}]);
+//     // console.log('Client Received: ' + data);
 
-  client.on('error', error => {
-    console.log('client error ' + error);
-  });
+//     // client.destroy(); // kill client after server's response
+//     // this.server.close();
+//   });
 
-  client.on('close', () => {
-    console.log('client close');
-  });
-  return client;
-};
+//   client.on('error', error => {
+//     console.log('client error ' + error);
+//   });
+
+//   client.on('close', () => {
+//     console.log('client close');
+//   });
+//   return client;
+// };
 
 const {width} = Dimensions.get('screen');
 
@@ -138,7 +139,7 @@ const Search = () => {
 
   const startClient = async () => {
     let ip = await NetworkInfo.getGatewayIPAddress();
-    setClient(createClient(ip));
+    // setClient(createClient(ip));
 
     return () => {};
   };

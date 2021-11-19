@@ -8,6 +8,7 @@ import Search from '../screens/private/Search';
 import Rolodex from '../screens/private/Rolodex';
 import SetReminder from '../screens/private/SetReminder';
 import ReminderCalendar from '../screens/private/ReminderCalendar';
+import SetMessage from '../screens/private/SetMessage';
 
 const Drawer = createDrawerNavigator<AuthenticatedRoutesParamsList>();
 
@@ -36,6 +37,12 @@ export default function AuthenticatedRoutes() {
       <Drawer.Screen
         name="SetReminder"
         component={SetReminder}
+        options={{headerShown: false}}
+      />
+
+      <Drawer.Screen
+        name="SetMessage"
+        component={SetMessage}
         options={{headerShown: false}}
       />
 
