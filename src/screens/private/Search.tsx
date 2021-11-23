@@ -25,31 +25,47 @@ import connects from '../../mock/Connects';
 import TextInputs from '../../components/TextInput';
 import {TextInput} from 'react-native-paper';
 import {NetworkInfo} from 'react-native-network-info';
-var net = require('react-native-tcp');
+import TcpSocket from 'react-native-tcp-socket';
+
+// const client = new TcpSocket.Socket();
 
 const createServer = (chats, setChats) => {
-  const server = net
-    .createServer(socket => {
-      console.log('server connected on ' + socket.address().address);
+  const server = TcpSocket.createServer(socket => {
+    console.log('server connected on ' + socket.address().address);
 
-      socket.on('data', data => {
-        let response = JSON.parse(data);
-        setChats([...chats, {id: chats.length + 1, msg: response.msg}]);
-        //   console.log('Server Received: ' + data);
-        //   socket.write('Echo server\r\n');
-      });
-
-      socket.on('error', error => {
-        console.log('error ' + error);
-      });
-
-      socket.on('close', error => {
-        console.log('server client closed ' + (error ? error : ''));
-      });
-    })
-    .listen(6666, () => {
-      console.log('opened server on ' + JSON.stringify(server.address()));
+    socket.on('data', data => {
+      let response = JSON.parse(data);
+      setChats([...chats, {id: chats.length + 1, msg: response.msg}]);
+      //   console.log('Server Received: ' + data);
+      //   socket.write('Echo server\r\n');
     });
+
+    socket.on('error', error => {
+      console.log('error ' + error);
+    });
+
+    socket.on('close', error => {
+      console.log('server client closed ' + (error ? error : ''));
+    });
+  }).listen({port: 6666, host: '127.0.0.1', reuseAddress: true}, () => {
+    const port = server.address()?.port;
+    console.log('This is my PORT here', port);
+    if (!port) throw new Error('Server port not found');
+    new TcpSocket.Socket().connect(
+      {
+        port: port,
+        host: 'localhost',
+        localAddress: 'localhost',
+        reuseAddress: true,
+        localPort: 6666,
+        interface: 'wifi',
+        tls: true,
+      },
+      () => {
+        console.log('opened server on ' + JSON.stringify(server.address()));
+      },
+    );
+  });
 
   server.on('error', error => {
     console.log('error ' + error);
@@ -63,10 +79,17 @@ const createServer = (chats, setChats) => {
 };
 
 const createClient = (ip, chats, setChats) => {
-  const client = net.createConnection(6666, ip, () => {
-    console.log('opened client on ' + JSON.stringify(client.address()));
-    // client.write('Hello, server! Love, Client.');
-  });
+  // console.log('This is my IP here', ip);
+  const client = TcpSocket.createConnection(
+    {
+      port: 6666,
+      host: '127.0.0.1',
+    },
+    () => {
+      console.log('opened client on ' + JSON.stringify(client.address()));
+      // client.write('Hello, server! Love, Client.');
+    },
+  );
 
   client.on('data', data => {
     setChats([...chats, {id: chats.length + 1, msg: data}]);

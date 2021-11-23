@@ -10,7 +10,6 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "browser": {
-    "net": "react-native-tcp",
     "_stream_transform": "readable-stream/transform",
     "_stream_readable": "readable-stream/readable",
     "_stream_writable": "readable-stream/writable",
@@ -68,7 +67,7 @@
     "react-native-svg": "^12.1.1",
     "react-native-svg-transformer": "^0.14.3",
     "react-native-tab-view": "^3.1.1",
-    "react-native-tcp": "^4.0.0",
+    "react-native-tcp-socket": "^5.5.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-webview": "^11.13.0",
     "react-native-wifi-and-hotspot-wizard": "^1.0.6-beta.1",
@@ -117,5 +116,8 @@
       "json",
       "node"
     ]
+  },
+  "react-native": {
+    "net": "react-native-tcp-socket"
   }
 }
