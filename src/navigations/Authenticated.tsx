@@ -6,9 +6,6 @@ import DrawerContent from './DrawerContent';
 import {AuthenticatedRoutesParamsList} from '../types';
 import Search from '../screens/private/Search';
 import Rolodex from '../screens/private/Rolodex';
-import ClientScreen from '../screens/private/client';
-import ServerScreen from '../screens/private/server';
-import Client from '../screens/private/client';
 
 const Drawer = createDrawerNavigator<AuthenticatedRoutesParamsList>();
 
@@ -25,17 +22,6 @@ export default function AuthenticatedRoutes() {
       <Drawer.Screen
         name="Search"
         component={Search}
-        options={{headerShown: false}}
-      />
-
-      <Drawer.Screen
-        name="Client"
-        component={Client}
-        options={{headerShown: false}}
-      />
-      <Drawer.Screen
-        name="Server"
-        component={ServerScreen}
         options={{headerShown: false}}
       />
 
