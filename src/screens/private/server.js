@@ -1,31 +1,30 @@
+/* eslint-disable prettier/prettier */
 import React, {useState} from 'react';
 import {View, Text, Button, StyleSheet, FlatList} from 'react-native';
 import {NetworkInfo} from 'react-native-network-info';
-var net = require('react-native-tcp');
+import TcpSocket from 'react-native-tcp-socket';
 
 const createServer = (chats, setChats) => {
-  const server = net
-    .createServer(socket => {
-      console.log('server connected on ' + socket.address().address);
+  const server = TcpSocket.createServer(socket => {
+    console.log('server connected on ' + socket.address().address);
 
-      socket.on('data', data => {
-        let response = JSON.parse(data);
-        setChats([...chats, {id: chats.length + 1, msg: response.msg}]);
-        //   console.log('Server Received: ' + data);
-        //   socket.write('Echo server\r\n');
-      });
-
-      socket.on('error', error => {
-        console.log('error ' + error);
-      });
-
-      socket.on('close', error => {
-        console.log('server client closed ' + (error ? error : ''));
-      });
-    })
-    .listen(6666, () => {
-      console.log('opened server on ' + JSON.stringify(server.address()));
+    socket.on('data', data => {
+      let response = JSON.parse(data);
+      setChats([...chats, {id: chats.length + 1, msg: response.msg}]);
+      //   console.log('Server Received: ' + data);
+      //   socket.write('Echo server\r\n');
     });
+
+    socket.on('error', error => {
+      console.log('error ' + error);
+    });
+
+    socket.on('close', error => {
+      console.log('server client closed ' + (error ? error : ''));
+    });
+  }).listen({port: 6666, host: '0.0.0.0'}, () => {
+    console.log('opened server on ' + JSON.stringify(server.address()));
+  });
 
   server.on('error', error => {
     console.log('error ' + error);

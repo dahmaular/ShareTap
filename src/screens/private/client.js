@@ -2,10 +2,10 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, Button, FlatList, TextInput} from 'react-native';
 import {NetworkInfo} from 'react-native-network-info';
-var net = require('react-native-tcp');
+import TcpSocket from 'react-native-tcp-socket';
 
 const createClient = (ip, chats, setChats) => {
-  const client = net.createConnection(6666, ip, () => {
+  const client = TcpSocket.createConnection({port: 6666, host: ip}, () => {
     console.log('opened client on ' + JSON.stringify(client.address()));
     // client.write('Hello, server! Love, Client.');
   });
@@ -33,6 +33,9 @@ const ClientScreen = ({navigation}) => {
   const [chats, setChats] = useState([]);
 
   useEffect(async () => {
+    // let ip = await NetworkInfo.getIPV4Address(); //await NetworkInfo.getGatewayIPAddress();
+    // setClient(createClient(ip));
+
     let ip = await NetworkInfo.getGatewayIPAddress();
     setClient(createClient(ip));
 
