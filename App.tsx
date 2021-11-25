@@ -87,10 +87,22 @@ Amplify.configure({
     ...awsConfig.Auth.oauth,
     urlOpener,
   },
+  Analytics: {
+    AWSPinpoint: {
+      appId: '308101c958a14b589b92de32794a5097',
+      region: 'ca-central-1',
+      endpoint: {
+        optOut: 'NONE',
+      },
+    },
+  },
+  PushNotification: {
+    appId: '308101c958a14b589b92de32794a5097',
+    requestIOSPermissions: false,
+  },
 });
 
 const App: FC = () => {
-
   useEffect(() => {
     const init = async () => {
       RNBootSplash.show();

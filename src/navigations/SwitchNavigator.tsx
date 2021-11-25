@@ -1,4 +1,6 @@
 import React, {useEffect, useState} from 'react';
+// import PushNotification from '@aws-amplify/pushnotification';
+import {Analytics, Auth} from 'aws-amplify';
 import {Hub, HubCapsule} from '@aws-amplify/core';
 import {
   NavigationContainer,
@@ -29,7 +31,7 @@ type Props = {
   route: RolodexRouteProp;
 };
 
-const SwitchNavigator = ({navigation}: Props) => {
+const SwitchNavigator = () => {
   const [message, setMessage] = useState<{
     type: 'regular' | 'error';
     text: string;
@@ -68,8 +70,24 @@ const SwitchNavigator = ({navigation}: Props) => {
     getUserIdService()
       .then(() => setUserLoggedIn('loggedIn')) //also dispatch redux action to get users
       .catch(() => setUserLoggedIn('loggedOut'));
-    // setUserLoggedIn('loggedIn')
   }, []);
+
+  // useEffect(() => {
+  //   PushNotification.onRegister((token: any) => {
+  //     console.log('FCM Token', token);
+  //     Analytics.updateEndpoint({
+  //       address: token,
+  //       optOut: 'NONE',
+  //       userId: getUserIdService(),
+  //     })
+  //       .then(data => {
+  //         console.log('endpoint updated', JSON.stringify(data));
+  //       })
+  //       .catch(error => {
+  //         console.log('error updating endpoint', error);
+  //       });
+  //   });
+  // }, []);
 
   const hubListener = (data: HubCapsule) => {
     switch (data.channel as 'navigation' | 'alert' | 'auth') {
