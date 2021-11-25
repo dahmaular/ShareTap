@@ -478,7 +478,8 @@ const Search = () => {
                 // setSuccessModal(true);
                 // setResultsModal(true);
                 // navigation.goBack();
-                navigation.navigate('Server');
+                // navigation.navigate('Server');
+                navigation.goBack();
               }}>
               <Close />
             </TouchableOpacity>
