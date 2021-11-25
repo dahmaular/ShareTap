@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  * Metro configuration for React Native
  * https://github.com/facebook/react-native
@@ -29,7 +30,7 @@ module.exports = (async () => {
     },
     resolver: {
       assetExts: assetExts.filter(ext => ext !== 'svg'),
-      sourceExts: [...sourceExts, 'svg'],
+      sourceExts: [...sourceExts, 'svg', 'pem'],
     },
   };
 })();

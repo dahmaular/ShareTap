@@ -25,67 +25,7 @@ import connects from '../../mock/Connects';
 import TextInputs from '../../components/TextInput';
 import {TextInput} from 'react-native-paper';
 import {NetworkInfo} from 'react-native-network-info';
-
-// var net = require('react-native-tcp');
-
-// const createServer = (chats, setChats) => {
-//   const server = net
-//     .createServer(socket => {
-//       console.log('server connected on ' + socket.address().address);
-
-//       socket.on('data', data => {
-//         let response = JSON.parse(data);
-//         setChats([...chats, {id: chats.length + 1, msg: response.msg}]);
-//         //   console.log('Server Received: ' + data);
-//         //   socket.write('Echo server\r\n');
-//       });
-
-//       socket.on('error', error => {
-//         console.log('error ' + error);
-//       });
-
-//       socket.on('close', error => {
-//         console.log('server client closed ' + (error ? error : ''));
-//       });
-//     })
-//     .listen(6666, () => {
-//       console.log('opened server on ' + JSON.stringify(server.address()));
-//     });
-
-//   server.on('error', error => {
-//     console.log('error ' + error);
-//   });
-
-//   server.on('close', () => {
-//     console.log('server close');
-//   });
-
-//   return server;
-// };
-
-// const createClient = (ip, chats, setChats) => {
-//   const client = net.createConnection(6666, ip, () => {
-//     console.log('opened client on ' + JSON.stringify(client.address()));
-//     // client.write('Hello, server! Love, Client.');
-//   });
-
-//   client.on('data', data => {
-//     setChats([...chats, {id: chats.length + 1, msg: data}]);
-//     // console.log('Client Received: ' + data);
-
-//     // client.destroy(); // kill client after server's response
-//     // this.server.close();
-//   });
-
-//   client.on('error', error => {
-//     console.log('client error ' + error);
-//   });
-
-//   client.on('close', () => {
-//     console.log('client close');
-//   });
-//   return client;
-// };
+import TcpSocket from 'react-native-tcp-socket';
 
 const {width} = Dimensions.get('screen');
 
@@ -129,9 +69,62 @@ const Search = () => {
 
   const [client, setClient] = useState(null);
 
-  useEffect(() => {
-    startClient();
-  }, [start]);
+  const createServer = (chats, setChats) => {
+    const server = TcpSocket.createServer(socket => {
+      console.log('server connected on ' + socket.address().address);
+
+      socket.on('data', data => {
+        let response = JSON.parse(data);
+        setChats([...chats, {id: chats.length + 1, msg: response.msg}]);
+        //   console.log('Server Received: ' + data);
+        //   socket.write('Echo server\r\n');
+      });
+
+      socket.on('error', error => {
+        console.log('error ' + error);
+      });
+
+      socket.on('close', error => {
+        console.log('server client closed ' + (error ? error : ''));
+      });
+    }).listen({port: 6666, host: '0.0.0.0'}, () => {
+      console.log('opened server on ' + JSON.stringify(server.address()));
+    });
+
+    server.on('error', error => {
+      console.log('error ' + error);
+    });
+
+    server.on('close', () => {
+      console.log('server close');
+    });
+
+    return server;
+  };
+
+  const createClient = (ip, chats, setChats) => {
+    const client = TcpSocket.createConnection({port: 6666, host: ip}, () => {
+      console.log('opened client on ' + JSON.stringify(client.address()));
+      // client.write('Hello, server! Love, Client.');
+    });
+
+    client.on('data', data => {
+      setChats([...chats, {id: chats.length + 1, msg: data}]);
+      // console.log('Client Received: ' + data);
+
+      // client.destroy(); // kill client after server's response
+      // this.server.close();
+    });
+
+    client.on('error', error => {
+      console.log('client error ' + error);
+    });
+
+    client.on('close', () => {
+      console.log('client close');
+    });
+    return client;
+  };
 
   const handleFinish = () => {
     setFinish(false);
@@ -484,7 +477,8 @@ const Search = () => {
                 // setErrorModal(true);
                 // setSuccessModal(true);
                 // setResultsModal(true);
-                navigation.goBack();
+                // navigation.goBack();
+                navigation.navigate('Server');
               }}>
               <Close />
             </TouchableOpacity>

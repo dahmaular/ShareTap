@@ -6,6 +6,7 @@ import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.reactnativewifiandhotspotwizard.RNWifiAndHotspotWizardPackage;
 import com.reactlibrary.rnwifi.RNWifiPackage;
+import com.asterinet.react.tcpsocket.TcpSocketPackage;
 import com.pusherman.networkinfo.RNNetworkInfoPackage;
 import com.reactlibrary.rnwifi.RNWifiPackage;
 import com.reactnativewifiandhotspotwizard.RNWifiAndHotspotWizardPackage;

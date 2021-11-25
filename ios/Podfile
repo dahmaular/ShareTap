@@ -26,6 +26,8 @@ target 'Tapiolla' do
 
   pod 'react-native-network-info', :path => '../node_modules/react-native-network-info'
 
+  pod 'react-native-tcp-socket', :path => '../node_modules/react-native-tcp-socket'
+
   target 'TapiollaTests' do
     inherit! :complete
     # Pods for testing
