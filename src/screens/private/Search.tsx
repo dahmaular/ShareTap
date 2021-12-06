@@ -598,11 +598,9 @@ const Search = ({route}) => {
                         style={styles.connect}
                         onPress={async () => {
                           await connectWithWifi(item.SSID);
-                          await startServer();
-                          if (server) {
-                            console.log('Hello server');
-                          }
-                          setShow(true);
+                          setTimeout(() => {
+                            setShow(true);
+                          }, 5000);
                         }}>
                         <Text style={styles.connectText}>CONNECT</Text>
                       </TouchableOpacity>
@@ -731,24 +729,26 @@ const Search = ({route}) => {
                     }}
                   />
                 </View> */}
-                <TouchableOpacity
-                  style={styles.connect}
-                  onPress={() => {
-                    startClient();
+                {show === true && (
+                  <TouchableOpacity
+                    style={styles.connect}
+                    onPress={() => {
+                      startClient();
 
-                    // setTimeout(() => {
-                    if (client) {
-                      client.write(JSON.stringify(card));
-                      sent = true;
-                    }
-                    if (sent === true) {
-                      setSuccessModal(true);
-                      setCard([]);
-                    }
-                    // }, 4000);
-                  }}>
-                  <Text style={styles.connectText}>Send </Text>
-                </TouchableOpacity>
+                      // setTimeout(() => {
+                      if (client) {
+                        client.write(JSON.stringify(card));
+                        sent = true;
+                      }
+                      if (sent === true) {
+                        setSuccessModal(true);
+                        setCard([]);
+                      }
+                      // }, 4000);
+                    }}>
+                    <Text style={styles.connectText}>Send </Text>
+                  </TouchableOpacity>
+                )}
               </>
             ) : (
               <>
