@@ -682,14 +682,8 @@ const Search = ({route}) => {
                 // setErrorModal(true);
                 // setSuccessModal(true);
                 // setResultsModal(true);
-<<<<<<< HEAD
-                // navigation.goBack();
-                // navigation.navigate('Server');
-                navigation.goBack();
-=======
                 navigation.goBack();
                 // setAcceptModal(true);
->>>>>>> damola
               }}>
               <Close />
             </TouchableOpacity>
