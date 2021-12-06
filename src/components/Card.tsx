@@ -30,7 +30,7 @@ export interface CardProps {
 const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
   const [visible, setVisible] = React.useState(false);
 
-  const userId = 2
+  const userId = 2;
 
   const openMenu = () => setVisible(true);
 
