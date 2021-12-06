@@ -8,6 +8,7 @@ import {
   Dimensions,
   TouchableOpacity,
   FlatList,
+  Animated,
   PermissionsAndroid,
 } from 'react-native';
 import WifiManager from 'react-native-wifi-reborn';
@@ -15,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import NetInfo from '@react-native-community/netinfo';
 
 import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
 import Close from '../../assets/svg/phone-verif-close-icon.svg';
@@ -26,15 +28,18 @@ import TextInputs from '../../components/TextInput';
 import {TextInput} from 'react-native-paper';
 import {NetworkInfo} from 'react-native-network-info';
 import TcpSocket from 'react-native-tcp-socket';
+import Card from '../../components/Card';
 
-const {width} = Dimensions.get('screen');
+const {width, height} = Dimensions.get('screen');
 
 interface WIFIUSER {
   BSSID: string;
   SSID: string;
 }
 
-const Search = () => {
+let sent: Boolean;
+
+const Search = ({route}) => {
   const animation = useRef<LottieView>(null);
 
   const [finish, setFinish] = useState(false);
@@ -42,10 +47,14 @@ const Search = () => {
   const [errorModal, setErrorModal] = useState(false);
 
   const [successModal, setSuccessModal] = useState(false);
+  const [cardSuccessModal, setCardSuccessModal] = useState(false);
 
   const [resultsModal, setResultsModal] = useState(false);
-  const [passwordModal, setPassModal] = useState(false);
+  const [acceptModal, setAcceptModal] = useState(false);
+
   const [password, setPassword] = useState({value: '', error: ''});
+
+  const [show, setShow] = useState(false);
 
   const [passwordEntry, setPasswordEntry] = useState(true);
   const [passwordFocus, setPasswordFocus] = useState(false);
@@ -57,26 +66,62 @@ const Search = () => {
   const [results] = useState<ConnectProps[]>(connects);
   let navigation = useNavigation();
 
-  const [connected, setConnected] = useState({connected: false, ssid: 'S4N'});
+  const [connected, setConnected] = useState({
+    connected: false,
+    ssid: 'Tapiolla-share',
+  });
   const [ssid, setSsid] = useState('');
   const passwords = 'damola-123';
   const [available, setAvailable] = useState<WIFIUSER[]>([]);
 
   const [server, setServer] = useState(null);
   const [chats, setChats] = useState([]);
+  const [card, setCard] = useState([]);
   const [ip, setIp] = useState('');
   const [start, setStart] = useState<Boolean>(false);
 
   const [client, setClient] = useState(null);
+  const [scrollViewWidth, setScrollViewWidth] = useState(0);
+  const boxWidth = scrollViewWidth * 1;
+  const boxDistance = scrollViewWidth - boxWidth;
+  const halfBoxDistance = boxDistance / 2;
+  const pan = useRef(new Animated.ValueXY()).current;
+  const [isOffline, setOfflineStatus] = useState(false);
 
-  const createServer = (chats, setChats) => {
+  // useEffect(() => {
+  //   // Subscribe
+  //   const unsubscribe = NetInfo.addEventListener(state => {
+  //     console.log('Connection type', state);
+  //     console.log('Is connected?', state.isConnected);
+  //     // const offline = !(state.isConnected && state.isInternetReachable);
+  //     // setOfflineStatus(offline);
+  //     // console.log('offline var here', isOffline);
+  //     if (state.type === 'cellular' || 'none') {
+  //       // setAcceptModal(true);
+  //     }
+  //   });
+
+  //   // Unsubscribe
+  //   return () => unsubscribe();
+  // }, []);
+
+  useEffect(() => {
+    if (route.params) {
+      const {card} = route.params;
+      setCard(card);
+      // console.log('This is the card details', card);
+    }
+  }, []);
+
+  const createServer = (card, setCard) => {
     const server = TcpSocket.createServer(socket => {
       console.log('server connected on ' + socket.address().address);
 
       socket.on('data', data => {
         let response = JSON.parse(data);
-        setChats([...chats, {id: chats.length + 1, msg: response.msg}]);
-        //   console.log('Server Received: ' + data);
+        setCard(response);
+        console.log('Server Received: ' + response);
+        setCardSuccessModal(true);
         //   socket.write('Echo server\r\n');
       });
 
@@ -102,15 +147,15 @@ const Search = () => {
     return server;
   };
 
-  const createClient = (ip, chats, setChats) => {
+  const createClient = (ip, card, setCard) => {
     const client = TcpSocket.createConnection({port: 6666, host: ip}, () => {
       console.log('opened client on ' + JSON.stringify(client.address()));
       // client.write('Hello, server! Love, Client.');
     });
 
     client.on('data', data => {
-      setChats([...chats, {id: chats.length + 1, msg: data}]);
-      // console.log('Client Received: ' + data);
+      setCard([...card, {id: card.length + 1, msg: data}]);
+      console.log('Client Received: ' + data);
 
       // client.destroy(); // kill client after server's response
       // this.server.close();
@@ -144,6 +189,22 @@ const Search = () => {
 
   const proceedToContinue = () => {
     setSuccessModal(false);
+    setTransferring(false);
+    if (server) {
+      server.close();
+      setServer(null);
+    }
+    setCard([]);
+    navigation.navigate('Home');
+  };
+
+  const proceedToHome = () => {
+    setCardSuccessModal(false);
+    if (client) {
+      client.destroy();
+      setClient(null);
+    }
+    navigation.navigate('Home');
   };
 
   useEffect(() => {
@@ -178,7 +239,7 @@ const Search = () => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         initWifi();
-        enableWifi();
+        // enableWifi();
         listAvailableWifi();
       } else {
         console.log('Location permission denied');
@@ -201,9 +262,22 @@ const Search = () => {
       setConnected({connected: true, ssid: hotspot});
       setResultsModal(false);
       setTransferring(true);
+      // startServer();
     } catch (error) {
       setConnected({connected: false, error: error.message});
       console.log('Connection failed!', {error});
+    }
+  };
+
+  const startServer = async () => {
+    if (!server) {
+      setServer(createServer(card, setCard));
+    }
+    try {
+      let temp_ip = await NetworkInfo.getIPV4Address();
+      setIp(temp_ip);
+    } catch (e) {
+      console.log(e.message);
     }
   };
 
@@ -342,7 +416,9 @@ const Search = () => {
               <Text style={styles.successText}>
                 You have sucessfully exchanged
               </Text>
-              <Text style={styles.successText}>cards with Ashley Maryjane</Text>
+              <Text style={styles.successText}>
+                cards with {connected.ssid}
+              </Text>
             </View>
           </View>
           <TouchableOpacity
@@ -350,6 +426,130 @@ const Search = () => {
             onPress={() => proceedToContinue()}>
             <Text style={styles.modalBtnText}>BACK TO HOME</Text>
           </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  };
+
+  const shareCardSuccessModal = () => {
+    return (
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.successBottomModal}
+        isVisible={cardSuccessModal}
+        onBackdropPress={() => setCardSuccessModal(false)}
+        onBackButtonPress={() => setCardSuccessModal(false)}>
+        <TouchableOpacity
+          onPress={() => setCardSuccessModal(false)}
+          style={styles.modalCloseBtn}>
+          <Close />
+        </TouchableOpacity>
+        <View style={styles.cardSuccessModal}>
+          <View style={styles.cardSuccessModalContentWrap}>
+            <View>
+              <FlatList
+                horizontal
+                data={card}
+                contentContainerStyle={{paddingVertical: 5}}
+                contentInsetAdjustmentBehavior="never"
+                snapToAlignment="center"
+                decelerationRate="fast"
+                automaticallyAdjustContentInsets={false}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                scrollEventThrottle={1}
+                snapToInterval={boxWidth}
+                contentInset={{
+                  left: halfBoxDistance,
+                  right: halfBoxDistance,
+                }}
+                contentOffset={{x: halfBoxDistance * -1, y: 0}}
+                onLayout={e => {
+                  setScrollViewWidth(e.nativeEvent.layout.width);
+                }}
+                onScroll={Animated.event(
+                  [{nativeEvent: {contentOffset: {x: pan.x}}}],
+                  {
+                    useNativeDriver: false,
+                  },
+                )}
+                onScrollEndDrag={() => console.log('Animation ended')}
+                keyExtractor={item => item.id}
+                renderItem={({item, index}) => {
+                  console.log('This is the card sent', item);
+                  return (
+                    <Card
+                      item={item}
+                      index={index}
+                      boxWidth={boxWidth}
+                      halfBoxDistance={halfBoxDistance}
+                      pan={pan}
+                    />
+                    // <></>
+                  );
+                }}
+              />
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.cardSuccessModalButton}
+            onPress={() => proceedToHome()}>
+            <Text style={styles.modalBtnText}>BACK TO HOME</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  };
+
+  const acceptExchangeModal = () => {
+    return (
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.acceptBottomModal}
+        isVisible={acceptModal}
+        onBackdropPress={() => setAcceptModal(false)}
+        onBackButtonPress={() => setAcceptModal(false)}>
+        <TouchableOpacity
+          onPress={() => setAcceptModal(false)}
+          style={styles.modalCloseBtn}>
+          <Close />
+        </TouchableOpacity>
+        <View style={styles.acceptModal}>
+          {/* <View style={styles.acceptModalContentWrap}> */}
+          <View style={{marginTop: 40}}>
+            <Text style={styles.acceptText}>
+              {connected.ssid} wants to exchange
+            </Text>
+            <Text style={styles.acceptText}>cards with you</Text>
+          </View>
+          {/* </View> */}
+          <View style={styles.buttonView}>
+            <TouchableOpacity
+              style={styles.acceptModalButton}
+              onPress={async () => {
+                // await startClient;
+                if (!server) {
+                  setServer(createServer(card, setCard));
+                }
+                try {
+                  let temp_ip = await NetworkInfo.getIPV4Address();
+                  setIp(temp_ip);
+                  setAcceptModal(false);
+                } catch (e) {
+                  console.log(e.message);
+                }
+                // setAcceptModal(false);
+              }}>
+              <Text style={styles.modalBtnText}>ACCEPT</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.acceptModalButton1}
+              onPress={() => proceedToContinue()}>
+              <Text style={styles.modalBtnText}>EXCHANGE</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     );
@@ -396,7 +596,14 @@ const Search = () => {
                       <Text style={styles.connectName}>{item.SSID}</Text>
                       <TouchableOpacity
                         style={styles.connect}
-                        onPress={() => connectWithWifi(item.SSID)}>
+                        onPress={async () => {
+                          await connectWithWifi(item.SSID);
+                          await startServer();
+                          if (server) {
+                            console.log('Hello server');
+                          }
+                          setShow(true);
+                        }}>
                         <Text style={styles.connectText}>CONNECT</Text>
                       </TouchableOpacity>
                     </View>
@@ -455,15 +662,13 @@ const Search = () => {
     );
   };
 
-  const openPass = name => {
-    setShowPass(!showPass);
-  };
-
   return (
     <View style={{flex: 1}}>
       {errorModal && searchErrorModal()}
       {successModal && shareSuccessModal()}
       {resultsModal && searchResultsModal()}
+      {acceptModal && acceptExchangeModal()}
+      {cardSuccessModal && shareCardSuccessModal()}
       <View style={styles.container}>
         <ScrollView
           contentContainerStyle={{flexGrow: 1}}
@@ -477,11 +682,12 @@ const Search = () => {
                 // setErrorModal(true);
                 // setSuccessModal(true);
                 // setResultsModal(true);
-                // navigation.goBack();
-                navigation.navigate('Server');
+                navigation.goBack();
+                // setAcceptModal(true);
               }}>
               <Close />
             </TouchableOpacity>
+
             {transferring ? (
               <>
                 <View style={{marginTop: 32}}>
@@ -496,8 +702,8 @@ const Search = () => {
                   </Text>
 
                   <Text style={styles.searchingNote}>connection</Text>
+                  {/* {startClient()} */}
                 </View>
-
                 <View style={styles.phonesView}>
                   <Phone />
                   <LottieView
@@ -509,8 +715,7 @@ const Search = () => {
                   />
                   <Phone />
                 </View>
-
-                <View>
+                {/* <View>
                   <TextInputs
                     label="Text Box"
                     placeholderTextColor="rgba(90, 89, 89, 0.55)"
@@ -518,58 +723,74 @@ const Search = () => {
                     onChangeText={() => startClient()}
                     onSubmitEditing={({nativeEvent: {text}}) => {
                       if (client) {
-                        client.write(JSON.stringify({msg: text, id: 1}));
+                        client.write(JSON.stringify(card));
                       }
                     }}
                     style={{
                       backgroundColor: '#EEEFEF',
                     }}
                   />
-                </View>
+                </View> */}
+                <TouchableOpacity
+                  style={styles.connect}
+                  onPress={() => {
+                    startClient();
+
+                    // setTimeout(() => {
+                    if (client) {
+                      client.write(JSON.stringify(card));
+                      sent = true;
+                    }
+                    if (sent === true) {
+                      setSuccessModal(true);
+                      setCard([]);
+                    }
+                    // }, 4000);
+                  }}>
+                  <Text style={styles.connectText}>Send </Text>
+                </TouchableOpacity>
               </>
             ) : (
               <>
-                <View style={{marginTop: 32}}>
-                  <Text style={styles.searchingText}>Searching</Text>
-                </View>
-                <View style={{marginTop: 16}}>
-                  <Text style={styles.searchingNote}>
-                    Make sure the receiver’s hotspot is active and
-                  </Text>
-                  <Text style={styles.searchingNote}>
-                    keep your devices close to establish a
-                  </Text>
-                  <Text style={styles.searchingNote}>connection</Text>
-                </View>
-                <TouchableOpacity
-                  style={styles.connect}
-                  onPress={async () => {
-                    if (!server) {
-                      setServer(createServer(chats, setChats));
-                    }
-                    try {
-                      let temp_ip = await NetworkInfo.getIPV4Address();
-                      setIp(temp_ip);
-                      setStart(true);
-                    } catch (e) {
-                      console.log(e.message);
-                    }
-                  }}>
-                  <Text style={styles.connectText}>RECEIVE</Text>
-                </TouchableOpacity>
+                {/* {client ? (
+                  setAcceptModal(true)
+                ) : ( */}
+                <>
+                  {/* {show === true && (
+                    <Text style={styles.searchingText}>show me {show}</Text>
+                  )} */}
+                  <View style={{marginTop: 32}}>
+                    <Text style={styles.searchingText}>Searching </Text>
+                  </View>
+                  <View style={{marginTop: 16}}>
+                    <Text style={styles.searchingNote}>
+                      Make sure the receiver’s hotspot is active and
+                    </Text>
+                    <Text style={styles.searchingNote}>
+                      keep your devices close to establish a
+                    </Text>
+                    <Text style={styles.searchingNote}>connection</Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.connect}
+                    onPress={async () => {
+                      setAcceptModal(true);
+                    }}>
+                    <Text style={styles.connectText}>RECEIVE</Text>
+                  </TouchableOpacity>
 
-                <View style={styles.lottieView}>
-                  <LottieView
-                    source={require('../../assets/json/searching.json')}
-                    style={{width: 500, height: 500}}
-                    loop={true}
-                    autoPlay={true}
-                    ref={animation}
-                  />
-                </View>
-                <View>
-                  <FlatList
-                    data={chats}
+                  <View style={styles.lottieView}>
+                    <LottieView
+                      source={require('../../assets/json/searching.json')}
+                      style={{width: 500, height: 500}}
+                      loop={true}
+                      autoPlay={true}
+                      ref={animation}
+                    />
+                  </View>
+                  <View>
+                    {/* <FlatList
+                    data={card}
                     renderItem={({item}) => {
                       console.log(item);
                       return (
@@ -579,8 +800,52 @@ const Search = () => {
                       );
                     }}
                     keyExtractor={item => item.id}
-                  />
-                </View>
+                  /> */}
+                    <FlatList
+                      horizontal
+                      data={card}
+                      contentContainerStyle={{paddingVertical: 5}}
+                      contentInsetAdjustmentBehavior="never"
+                      snapToAlignment="center"
+                      decelerationRate="fast"
+                      automaticallyAdjustContentInsets={false}
+                      showsHorizontalScrollIndicator={false}
+                      showsVerticalScrollIndicator={false}
+                      scrollEventThrottle={1}
+                      snapToInterval={boxWidth}
+                      contentInset={{
+                        left: halfBoxDistance,
+                        right: halfBoxDistance,
+                      }}
+                      contentOffset={{x: halfBoxDistance * -1, y: 0}}
+                      onLayout={e => {
+                        setScrollViewWidth(e.nativeEvent.layout.width);
+                      }}
+                      onScroll={Animated.event(
+                        [{nativeEvent: {contentOffset: {x: pan.x}}}],
+                        {
+                          useNativeDriver: false,
+                        },
+                      )}
+                      onScrollEndDrag={() => console.log('Animation ended')}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        console.log('This is the card sent', item);
+                        return (
+                          <Card
+                            item={item}
+                            index={index}
+                            boxWidth={boxWidth}
+                            halfBoxDistance={halfBoxDistance}
+                            pan={pan}
+                          />
+                          // <></>
+                        );
+                      }}
+                    />
+                  </View>
+                </>
+                {/* )} */}
               </>
             )}
           </View>
@@ -748,6 +1013,85 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#333333',
     textAlign: 'center',
+  },
+
+  // acceptExchange Modal
+  acceptModal: {
+    width: '100%',
+    height: 250,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    // borderTopLeftRadius: 10,
+  },
+  acceptBottomModal: {
+    justifyContent: 'flex-end',
+    paddingBottom: height / 8,
+  },
+
+  acceptText: {
+    fontFamily: 'Poppins',
+    fontSize: 18,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    color: '#333333',
+    textAlign: 'center',
+  },
+
+  acceptModalButton: {
+    height: 43,
+    width: '40%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 15,
+    backgroundColor: '#000',
+  },
+
+  acceptModalButton1: {
+    height: 43,
+    width: '40%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 15,
+    backgroundColor: PRIMARY_COLOR,
+  },
+
+  acceptModalContentWrap: {
+    height: 300,
+    width: '100%',
+    // paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  buttonView: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: 50,
+  },
+
+  //card success
+  cardSuccessModal: {
+    width: '100%',
+    height: 250,
+    backgroundColor: '#FFFFFF',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+  },
+
+  cardSuccessModalButton: {
+    height: 53,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: PRIMARY_COLOR,
+  },
+
+  cardSuccessModalContentWrap: {
+    height: 200,
+    width: '100%',
+    paddingHorizontal: 20,
+    alignItems: 'center',
   },
 
   // Results List Modal

@@ -16,6 +16,7 @@ import {
   AuthenticatedRoutesParamsList,
   TabNavigatorParamsList,
 } from '../../types/navigation';
+import NetInfo from '@react-native-community/netinfo';
 import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
 import {Badge} from 'react-native-paper';
 import Menu from '../../assets/svg/menu.svg';
@@ -33,7 +34,6 @@ import {getUserIdService} from '../../services/userService';
 import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
-import TurnOnHotspot from '../../components/TurnOnHotspot';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -42,7 +42,7 @@ type Props = {
   >;
 };
 
-const {width} = Dimensions.get('screen');
+const {width, height} = Dimensions.get('screen');
 
 const Home = ({navigation}: Props) => {
   const [message, setMessage] = useState<{
@@ -53,13 +53,13 @@ const Home = ({navigation}: Props) => {
   const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector(userSlice);
-
   const [cardModal, setCardModal] = useState(false);
   const boxWidth = scrollViewWidth * 1;
   const boxDistance = scrollViewWidth - boxWidth;
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
-  const [TurnOnHotspotModalState, showTurnOnHotspotModal] = useState(false);
+  const [isOffline, setOfflineStatus] = useState(false);
+  const [acceptModal, setAcceptModal] = useState(false);
 
   const _onNotificationPressed = () => {
     setModal(true);
@@ -69,6 +69,23 @@ const Home = ({navigation}: Props) => {
     setCardModal(false);
   };
 
+  // useEffect(() => {
+  //   // Subscribe
+  //   const unsubscribe = NetInfo.addEventListener(state => {
+  //     console.log('Connection type', state);
+  //     console.log('Is connected?', state.isConnected);
+  //     const offline = !(state.isConnected && state.isInternetReachable);
+  //     setOfflineStatus(offline);
+
+  //     if (state.type !== 'wifi') {
+  //       console.log('offline var here', isOffline);
+  //     }
+  //   });
+
+  //   // Unsubscribe
+  //   return () => unsubscribe();
+  // }, [isOffline]);
+
   // ?TAP TO SHARE BUTTON
   const TapToShareButton = () => {
     return (
@@ -77,15 +94,66 @@ const Home = ({navigation}: Props) => {
           style={styles.tap}
           onPress={
             // () => setCardModal(true)
-            // showTurnOnHotspotModal(true)
-            // enableWifi()
             // scanExample()
-            () => navigation.navigate('Search')
+            () =>
+              navigation.navigate(
+                'Search',
+                user.cards ? {card: user.cards} : null,
+              )
           }>
           <Tap />
           <Text style={styles.tapText}>TAP TO SHARE</Text>
         </TouchableOpacity>
       </View>
+    );
+  };
+
+  const acceptExchangeModal = () => {
+    return (
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.acceptBottomModal}
+        isVisible={acceptModal}
+        onBackdropPress={() => setAcceptModal(false)}
+        onBackButtonPress={() => setAcceptModal(false)}>
+        <TouchableOpacity
+          onPress={() => setAcceptModal(false)}
+          style={styles.modalCloseBtn}>
+          <Close />
+        </TouchableOpacity>
+        <View style={styles.acceptModal}>
+          {/* <View style={styles.acceptModalContentWrap}> */}
+          <View style={{marginTop: 40}}>
+            <Text style={styles.acceptText}>A user wants to exchange</Text>
+            <Text style={styles.acceptText}>cards with you</Text>
+          </View>
+          {/* </View> */}
+          <View style={styles.buttonView}>
+            <TouchableOpacity
+              style={styles.acceptModalButton}
+              onPress={async () => {
+                // if (!server) {
+                //   setServer(createServer(card, setCard));
+                // }
+                // try {
+                //   let temp_ip = await NetworkInfo.getIPV4Address();
+                //   setIp(temp_ip);
+                // } catch (e) {
+                //   console.log(e.message);
+                // }
+              }}>
+              <Text style={styles.modalBtnText}>ACCEPT</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.acceptModalButton1}
+              // onPress={() => proceedToContinue()}
+            >
+              <Text style={styles.modalBtnText}>EXCHANGE</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     );
   };
 
@@ -223,6 +291,7 @@ const Home = ({navigation}: Props) => {
       )}
 
       {cardModal && selectCardModal}
+      {acceptModal && acceptExchangeModal}
       <Header
         title="HOME"
         titleColor="#FFFFFF"
@@ -282,7 +351,7 @@ const Home = ({navigation}: Props) => {
               <Text
                 style={styles.viewAll}
                 onPress={() => {
-                  navigation.navigate('Search');
+                  // navigation.navigate('Search');
                 }}>
                 View all
               </Text>
@@ -291,20 +360,9 @@ const Home = ({navigation}: Props) => {
             <UserCardSlider />
 
             <TapToShareButton />
-            {/* <Text style={styles.sectionDescription}>
-              {JSON.stringify(ssid)}
-            </Text>
-            <Text style={styles.sectionDescription}>
-              {JSON.stringify(connected)}
-            </Text> */}
           </View>
         </ScrollView>
       </View>
-      <Modal
-        isVisible={TurnOnHotspotModalState}
-        style={{justifyContent: 'flex-end', margin: 0}}>
-        <TurnOnHotspot showTurnOnHotspotModal={showTurnOnHotspotModal} />
-      </Modal>
     </View>
   );
 };
@@ -480,5 +538,58 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
     color: '#000',
+  },
+
+  acceptModal: {
+    width: '100%',
+    height: 250,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    // borderTopLeftRadius: 10,
+  },
+  acceptBottomModal: {
+    justifyContent: 'flex-end',
+    paddingBottom: height / 8,
+  },
+
+  acceptText: {
+    fontFamily: 'Poppins',
+    fontSize: 18,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    color: '#333333',
+    textAlign: 'center',
+  },
+
+  acceptModalButton: {
+    height: 43,
+    width: '40%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 15,
+    backgroundColor: '#000',
+  },
+
+  acceptModalButton1: {
+    height: 43,
+    width: '40%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 15,
+    backgroundColor: PRIMARY_COLOR,
+  },
+
+  acceptModalContentWrap: {
+    height: 300,
+    width: '100%',
+    // paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  buttonView: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: 50,
   },
 });
