@@ -30,6 +30,10 @@ target 'Tapiolla' do
 
   pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
 
+  pod 'RNFBApp', :path => '../node_modules/@react-native-firebase/app'
+
+  pod 'RNFBMessaging', :path => '../node_modules/@react-native-firebase/messaging'
+
   target 'TapiollaTests' do
     inherit! :complete
     # Pods for testing

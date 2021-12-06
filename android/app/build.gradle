@@ -129,8 +129,8 @@ android {
         applicationId "com.tapiolla"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
     }
     splits {
         abi {
@@ -194,15 +194,9 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
-    implementation platform('com.google.firebase:firebase-bom:28.4.2')
+    implementation platform('com.google.firebase:firebase-bom:29.0.1')
 
     implementation 'com.google.firebase:firebase-analytics'
-
-    //  implementation "com.google.firebase:firebase-core:15.0.2"
-    // implementation "com.google.firebase:firebase-messaging:15.0.2" 
-
-    // implementation 'com.google.firebase:firebase-messaging:20.1.0'
-    // implementation 'com.google.firebase:firebase-analytics:17.2.1'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

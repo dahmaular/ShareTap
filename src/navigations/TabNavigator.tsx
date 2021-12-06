@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {AuthenticatedRoutesParamsList, TabNavigatorParamsList} from '../types';
+import {AuthenticatedRoutesParamsList, TabNavigatorParamsList} from '../types/navigation';
 import {Home, Chat, Contacts, Profile, Card} from '../screens/tabs';
 import Plus from '../assets/svg/add_black_24dp (6) 1.svg';
 import Svg, {Path} from 'react-native-svg';

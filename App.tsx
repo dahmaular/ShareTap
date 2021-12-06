@@ -30,6 +30,7 @@ import {awsConfig} from './src/core/awsExports';
 import Amplify from 'aws-amplify';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import RNBootSplash from 'react-native-bootsplash';
+import { notificationListener } from './src/services/notification';
 
 const theme = {
   ...DefaultTheme,
@@ -86,23 +87,16 @@ Amplify.configure({
   oauth: {
     ...awsConfig.Auth.oauth,
     urlOpener,
-  },
-  Analytics: {
-    AWSPinpoint: {
-      appId: '308101c958a14b589b92de32794a5097',
-      region: 'ca-central-1',
-      endpoint: {
-        optOut: 'NONE',
-      },
-    },
-  },
-  PushNotification: {
-    appId: '308101c958a14b589b92de32794a5097',
-    requestIOSPermissions: false,
-  },
+  }
 });
 
 const App: FC = () => {
+
+  useEffect(()=>{
+    notificationListener();
+  },[]);
+
+
   useEffect(() => {
     const init = async () => {
       RNBootSplash.show();

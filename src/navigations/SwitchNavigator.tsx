@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react';
-// import PushNotification from '@aws-amplify/pushnotification';
-import {Analytics, Auth} from 'aws-amplify';
 import {Hub, HubCapsule} from '@aws-amplify/core';
 import {
   NavigationContainer,
@@ -72,22 +70,6 @@ const SwitchNavigator = () => {
       .catch(() => setUserLoggedIn('loggedOut'));
   }, []);
 
-  // useEffect(() => {
-  //   PushNotification.onRegister((token: any) => {
-  //     console.log('FCM Token', token);
-  //     Analytics.updateEndpoint({
-  //       address: token,
-  //       optOut: 'NONE',
-  //       userId: getUserIdService(),
-  //     })
-  //       .then(data => {
-  //         console.log('endpoint updated', JSON.stringify(data));
-  //       })
-  //       .catch(error => {
-  //         console.log('error updating endpoint', error);
-  //       });
-  //   });
-  // }, []);
 
   const hubListener = (data: HubCapsule) => {
     switch (data.channel as 'navigation' | 'alert' | 'auth') {
