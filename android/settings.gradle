@@ -1,6 +1,8 @@
 rootProject.name = 'Tapiolla'
 include ':@react-native-firebase_messaging'
 project(':@react-native-firebase_messaging').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-firebase/messaging/android')
+include ':@react-native-firebase_dynamic-links'
+project(':@react-native-firebase_dynamic-links').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-firebase/dynamic-links/android')
 include ':@react-native-firebase_app'
 project(':@react-native-firebase_app').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-firebase/app/android')
 include ':@react-native-community_netinfo'
@@ -15,8 +17,6 @@ include ':react-native-network-info'
 project(':react-native-network-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-network-info/android')
 include ':react-native-wifi-reborn'
 project(':react-native-wifi-reborn').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-wifi-reborn/android')
-include ':react-native-wifi-and-hotspot-wizard'
-project(':react-native-wifi-and-hotspot-wizard').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-wifi-and-hotspot-wizard/android')
 include ':lottie-react-native'
 project(':lottie-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/lottie-react-native/src/android')
 include ':react-native-vector-icons'

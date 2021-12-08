@@ -34,6 +34,8 @@ target 'Tapiolla' do
 
   pod 'RNFBMessaging', :path => '../node_modules/@react-native-firebase/messaging'
 
+  pod 'RNFBDynamicLinks', :path => '../node_modules/@react-native-firebase/dynamic-links'
+
   target 'TapiollaTests' do
     inherit! :complete
     # Pods for testing

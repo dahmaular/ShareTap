@@ -30,7 +30,7 @@ import {awsConfig} from './src/core/awsExports';
 import Amplify from 'aws-amplify';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import RNBootSplash from 'react-native-bootsplash';
-import { notificationListener } from './src/services/notification';
+import { notificationListener, requestUserPermission } from './src/services/notification';
 
 const theme = {
   ...DefaultTheme,
@@ -94,6 +94,7 @@ const App: FC = () => {
 
   useEffect(()=>{
     notificationListener();
+    requestUserPermission();
   },[]);
 
 
