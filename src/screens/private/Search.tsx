@@ -38,6 +38,7 @@ interface WIFIUSER {
 }
 
 let sent: Boolean;
+let exchange: Boolean;
 
 const Search = ({route}) => {
   const animation = useRef<LottieView>(null);
@@ -122,7 +123,10 @@ const Search = ({route}) => {
         setCard(response);
         console.log('Server Received: ' + response);
         setCardSuccessModal(true);
-        //   socket.write('Echo server\r\n');
+        if (exchange === true) {
+          console.log('Exchanged clicked');
+          socket.write(JSON.stringify(card));
+        }
       });
 
       socket.on('error', error => {
@@ -147,16 +151,20 @@ const Search = ({route}) => {
     return server;
   };
 
-  const createClient = (ip, card, setCard) => {
+  const createClient = ip => {
     const client = TcpSocket.createConnection({port: 6666, host: ip}, () => {
       console.log('opened client on ' + JSON.stringify(client.address()));
       // client.write('Hello, server! Love, Client.');
     });
 
     client.on('data', data => {
-      setCard([...card, {id: card.length + 1, msg: data}]);
-      console.log('Client Received: ' + data);
-
+      let response = JSON.parse(data);
+      // setCard([...card, {id: card.length + 1, msg: data}]);
+      setCard(response);
+      console.log('Client Received: ' + response);
+      setSuccessModal(false);
+      exchange = true;
+      setCardSuccessModal(true);
       // client.destroy(); // kill client after server's response
       // this.server.close();
     });
@@ -529,7 +537,7 @@ const Search = ({route}) => {
             <TouchableOpacity
               style={styles.acceptModalButton}
               onPress={async () => {
-                // await startClient;
+                exchange = false;
                 if (!server) {
                   setServer(createServer(card, setCard));
                 }
@@ -546,7 +554,19 @@ const Search = ({route}) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.acceptModalButton1}
-              onPress={() => proceedToContinue()}>
+              onPress={async () => {
+                if (!server) {
+                  setServer(createServer(card, setCard));
+                }
+                try {
+                  let temp_ip = await NetworkInfo.getIPV4Address();
+                  setIp(temp_ip);
+                  exchange = true;
+                  setAcceptModal(false);
+                } catch (e) {
+                  console.log(e.message);
+                }
+              }}>
               <Text style={styles.modalBtnText}>EXCHANGE</Text>
             </TouchableOpacity>
           </View>
@@ -600,7 +620,7 @@ const Search = ({route}) => {
                           await connectWithWifi(item.SSID);
                           setTimeout(() => {
                             setShow(true);
-                          }, 5000);
+                          }, 7000);
                         }}>
                         <Text style={styles.connectText}>CONNECT</Text>
                       </TouchableOpacity>
@@ -735,16 +755,18 @@ const Search = ({route}) => {
                     onPress={() => {
                       startClient();
 
-                      // setTimeout(() => {
                       if (client) {
                         client.write(JSON.stringify(card));
                         sent = true;
                       }
                       if (sent === true) {
+                        console.log(sent, exchange);
                         setSuccessModal(true);
                         setCard([]);
                       }
-                      // }, 4000);
+                      if (exchange === true) {
+                        console.log('Exchange it is');
+                      }
                     }}>
                     <Text style={styles.connectText}>Send </Text>
                   </TouchableOpacity>
@@ -788,62 +810,22 @@ const Search = ({route}) => {
                       ref={animation}
                     />
                   </View>
-                  <View>
-                    {/* <FlatList
-                    data={card}
-                    renderItem={({item}) => {
-                      console.log(item);
-                      return (
-                        <Text style={{margin: 10, fontSize: 20}}>
-                          {item.msg}
-                        </Text>
-                      );
-                    }}
-                    keyExtractor={item => item.id}
-                  /> */}
-                    <FlatList
-                      horizontal
-                      data={card}
-                      contentContainerStyle={{paddingVertical: 5}}
-                      contentInsetAdjustmentBehavior="never"
-                      snapToAlignment="center"
-                      decelerationRate="fast"
-                      automaticallyAdjustContentInsets={false}
-                      showsHorizontalScrollIndicator={false}
-                      showsVerticalScrollIndicator={false}
-                      scrollEventThrottle={1}
-                      snapToInterval={boxWidth}
-                      contentInset={{
-                        left: halfBoxDistance,
-                        right: halfBoxDistance,
+                  {/* <View>
+                    <TextInputs
+                      label="Text Box"
+                      placeholderTextColor="rgba(90, 89, 89, 0.55)"
+                      placeholder="Enter your phrase"
+                      onChangeText={() => startClient()}
+                      onSubmitEditing={({nativeEvent: {text}}) => {
+                        if (client) {
+                          client.write(JSON.stringify(card));
+                        }
                       }}
-                      contentOffset={{x: halfBoxDistance * -1, y: 0}}
-                      onLayout={e => {
-                        setScrollViewWidth(e.nativeEvent.layout.width);
-                      }}
-                      onScroll={Animated.event(
-                        [{nativeEvent: {contentOffset: {x: pan.x}}}],
-                        {
-                          useNativeDriver: false,
-                        },
-                      )}
-                      onScrollEndDrag={() => console.log('Animation ended')}
-                      keyExtractor={item => item.id}
-                      renderItem={({item, index}) => {
-                        console.log('This is the card sent', item);
-                        return (
-                          <Card
-                            item={item}
-                            index={index}
-                            boxWidth={boxWidth}
-                            halfBoxDistance={halfBoxDistance}
-                            pan={pan}
-                          />
-                          // <></>
-                        );
+                      style={{
+                        backgroundColor: '#EEEFEF',
                       }}
                     />
-                  </View>
+                  </View> */}
                 </>
                 {/* )} */}
               </>

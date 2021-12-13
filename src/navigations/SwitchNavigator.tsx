@@ -58,12 +58,6 @@ const SwitchNavigator = () => {
   //   config,
   // };
 
-  // useEffect(() => {
-  //   getUserIdService()
-  //     .then(() => setUserLoggedIn('loggedIn')) //also dispatch redux action to get users
-  //     .catch(() => setUserLoggedIn('loggedOut'));
-  // }, []);
-
   useEffect(() => {
     getUserIdService()
       .then(() => setUserLoggedIn('loggedIn')) //also dispatch redux action to get users
