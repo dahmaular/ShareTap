@@ -16,7 +16,6 @@ import {
   AuthenticatedRoutesParamsList,
   TabNavigatorParamsList,
 } from '../../types/navigation';
-import NetInfo from '@react-native-community/netinfo';
 import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
 import {Badge} from 'react-native-paper';
 import Menu from '../../assets/svg/menu.svg';
@@ -25,7 +24,7 @@ import Notification from '../../assets/svg/ion-ios-notifications.svg';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
 import Message from '../../components/Message';
-import cards from '../../mock/CarouselList';
+import {Analytics} from 'aws-amplify';
 import Card from '../../components/Card';
 import NotificationModal from '../../components/NotificationModal';
 import Modal from 'react-native-modal';
@@ -34,6 +33,7 @@ import {getUserIdService} from '../../services/userService';
 import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
+import {GET_FCM_TOKEN, GET_FCM_TOKEN_STATUS} from '../../core/storage';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -271,13 +271,31 @@ const Home = ({navigation}: Props) => {
   };
   useEffect(() => {
     getUserIdService()
-      .then(id => dispatch(fetchUserCards(id)))
+      .then(id => {
+        console.log('IDDDDD', id);
+        uploadPushToken(id);
+        dispatch(fetchUserCards(id));
+      })
       .catch(() => hubDispatch('navigation', 'loggedIn'));
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   start();
-  // }, []);
+  const uploadPushToken = async (id: string) => {
+    const isSaved = await GET_FCM_TOKEN_STATUS();
+    const token = await GET_FCM_TOKEN();
+    console.log('TOken Gotten', token);
+    if (isSaved) {
+      return;
+    } else {
+      Analytics.updateEndpoint({
+        address: token, // Token should be set on address field!
+        userId: id
+      }).then((res)=>{
+        console.log('Response', res);
+      }).catch((error)=>{
+        console.log('Errrrrrrrrror', error)
+      });
+    }
+  };
 
   return (
     <View style={{flex: 1}}>

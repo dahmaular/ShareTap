@@ -36,6 +36,12 @@ export const awsConfig = {
     aws_appsync_apiKey: APPSYNC_APIKEY, // (optional) - AWS AppSync API Key
     aws_appsync_appId: APPSYNC_APPID,
   },
+  Analytics: {
+    AWSPinpoint: {
+      appId: '308101c958a14b589b92de32794a5097',
+      region: 'ca-central-1',
+    },
+  },
 };
 
 export const hubDispatch = (
