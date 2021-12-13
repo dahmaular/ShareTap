@@ -30,6 +30,7 @@ type Props = {
 
 const Verification = ({navigation, route}: Props) => {
   const {item} = route.params;
+  console.log('Item on Verification Page', item);
   const [otpCode, setOtpCode] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -37,7 +38,7 @@ const Verification = ({navigation, route}: Props) => {
     try {
       if (item.isForgotPassword) {
         navigation.navigate('ResetPassword', {
-          item: {code: otpCode, email: item.email},
+          item: {code: otpCode, email: item.userName}, 
         });
         return;
       }

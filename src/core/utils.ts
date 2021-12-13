@@ -43,3 +43,8 @@ export const nameValidator = (value: string, type: string) => {
   if (!value || value.length <= 0) return `${type} cannot be empty.`;
   return '';
 };
+
+export const userNameValidator = (value: string, type: string) => {
+  if (!value || value.length <= 0) return `${type} cannot be empty.`;
+  return '';
+};

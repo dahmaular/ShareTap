@@ -8,7 +8,7 @@ import {RouteProp} from '@react-navigation/native';
 import {UnauthenticatedRoutesParamsList} from '../../types/navigation';
 import TextInputs from '../../components/TextInput';
 import Button from '../../components/Button';
-import {emailValidator} from '../../core/utils';
+import {emailValidator, userNameValidator} from '../../core/utils';
 import EmailModal from '../../components/EmailModal';
 import {forgotPassword} from '../../services/authService';
 import {hubDispatch} from '../../core/awsExports';
@@ -31,21 +31,21 @@ type Props = {
 };
 
 const ForgotPassword = ({navigation}: Props) => {
-  const [email, setEmail] = useState({value: '', error: ''});
-  const [emailFocus, setEmailFocus] = useState(false);
+  const [userName, setUserName] = useState({value: '', error: ''});
+  const [userNameFocus, setUserNameFocus] = useState(false);
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const _onRegisterPressed = async () => {
     try {
-      const emailError = emailValidator(email.value);
+      const userNameError = userNameValidator(userName.value, 'User Name');
 
-      if (emailError) {
-        setEmail({...email, error: emailError});
+      if (userNameError) {
+        setUserName({...userName, error: userNameError});
         return;
       }
       setLoading(true);
-      await forgotPassword(email.value);
+      await forgotPassword(userName.value);
 
       setModal(true);
     } catch (error: any) {
@@ -55,11 +55,11 @@ const ForgotPassword = ({navigation}: Props) => {
     }
   };
 
-  const handleEmailBlur = () => {
-    setEmailFocus(true);
+  const handleUserNameBlur = () => {
+    setUserNameFocus(true);
 
-    const validationError = emailValidator(email.value);
-    setEmail({...email, error: validationError});
+    const validationError = userNameValidator(userName.value, 'Userame');
+    setUserName({...userName, error: validationError});
   };
 
   return (
@@ -71,7 +71,7 @@ const ForgotPassword = ({navigation}: Props) => {
           onBackdropPress={() => setModal(true)}
           onClose={() => setModal(false)}
           navigation={navigation}
-          email={email.value}
+          userName={userName.value}
         />
       )} 
       <Header
@@ -92,26 +92,29 @@ const ForgotPassword = ({navigation}: Props) => {
           keyboardShouldPersistTaps="handled">
           <View style={styles.createView}>
             <Text style={styles.createText}>Forgot password</Text>
-            <Text style={styles.create}>Enter your email address</Text>
+            <Text style={styles.create}>Enter your username</Text>
           </View>
 
           <TextInputs
-            label="Email"
+            label="Username"
             returnKeyType="next"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
-            placeholder="Enter your email address"
-            value={email.value}
-            onChangeText={text => setEmail({value: text, error: ''})}
-            error={!!email.error}
-            errorText={email.error}
+            placeholder="Enter your username"
+            value={userName.value}
+            onChangeText={text => setUserName({value: text, error: ''})}
+            error={!!userName.error}
+            errorText={userName.error}
             autoCapitalize="none"
-            autoCompleteType="email"
-            textContentType="emailAddress"
-            keyboardType="email-address"
-            onFocus={() => setEmailFocus(true)}
-            onBlur={handleEmailBlur}
+            // autoCompleteType="email"
+            // textContentType="emailAddress"
+            // keyboardType="email-address"
+            autoCompleteType='username'
+            keyboardType='name-phone-pad'
+            textContentType='nickname'
+            onFocus={() => setUserNameFocus(true)}
+            onBlur={handleUserNameBlur}
             style={{
-              backgroundColor: emailFocus ? '#FFFFFF' : '#EEEFEF',
+              backgroundColor: userNameFocus ? '#FFFFFF' : '#EEEFEF',
               marginTop: 34,
             }}
           />

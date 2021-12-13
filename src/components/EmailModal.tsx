@@ -4,10 +4,12 @@ import Modal from 'react-native-modal';
 import Close from '../assets/svg/phone-verif-close-icon.svg';
 import Message from '../assets/svg/message-icon.svg';
 import {PRIMARY_COLOR} from '../core/color';
+import {resendSignUpService} from '../services/authService';
+import {hubDispatch} from '../core/awsExports';
 
 type Props = {
   navigation: any;
-  email: string;
+  userName: string;
   visible: boolean;
   onBackdropPress: Function;
   onBackButtonPress: Function;
@@ -16,13 +18,14 @@ type Props = {
 
 const EmailModal = ({
   navigation,
-  email,
+  userName,
   visible,
   onBackdropPress,
   onBackButtonPress,
   onClose,
 }: Props) => {
   const [wait, setWait] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(59);
   const [modal] = useState(visible);
 
@@ -39,12 +42,26 @@ const EmailModal = ({
     onClose();
     navigation.navigate('Verification', {
       item: {
-        email: email,
+        userName: userName,
         isForgotPassword: true,
       },
     });
 
     // navigation.navigate('ResetPassword'); //! routing should proceed to verification page
+  };
+
+
+  const resendEmailOTP = () => {
+    setCounter(59);
+    setWait(true);
+    resendSignUpService(userName)
+      .then(data => {
+        console.log('Response Data', data);
+      })
+      .catch(e => {
+        console.log('Errrrorrr', e)
+      })
+      .finally(() => {});
   };
 
   return (
@@ -69,7 +86,7 @@ const EmailModal = ({
               A reset code has been sent to your
             </Text>
             <Text style={styles.modalContentText}>
-              mailbox <Text style={styles.modalContentPhoneText}>{email}</Text>
+              registered <Text style={styles.modalContentPhoneText}>phone number</Text>
             </Text>
           </View>
 
@@ -82,9 +99,9 @@ const EmailModal = ({
             </View>
           ) : (
             <View style={{marginTop: 17}}>
-              <Text style={styles.didReceiveText}>
+              <Text style={styles.didReceiveText} >
                 DIDNT RECEIVE A CODE?{' '}
-                <Text style={styles.resendText}>RESEND CODE</Text>
+                <Text style={styles.resendText} onPress={()=>resendEmailOTP()}>RESEND CODE</Text>
               </Text>
             </View>
           )}

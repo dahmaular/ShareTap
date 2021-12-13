@@ -272,7 +272,6 @@ const Home = ({navigation}: Props) => {
   useEffect(() => {
     getUserIdService()
       .then(id => {
-        console.log('IDDDDD', id);
         uploadPushToken(id);
         dispatch(fetchUserCards(id));
       })
