@@ -58,18 +58,18 @@ const SwitchNavigator = ({navigation}: Props) => {
   //   config,
   // };
 
-  // useEffect(() => {
-  //   getUserIdService()
-  //     .then(() => setUserLoggedIn('loggedIn')) //also dispatch redux action to get users
-  //     .catch(() => setUserLoggedIn('loggedOut'));
-  // }, []);
-
   useEffect(() => {
-    // getUserIdService()
-    //   .then(() => setUserLoggedIn('loggedIn')) //also dispatch redux action to get users
-    //   .catch(() => setUserLoggedIn('loggedOut'));
-    setUserLoggedIn('loggedIn');
+    getUserIdService()
+      .then(() => setUserLoggedIn('loggedIn')) //also dispatch redux action to get users
+      .catch(() => setUserLoggedIn('loggedOut'));
   }, []);
+
+  // useEffect(() => {
+  //   // getUserIdService()
+  //   //   .then(() => setUserLoggedIn('loggedIn')) //also dispatch redux action to get users
+  //   //   .catch(() => setUserLoggedIn('loggedOut'));
+  //   setUserLoggedIn('loggedIn');
+  // }, []);
 
   const hubListener = (data: HubCapsule) => {
     switch (data.channel as 'navigation' | 'alert' | 'auth') {
