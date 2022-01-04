@@ -58,7 +58,7 @@ const Home = ({navigation}: Props) => {
   const boxDistance = scrollViewWidth - boxWidth;
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
-
+  // console.log(user.cards);
   const _onNotificationPressed = () => {
     setModal(true);
   };
