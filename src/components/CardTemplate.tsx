@@ -19,7 +19,8 @@ import Facebook from '../assets/svg/facebbk.svg';
 import Twitter from '../assets/svg/twitter.svg';
 const {width} = Dimensions.get('window');
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import CheckBox from '@react-native-community/checkbox';
+// import CheckBox from '@react-native-community/checkbox';
+import {Checkbox} from 'react-native-paper';
 import TextInputs from './TextInput';
 
 import {ListUserCardsResponse} from '../services/userService';
@@ -114,11 +115,12 @@ const CardTemplate = ({
         anchor={
           <View style={{...styles.touchable, width: boxWidth}}>
             <View style={styles.checkInput}>
-              <CheckBox
+              <Checkbox.Android
                 style={styles.checkBox}
+                color="#219653"
                 disabled={false}
-                value={item.name.length > 3 ? !checkName : checkName}
-                onChange={() => setCheckName(!checkName)}
+                status={item.name.length > 3 ? 'checked' : 'unchecked'}
+                onPress={() => setCheckName(!checkName)}
               />
               <TextInput
                 style={styles.namer}
@@ -131,11 +133,12 @@ const CardTemplate = ({
               />
             </View>
             <View style={styles.checkInput}>
-              <CheckBox
+              <Checkbox.Android
                 style={styles.checkBox}
+                color="#219653"
                 disabled={false}
-                value={item.role.length > 3 ? !checkRole : checkRole}
-                onChange={() => setCheckRole(!checkRole)}
+                status={item.role.length > 3 ? 'checked' : 'unchecked'}
+                onPress={() => setCheckRole(!checkRole)}
               />
               <TextInput
                 style={styles.namer}
@@ -148,11 +151,12 @@ const CardTemplate = ({
               />
             </View>
             <View style={styles.checkInput}>
-              <CheckBox
+              <Checkbox.Android
                 style={styles.checkBox}
+                color="#219653"
                 disabled={false}
-                value={emailVal ? !checkEmail : checkEmail}
-                onChange={() => setCheckEmail(!checkEmail)}
+                status={emailVal ? 'checked' : 'unchecked'}
+                onPress={() => setCheckEmail(!checkEmail)}
               />
               <TextInput
                 style={styles.namer}
@@ -168,11 +172,12 @@ const CardTemplate = ({
               />
             </View>
             <View style={styles.checkInput}>
-              <CheckBox
+              <Checkbox.Android
                 style={styles.checkBox}
+                color="#219653"
                 disabled={false}
-                value={item.phone.length > 10 ? !checkPhone : checkPhone}
-                onChange={() => setCheckPhone(!checkPhone)}
+                status={item.phone.length > 10 ? 'checked' : 'unchecked'}
+                onPress={() => setCheckPhone(!checkPhone)}
               />
               <TextInput
                 style={styles.namer}
@@ -186,11 +191,12 @@ const CardTemplate = ({
               />
             </View>
             <View style={styles.checkInput}>
-              <CheckBox
+              <Checkbox.Android
                 style={styles.checkBox}
+                color="#219653"
                 disabled={false}
-                value={item.address.length > 3 ? !checkAddress : checkAddress}
-                onChange={() => setCheckAddress(!checkAddress)}
+                status={item.address.length > 3 ? 'checked' : 'unchecked'}
+                onPress={() => setCheckAddress(!checkAddress)}
               />
               <TextInput
                 style={styles.namer}
@@ -319,6 +325,8 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '600',
     color: '#333333',
+    alignItems: 'center',
+    marginTop: -3,
   },
   profession: {
     fontFamily: 'Poppins',
