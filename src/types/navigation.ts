@@ -39,6 +39,7 @@ export type AuthenticatedRoutesParamsList = {
   Rolodex: undefined;
   SetReminder: undefined;
   SetMessage: undefined;
+  CreateCard: undefined;
   ReminderCalendar: Record<'item', ReminderCalenderRoute>;
 };
 
