@@ -9,6 +9,7 @@ import Rolodex from '../screens/private/Rolodex';
 import SetReminder from '../screens/private/SetReminder';
 import ReminderCalendar from '../screens/private/ReminderCalendar';
 import SetMessage from '../screens/private/SetMessage';
+import CreateCard from '../screens/private/Create_Card';
 
 const Drawer = createDrawerNavigator<AuthenticatedRoutesParamsList>();
 
@@ -49,6 +50,11 @@ export default function AuthenticatedRoutes() {
       <Drawer.Screen
         name="ReminderCalendar"
         component={ReminderCalendar}
+      />
+
+      <Drawer.Screen
+        name="CreateCard"
+        component={CreateCard}
         options={{headerShown: false}}
       />
     </Drawer.Navigator>

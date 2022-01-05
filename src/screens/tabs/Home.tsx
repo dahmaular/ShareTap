@@ -58,9 +58,7 @@ const Home = ({navigation}: Props) => {
   const boxDistance = scrollViewWidth - boxWidth;
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
-  const [isOffline, setOfflineStatus] = useState(false);
-  const [acceptModal, setAcceptModal] = useState(false);
-
+  // console.log(user.cards);
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -68,23 +66,6 @@ const Home = ({navigation}: Props) => {
   const confirmToVerify = () => {
     setCardModal(false);
   };
-
-  // useEffect(() => {
-  //   // Subscribe
-  //   const unsubscribe = NetInfo.addEventListener(state => {
-  //     console.log('Connection type', state);
-  //     console.log('Is connected?', state.isConnected);
-  //     const offline = !(state.isConnected && state.isInternetReachable);
-  //     setOfflineStatus(offline);
-
-  //     if (state.type !== 'wifi') {
-  //       console.log('offline var here', isOffline);
-  //     }
-  //   });
-
-  //   // Unsubscribe
-  //   return () => unsubscribe();
-  // }, [isOffline]);
 
   // ?TAP TO SHARE BUTTON
   const TapToShareButton = () => {
@@ -105,55 +86,6 @@ const Home = ({navigation}: Props) => {
           <Text style={styles.tapText}>TAP TO SHARE</Text>
         </TouchableOpacity>
       </View>
-    );
-  };
-
-  const acceptExchangeModal = () => {
-    return (
-      <Modal
-        avoidKeyboard
-        propagateSwipe={true}
-        style={styles.acceptBottomModal}
-        isVisible={acceptModal}
-        onBackdropPress={() => setAcceptModal(false)}
-        onBackButtonPress={() => setAcceptModal(false)}>
-        <TouchableOpacity
-          onPress={() => setAcceptModal(false)}
-          style={styles.modalCloseBtn}>
-          <Close />
-        </TouchableOpacity>
-        <View style={styles.acceptModal}>
-          {/* <View style={styles.acceptModalContentWrap}> */}
-          <View style={{marginTop: 40}}>
-            <Text style={styles.acceptText}>A user wants to exchange</Text>
-            <Text style={styles.acceptText}>cards with you</Text>
-          </View>
-          {/* </View> */}
-          <View style={styles.buttonView}>
-            <TouchableOpacity
-              style={styles.acceptModalButton}
-              onPress={async () => {
-                // if (!server) {
-                //   setServer(createServer(card, setCard));
-                // }
-                // try {
-                //   let temp_ip = await NetworkInfo.getIPV4Address();
-                //   setIp(temp_ip);
-                // } catch (e) {
-                //   console.log(e.message);
-                // }
-              }}>
-              <Text style={styles.modalBtnText}>ACCEPT</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.acceptModalButton1}
-              // onPress={() => proceedToContinue()}
-            >
-              <Text style={styles.modalBtnText}>EXCHANGE</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     );
   };
 
@@ -308,7 +240,6 @@ const Home = ({navigation}: Props) => {
       )}
 
       {cardModal && selectCardModal}
-      {acceptModal && acceptExchangeModal}
       <Header
         title="HOME"
         titleColor="#FFFFFF"
@@ -555,58 +486,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
     color: '#000',
-  },
-
-  acceptModal: {
-    width: '100%',
-    height: 250,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    // borderTopLeftRadius: 10,
-  },
-  acceptBottomModal: {
-    justifyContent: 'flex-end',
-    paddingBottom: height / 8,
-  },
-
-  acceptText: {
-    fontFamily: 'Poppins',
-    fontSize: 18,
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    color: '#333333',
-    textAlign: 'center',
-  },
-
-  acceptModalButton: {
-    height: 43,
-    width: '40%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 15,
-    backgroundColor: '#000',
-  },
-
-  acceptModalButton1: {
-    height: 43,
-    width: '40%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 15,
-    backgroundColor: PRIMARY_COLOR,
-  },
-
-  acceptModalContentWrap: {
-    height: 300,
-    width: '100%',
-    // paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  buttonView: {
-    flexDirection: 'row',
-    alignSelf: 'center',
-    position: 'absolute',
-    bottom: 50,
   },
 });

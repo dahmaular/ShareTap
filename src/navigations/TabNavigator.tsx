@@ -59,7 +59,9 @@ const CustomTabBarButton: React.FunctionComponent<CustomTabProps> = (
   return (
     <TouchableOpacity
       style={styles.plusView}
-      onPress={() => console.log('Pressed')}>
+      onPress={() => {
+        navigation.navigate('CreateCard');
+      }}>
       <View style={styles.plusContainer}>
         <Plus color="#FFFFFF" />
       </View>

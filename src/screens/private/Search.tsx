@@ -179,10 +179,6 @@ const Search = ({route}) => {
     return client;
   };
 
-  const handleFinish = () => {
-    setFinish(false);
-  };
-
   const startClient = async () => {
     let ip = await NetworkInfo.getGatewayIPAddress();
     // setClient(createClient(ip));
@@ -620,7 +616,7 @@ const Search = ({route}) => {
                           await connectWithWifi(item.SSID);
                           setTimeout(() => {
                             setShow(true);
-                          }, 7000);
+                          }, 5000);
                         }}>
                         <Text style={styles.connectText}>CONNECT</Text>
                       </TouchableOpacity>
@@ -733,22 +729,7 @@ const Search = ({route}) => {
                   />
                   <Phone />
                 </View>
-                {/* <View>
-                  <TextInputs
-                    label="Text Box"
-                    placeholderTextColor="rgba(90, 89, 89, 0.55)"
-                    placeholder="Enter your phrase"
-                    onChangeText={() => startClient()}
-                    onSubmitEditing={({nativeEvent: {text}}) => {
-                      if (client) {
-                        client.write(JSON.stringify(card));
-                      }
-                    }}
-                    style={{
-                      backgroundColor: '#EEEFEF',
-                    }}
-                  />
-                </View> */}
+
                 {show === true && (
                   <TouchableOpacity
                     style={styles.connect}
@@ -763,9 +744,6 @@ const Search = ({route}) => {
                         console.log(sent, exchange);
                         setSuccessModal(true);
                         setCard([]);
-                      }
-                      if (exchange === true) {
-                        console.log('Exchange it is');
                       }
                     }}>
                     <Text style={styles.connectText}>Send </Text>
