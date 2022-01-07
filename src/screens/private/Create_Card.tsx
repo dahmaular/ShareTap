@@ -130,9 +130,8 @@ const CreateCard = ({navigation}) => {
 
   const onPlay = async () => {
     const businessProfileId = '';
-    const category = '';
     console.log(cardDetails[0]);
-    const data = {...cardDetails[0], userId, businessProfileId, category};
+    const data = {...cardDetails[0], userId, businessProfileId};
     console.log('This is input', data);
     await createUserCard(data);
   };

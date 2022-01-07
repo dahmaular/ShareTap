@@ -230,8 +230,8 @@ export const adminDashboard = /* GraphQL */ `
   }
 `;
 export const listAllUsers = /* GraphQL */ `
-  query ListAllUsers {
-    listAllUsers {
+  query ListAllUsers($listUsers: ListAllUsersInput) {
+    listAllUsers(listUsers: $listUsers) {
       users {
         id
         positionId
@@ -245,6 +245,11 @@ export const listAllUsers = /* GraphQL */ `
         group
       }
       total
+      lastEvaluatedKey {
+        partitionType
+        id
+        item
+      }
       error
     }
   }
@@ -294,7 +299,7 @@ export const listSubscriptionPlans = /* GraphQL */ `
         plan
         currency
         price
-        description
+        features
       }
       error
     }
@@ -336,6 +341,11 @@ export const getUsersBySubscriptionPlan = /* GraphQL */ `
         group
       }
       total
+      lastEvaluatedKey {
+        partitionType
+        id
+        item
+      }
       error
     }
   }
@@ -401,6 +411,36 @@ export const getCardTemplateById = /* GraphQL */ `
         backgroundColor
         borderBottomColor
       }
+      error
+    }
+  }
+`;
+export const getAboutPage = /* GraphQL */ `
+  query GetAboutPage {
+    getAboutPage {
+      id
+      data
+      updatedAt
+      error
+    }
+  }
+`;
+export const getPrivacyPolicyPage = /* GraphQL */ `
+  query GetPrivacyPolicyPage {
+    getPrivacyPolicyPage {
+      id
+      data
+      updatedAt
+      error
+    }
+  }
+`;
+export const getTermsAndConditionsPage = /* GraphQL */ `
+  query GetTermsAndConditionsPage {
+    getTermsAndConditionsPage {
+      id
+      data
+      updatedAt
       error
     }
   }

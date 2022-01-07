@@ -166,3 +166,70 @@ export const createCardTemplate = /* GraphQL */ `
     }
   }
 `;
+export const removeReceivedCard = /* GraphQL */ `
+  mutation RemoveReceivedCard(
+    $removeReceivedCardPayload: RemoveReceivedCardPayload
+  ) {
+    removeReceivedCard(removeReceivedCardPayload: $removeReceivedCardPayload)
+  }
+`;
+export const activateUserCard = /* GraphQL */ `
+  mutation ActivateUserCard($cardId: String) {
+    activateUserCard(cardId: $cardId)
+  }
+`;
+export const updateAboutPage = /* GraphQL */ `
+  mutation UpdateAboutPage($data: String) {
+    updateAboutPage(data: $data) {
+      id
+      data
+      updatedAt
+      error
+    }
+  }
+`;
+export const updatePrivacyPolicyPage = /* GraphQL */ `
+  mutation UpdatePrivacyPolicyPage($data: String) {
+    updatePrivacyPolicyPage(data: $data) {
+      id
+      data
+      updatedAt
+      error
+    }
+  }
+`;
+export const updateTermsAndConditionsPage = /* GraphQL */ `
+  mutation UpdateTermsAndConditionsPage($data: String) {
+    updateTermsAndConditionsPage(data: $data) {
+      id
+      data
+      updatedAt
+      error
+    }
+  }
+`;
+export const updateSubscriptionFeatures = /* GraphQL */ `
+  mutation UpdateSubscriptionFeatures(
+    $updateFeatures: UpdateSubscriptionFeaturesInput
+  ) {
+    updateSubscriptionFeatures(updateFeatures: $updateFeatures) {
+      id
+      features {
+        premiumFeatures
+        standardFeatures
+      }
+      updatedAt
+      error
+    }
+  }
+`;
+export const sendPushNotification = /* GraphQL */ `
+  mutation SendPushNotification($sendNotification: PushNotificationInput) {
+    sendPushNotification(sendNotification: $sendNotification)
+  }
+`;
+export const updateEndpoint = /* GraphQL */ `
+  mutation UpdateEndpoint($deviceToken: String) {
+    updateEndpoint(deviceToken: $deviceToken)
+  }
+`;

@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable no-useless-catch */ /* eslint-disable prettier/prettier */
 import {GRAPHQL_AUTH_MODE} from '@aws-amplify/api-graphql';
 import {API} from 'aws-amplify';
 import {createCard} from '../graphql/mutations';
@@ -16,7 +16,7 @@ export const createUserCard = async (cardPayload: CreateCardInput) => {
     })) as {
       data: CreateUserCardResponse;
     };
-
+    console.log('This is response data', data);
     return {data: data.createCard};
   } catch (e) {
     throw e;
