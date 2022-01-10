@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable react-hooks/exhaustive-deps */ /* eslint-disable prettier/prettier */
 import React, {useState, useRef, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -43,13 +43,23 @@ import Card from '../../components/Card';
 import {userSlice} from '../../selectors';
 import CardTemplate from '../../components/CardTemplate';
 import CreateCardHeader from '../../components/CreateCardHeader';
-import {createUserCard} from '../../services/cardService';
-import {getUserIdService} from '../../services/userService';
+import {
+  createCardTemplateService,
+  createUserCard,
+  listCardsByBusinessProfileIdService,
+} from '../../services/cardService';
+import {
+  getUserIdService,
+  listUserBusinessProfilesService,
+  listUserCardTemplateService,
+} from '../../services/userService';
 
 const {width} = Dimensions.get('screen');
 
 const deviceHeight = Dimensions.get('window').height;
 let id: number;
+let template;
+
 const social = {
   websiteIcon: '',
   twitterIcon: '',
@@ -107,6 +117,41 @@ const CreateCard = ({navigation}) => {
       .catch(e => console.log(e));
   }, []);
 
+  useEffect(() => {
+    listUserCardTemplateService()
+      .then(temp => {
+        template = temp.data.listCardTemplates.cardTemplates;
+        // console.log(template[4].borderBottomColor);
+      })
+      .catch(e => console.log(e));
+  }, []);
+
+  useEffect(() => {
+    // cardTemplateService;
+  }, []);
+
+  const cardTemplateService = async () => {
+    const data = {
+      backgroundColor: 'white',
+      borderBottomColor: '#219653',
+    };
+    await createCardTemplateService(data).then(res => console.log(res.data));
+  };
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     listUserBusinessProfilesService(userId)
+  //       .then(bp => {
+  //         console.log(bp.data?.businessProfiles[0]?.id);
+  //         const bpId: string = bp.data?.businessProfiles[0]?.id;
+  //         listCardsByBusinessProfileIdService(bpId)
+  //           .then(res => console.log(res.data?.cards))
+  //           .catch(e => console.log(e));
+  //       })
+  //       .catch(e => console.log(e));
+  //   }, 2000);
+  // }, []);
+
   const submitSocial = () => {
     // social = true;
     if (website.value !== '') {
@@ -129,11 +174,16 @@ const CreateCard = ({navigation}) => {
   };
 
   const onPlay = async () => {
-    const businessProfileId = '';
+    const businessProfileId = 'BSP-ba114e9f-049f-4676-848b-09d333118fe7';
     console.log(cardDetails[0]);
     const data = {...cardDetails[0], userId, businessProfileId};
     console.log('This is input', data);
-    await createUserCard(data);
+    await createUserCard(data)
+      .then(userCard => {
+        console.log(userCard.data?.card);
+        setCardSuccess(true);
+      })
+      .catch(e => console.log(e));
   };
 
   const selectPositionModal = () => {
@@ -227,46 +277,58 @@ const CreateCard = ({navigation}) => {
             </View>
             <View style={{flexDirection: 'row', marginTop: 20}}>
               <TouchableOpacity
-                style={styles.template1}
+                style={{
+                  ...styles.template1,
+                  borderBottomColor: template[4].borderBottomColor,
+                }}
                 onPress={() => {
                   setTemplateModal(false);
                   setEditCard(true);
                   id = 1;
-                  cardDetails[0].cardTemplateId = '1';
+                  cardDetails[0].cardTemplateId = template[4].id;
                 }}>
-                <View style={styles.bottomLine} />
+                {/* <View style={styles.bottomLine} /> */}
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.template1}
+                style={{
+                  ...styles.template1,
+                  borderBottomColor: template[1].borderBottomColor,
+                }}
                 onPress={() => {
                   setTemplateModal(false);
                   setEditCard(true);
                   id = 2;
-                  cardDetails[0].cardTemplateId = '2';
+                  cardDetails[0].cardTemplateId = template[1].id;
                 }}>
-                <View style={styles.bottomLine2} />
+                {/* <View style={styles.bottomLine2} /> */}
               </TouchableOpacity>
             </View>
             <View style={{flexDirection: 'row', marginTop: 20}}>
               <TouchableOpacity
-                style={styles.template1}
+                style={{
+                  ...styles.template3,
+                  borderBottomColor: template[2].borderBottomColor,
+                }}
                 onPress={() => {
                   setTemplateModal(false);
                   setEditCard(true);
                   id = 3;
-                  cardDetails[0].cardTemplateId = '3';
+                  cardDetails[0].cardTemplateId = template[4].id;
                 }}>
-                <View style={styles.bottomLine3} />
+                {/* <View style={styles.bottomLine3} /> */}
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.template1}
+                style={{
+                  ...styles.template4,
+                  borderBottomColor: template[6].borderBottomColor,
+                }}
                 onPress={() => {
                   setTemplateModal(false);
                   setEditCard(true);
                   id = 4;
-                  cardDetails[0].cardTemplateId = '4';
+                  cardDetails[0].cardTemplateId = template[4].id;
                 }}>
-                <View style={styles.bottomLine4} />
+                {/* <View style={styles.bottomLine4} /> */}
               </TouchableOpacity>
             </View>
           </View>
@@ -495,7 +557,9 @@ const CreateCard = ({navigation}) => {
 
             {/* <View style={styles.searchErrorLottie} /> */}
           </View>
-          <TouchableOpacity style={styles.successmodalButton}>
+          <TouchableOpacity
+            style={styles.successmodalButton}
+            onPress={() => navigation.navigate('Home')}>
             <Text style={styles.modalBtnText}>GO TO CHAT</Text>
           </TouchableOpacity>
         </View>
@@ -535,7 +599,8 @@ const CreateCard = ({navigation}) => {
           <TouchableOpacity
             style={styles.plusView}
             onPress={() => {
-              //   navigation.navigate('CreateCard');
+              // navigation.navigate('CreateCard');
+              // cardTemplateService();
             }}>
             <View style={styles.plusContainer}>
               <Plus color="#FFFFFF" />
@@ -848,8 +913,36 @@ const styles = StyleSheet.create({
     marginRight: 10,
     height: 90,
     elevation: 5,
+    borderColor: 'white',
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 7,
+  },
+  template2: {
+    width: width / 2.5,
+    marginRight: 10,
+    height: 90,
+    elevation: 5,
     borderColor: 'rgba(49, 111, 138, 0.16)',
     backgroundColor: '#FFFFFF',
+    borderBottomWidth: 7,
+  },
+  template3: {
+    width: width / 2.5,
+    marginRight: 10,
+    height: 90,
+    elevation: 5,
+    borderColor: 'rgba(49, 111, 138, 0.16)',
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 7,
+  },
+  template4: {
+    width: width / 2.5,
+    marginRight: 10,
+    height: 90,
+    elevation: 5,
+    borderColor: 'rgba(49, 111, 138, 0.16)',
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 7,
   },
   modalTitleText: {
     marginTop: 23,

@@ -89,23 +89,6 @@ const Search = ({route}) => {
   const pan = useRef(new Animated.ValueXY()).current;
   const [isOffline, setOfflineStatus] = useState(false);
 
-  // useEffect(() => {
-  //   // Subscribe
-  //   const unsubscribe = NetInfo.addEventListener(state => {
-  //     console.log('Connection type', state);
-  //     console.log('Is connected?', state.isConnected);
-  //     // const offline = !(state.isConnected && state.isInternetReachable);
-  //     // setOfflineStatus(offline);
-  //     // console.log('offline var here', isOffline);
-  //     if (state.type === 'cellular' || 'none') {
-  //       // setAcceptModal(true);
-  //     }
-  //   });
-
-  //   // Unsubscribe
-  //   return () => unsubscribe();
-  // }, []);
-
   useEffect(() => {
     if (route.params) {
       const {card} = route.params;
@@ -788,24 +771,7 @@ const Search = ({route}) => {
                       ref={animation}
                     />
                   </View>
-                  {/* <View>
-                    <TextInputs
-                      label="Text Box"
-                      placeholderTextColor="rgba(90, 89, 89, 0.55)"
-                      placeholder="Enter your phrase"
-                      onChangeText={() => startClient()}
-                      onSubmitEditing={({nativeEvent: {text}}) => {
-                        if (client) {
-                          client.write(JSON.stringify(card));
-                        }
-                      }}
-                      style={{
-                        backgroundColor: '#EEEFEF',
-                      }}
-                    />
-                  </View> */}
                 </>
-                {/* )} */}
               </>
             )}
           </View>

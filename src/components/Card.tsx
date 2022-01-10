@@ -15,6 +15,7 @@ import {Menu} from 'react-native-paper';
 import Link from '../assets/svg/link_02.svg';
 import Facebook from '../assets/svg/facebook.svg';
 import Twitter from '../assets/svg/twitter.svg';
+import LinkedIn from '../assets/svg/linkedIn.svg';
 const {width} = Dimensions.get('window');
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 
@@ -138,6 +139,14 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
                     Linking.openURL(item.cardDetails.twitter as string)
                   }>
                   <Twitter />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{marginRight: 10}}
+                  onPress={() =>
+                    Linking.openURL(item.cardDetails.linkedIn as string)
+                  }>
+                  <LinkedIn />
                 </TouchableOpacity>
               </View>
             </View>

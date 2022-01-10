@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */ /* eslint-disable prettier/prettier */
 import {Auth} from 'aws-amplify';
 
 export const signInService = async (username: string, password: string) => {
