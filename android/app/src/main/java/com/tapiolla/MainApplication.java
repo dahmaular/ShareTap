@@ -7,8 +7,6 @@ import com.facebook.react.ReactApplication;
 import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
 import io.invertase.firebase.dynamiclinks.ReactNativeFirebaseDynamicLinksPackage;
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
-import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
-import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import com.reactlibrary.rnwifi.RNWifiPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.asterinet.react.tcpsocket.TcpSocketPackage;

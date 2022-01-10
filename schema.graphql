@@ -1,3 +1,12 @@
+type AdminDashboardPayload {
+	totalUsers: Int
+	totalInactiveUsers: Int
+	totalCardsCreated: Int
+	totalCardsShared: Int
+	totalEarnings: String
+	error: String
+}
+
 type BusinessProfile {
 	id: String
 	companyName: String
@@ -114,6 +123,12 @@ input CreateSubscriptionSessionPayload {
 	customerPlan: String!
 }
 
+input ListAllUsersInput {
+	limit: Int
+	isFirst: Boolean
+	lastEvaluatedKey: NextKeyInput
+}
+
 type ListCardTemplatesPayload {
 	cardTemplates: [CardTemplate]
 	error: String
@@ -140,6 +155,7 @@ type ListUser {
 type ListUsersPayload {
 	users: [ListUser]
 	total: Int
+	lastEvaluatedKey: NextKey
 	error: String
 }
 
@@ -160,6 +176,38 @@ type Mutation {
 	signUp(signUpPayload: SignupPayload): String
 	confirmSignUp(confirmSignUpPayload: ConfirmSignUpPayload): String
 	createCardTemplate(cardTemplatePayload: CardTemplateInput): CardTemplateResponse
+	removeReceivedCard(removeReceivedCardPayload: RemoveReceivedCardPayload): String
+	activateUserCard(cardId: String): String
+	updateAboutPage(data: String): PageData
+	updatePrivacyPolicyPage(data: String): PageData
+	updateTermsAndConditionsPage(data: String): PageData
+	updateSubscriptionFeatures(updateFeatures: UpdateSubscriptionFeaturesInput): UpdateSubscriptionFeaturesPayload
+	sendPushNotification(sendNotification: PushNotificationInput): String
+	updateEndpoint(deviceToken: String): String
+}
+
+type NextKey {
+	partitionType: String
+	id: String
+	item: String
+}
+
+input NextKeyInput {
+	partitionType: String
+	id: String
+	item: String
+}
+
+type PageData {
+	id: String
+	data: String
+	updatedAt: String
+	error: String
+}
+
+input PushNotificationInput {
+	title: String
+	body: String
 }
 
 type Query {
@@ -172,8 +220,8 @@ type Query {
 	listUserBusinessProfiles(userId: String): BusinessProfilesPayload
 	getBusinessProfileById(id: String): BusinessProfileResponse
 	listCardsByBusinessProfileId(businessProfileId: String): CardsPayload
-	adminDashboard: adminDashboardPayload
-	listAllUsers: ListUsersPayload
+	adminDashboard: AdminDashboardPayload
+	listAllUsers(listUsers: ListAllUsersInput): ListUsersPayload
 	mostSharedCards(userId: String): CardsPayload
 	countUserCards(userId: String): Int
 	listSubscriptionPlans: SubscriptionPlansPayload
@@ -183,6 +231,14 @@ type Query {
 	listBusinessCategories: ListCategoriesPayload
 	listCardTemplates: ListCardTemplatesPayload
 	getCardTemplateById(id: String): CardTemplateResponse
+	getAboutPage: PageData
+	getPrivacyPolicyPage: PageData
+	getTermsAndConditionsPage: PageData
+}
+
+input RemoveReceivedCardPayload {
+	cardId: String
+	userId: String
 }
 
 input ShareCardPayload {
@@ -203,11 +259,16 @@ type SubscriptionDetails {
 	subscriptionPrice: String
 }
 
+type SubscriptionFeatures {
+	premiumFeatures: String
+	standardFeatures: String
+}
+
 type SubscriptionPlanResponse {
 	plan: String
 	currency: String
 	price: String
-	description: String
+	features: String
 }
 
 type SubscriptionPlansPayload {
@@ -234,6 +295,18 @@ input UpdateBusinessProfilePayload {
 	category: String
 	startDate: String
 	endDate: String
+}
+
+input UpdateSubscriptionFeaturesInput {
+	premiumFeatures: String
+	standardFeatures: String
+}
+
+type UpdateSubscriptionFeaturesPayload {
+	id: String
+	features: SubscriptionFeatures
+	updatedAt: String
+	error: String
 }
 
 input UpdateUserSubscriptionPayload {
@@ -277,14 +350,5 @@ type UserSubscriptionStatusPayload {
 
 type UsersPayload {
 	users: [User]
-	error: String
-}
-
-type adminDashboardPayload {
-	totalUsers: Int
-	totalInactiveUsers: Int
-	totalCardsCreated: Int
-	totalCardsShared: Int
-	totalEarnings: String
 	error: String
 }

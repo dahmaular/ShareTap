@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable react-hooks/exhaustive-deps */ /* eslint-disable prettier/prettier */
 import React, {useState, useRef, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -29,7 +29,10 @@ import Card from '../../components/Card';
 import NotificationModal from '../../components/NotificationModal';
 import Modal from 'react-native-modal';
 import Close from '../../assets/svg/phone-verif-close-icon.svg';
-import {getUserIdService} from '../../services/userService';
+import {
+  getUserIdService,
+  listUserCardsService,
+} from '../../services/userService';
 import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
@@ -58,10 +61,29 @@ const Home = ({navigation}: Props) => {
   const boxDistance = scrollViewWidth - boxWidth;
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
-  // console.log(user.cards);
+  const [userId, setUserId] = useState('');
+  console.log('User data @home', user.cards.listUserCards.cards);
   const _onNotificationPressed = () => {
     setModal(true);
   };
+
+  useEffect(() => {
+    getUserIdService()
+      .then(id => {
+        console.log('Id is here', id);
+        setUserId(id);
+      })
+      .catch(e => console.log(e));
+  }, []);
+
+  useEffect(() => {
+    listUserCardsService(userId)
+      .then(card => {
+        // console.log('card is here @home', card.data.listUserCards?.cards[0]);
+        // setUserId(id);
+      })
+      .catch(e => console.log(e));
+  }, []);
 
   const confirmToVerify = () => {
     setCardModal(false);
@@ -95,7 +117,7 @@ const Home = ({navigation}: Props) => {
       <View style={styles.flatlistView}>
         <FlatList
           horizontal
-          data={user.cards}
+          data={user.cards.listUserCards.cards}
           contentContainerStyle={{paddingVertical: 5}}
           contentInsetAdjustmentBehavior="never"
           snapToAlignment="center"

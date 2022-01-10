@@ -11,12 +11,14 @@ import {
   Linking,
   TextInput,
   Platform,
+  Image,
 } from 'react-native';
 
 import {Menu} from 'react-native-paper';
 import Link from '../assets/svg/link_02.svg';
 import Facebook from '../assets/svg/facebbk.svg';
 import Twitter from '../assets/svg/twitter.svg';
+import LinkedIn from '../assets/svg/linkedIn.svg';
 const {width} = Dimensions.get('window');
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 // import CheckBox from '@react-native-community/checkbox';
@@ -207,12 +209,7 @@ const CardTemplate = ({
                   item.address = t;
                 }}
               />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginLeft: width / 5,
-                  alignItems: 'center',
-                }}>
+              <View style={styles.socialIcons}>
                 {social.websiteIcon === 'true' && (
                   <TouchableOpacity
                     style={styles.social}
@@ -230,6 +227,11 @@ const CardTemplate = ({
                 {social.twitterIcon === 'true' && (
                   <TouchableOpacity style={styles.social}>
                     <Twitter />
+                  </TouchableOpacity>
+                )}
+                {social.linkedInIcon === 'true' && (
+                  <TouchableOpacity style={styles.social}>
+                    <LinkedIn />
                   </TouchableOpacity>
                 )}
               </View>
@@ -374,5 +376,10 @@ const styles = StyleSheet.create({
     left: 280,
     width: 100,
     height: 112,
+  },
+  socialIcons: {
+    flexDirection: 'row',
+    marginLeft: width / 5,
+    alignItems: 'center',
   },
 });
