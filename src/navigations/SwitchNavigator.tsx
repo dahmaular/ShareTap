@@ -39,31 +39,11 @@ const SwitchNavigator = () => {
 
   const navigationRef = useNavigationContainerRef();
 
-  // const config = {
-  //   screens: {
-  //     Rolodex: 'rolodex',
-  //     Search: 'search',
-  //     Root: 'root',
-  //     // Profile: {
-  //     //   path: "profile/:id",
-  //     //   parse: {
-  //     //     id: (id) => `${id}`,
-  //     //   },
-  //     // },
-  //   },
-  // };
-
-  // const linking = {
-  //   prefixes: ['https://mobile.tap2me.com', 'tapiolla://'],
-  //   config,
-  // };
-
   useEffect(() => {
     getUserIdService()
       .then(() => setUserLoggedIn('loggedIn')) //also dispatch redux action to get users
       .catch(() => setUserLoggedIn('loggedOut'));
   }, []);
-
 
   const hubListener = (data: HubCapsule) => {
     switch (data.channel as 'navigation' | 'alert' | 'auth') {
@@ -93,57 +73,6 @@ const SwitchNavigator = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   // Get the deep link used to open the app
-  //   const getUrl = async () => {
-  //     const initialUrl = await Linking.getInitialURL();
-
-  //     if (initialUrl === null) {
-  //       return;
-  //     }
-
-  //     if (initialUrl.includes('rolodex')) {
-  //       navigation.navigate('Rolodex');
-  //     }
-  //   };
-  //   getUrl();
-
-  //   Linking.addEventListener('url', ({url}) => {
-  //     console.log('URL', url);
-  //   });
-
-  //   return () => {
-  //     Linking.removeAllListeners('url');
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   const getUrl = async () => {
-  //     const initialUrl = await Linking.getInitialURL();
-  //     if (initialUrl) handleLinkingUrl(initialUrl);
-  //   };
-
-  //   getUrl();
-
-  //   Linking.addEventListener('url', ({url}) => {
-  //     handleLinkingUrl(url);
-  //   });
-
-  //   return () => {
-  //     Linking.removeAllListeners('url');
-  //   };
-  // }, []);
-
-  // const handleLinkingUrl = (url: string | string[] | null) => {
-  //   if (url === null) {
-  //     return;
-  //   }
-
-  //   if (url.includes('rolodex')) {
-  //     navigation.navigate('Rolodex');
-  //   }
-  // };
-
   const handleDynamicLink = (link: any) => {
     console.log('link url ++++', link);
     if (!!link?.url) {
@@ -171,10 +100,7 @@ const SwitchNavigator = () => {
 
   return (
     <>
-      <NavigationContainer
-        ref={navigationRef}
-        // linking={linking}
-      >
+      <NavigationContainer ref={navigationRef}>
         {isUserLoggedIn === 'initializing' && <Splash />}
         {isUserLoggedIn === 'loggedIn' && <AuthenticatedRoutes />}
         {isUserLoggedIn === 'loggedOut' && <UnauthenticatedRoutes />}
