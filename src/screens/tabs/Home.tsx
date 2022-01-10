@@ -62,7 +62,7 @@ const Home = ({navigation}: Props) => {
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
-  console.log('User data @home', user.cards.listUserCards.cards);
+  // console.log('User data @home', user?.cards?.listUserCards?.cards);
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -117,7 +117,7 @@ const Home = ({navigation}: Props) => {
       <View style={styles.flatlistView}>
         <FlatList
           horizontal
-          data={user.cards.listUserCards.cards}
+          data={user?.cards?.listUserCards?.cards}
           contentContainerStyle={{paddingVertical: 5}}
           contentInsetAdjustmentBehavior="never"
           snapToAlignment="center"
