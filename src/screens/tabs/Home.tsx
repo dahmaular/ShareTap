@@ -24,7 +24,6 @@ import Notification from '../../assets/svg/ion-ios-notifications.svg';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
 import Message from '../../components/Message';
-import {Analytics} from 'aws-amplify';
 import Card from '../../components/Card';
 import NotificationModal from '../../components/NotificationModal';
 import Modal from 'react-native-modal';
@@ -37,6 +36,7 @@ import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
 import {GET_FCM_TOKEN, GET_FCM_TOKEN_STATUS} from '../../core/storage';
+import {updateUserDeviceToken} from '../../services/cardService';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -226,27 +226,21 @@ const Home = ({navigation}: Props) => {
   useEffect(() => {
     getUserIdService()
       .then(id => {
-        uploadPushToken(id);
+        uploadPushToken();
         dispatch(fetchUserCards(id));
       })
       .catch(() => hubDispatch('navigation', 'loggedIn'));
   }, [dispatch]);
 
-  const uploadPushToken = async (id: string) => {
+  const uploadPushToken = async () => {
     const isSaved = await GET_FCM_TOKEN_STATUS();
     const token = await GET_FCM_TOKEN();
-    console.log('TOken Gotten', token);
     if (isSaved) {
       return;
     } else {
-      Analytics.updateEndpoint({
-        address: token, // Token should be set on address field!
-        userId: id
-      }).then((res)=>{
-        console.log('Response', res);
-      }).catch((error)=>{
-        console.log('Errrrrrrrrror', error)
-      });
+      updateUserDeviceToken(token)
+        .then(res => {})
+        .catch(error => {});
     }
   };
 
