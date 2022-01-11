@@ -13,6 +13,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import TextInputs from '../../components/TextInput';
@@ -107,6 +108,7 @@ const CreateCard = ({navigation}) => {
   const [twitterFocus, setTwitterFocus] = useState(false);
   const [linkedInFocus, setLinkedInFocus] = useState(false);
   const [userId, setUserId] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     getUserIdService()
@@ -138,20 +140,6 @@ const CreateCard = ({navigation}) => {
     await createCardTemplateService(data).then(res => console.log(res.data));
   };
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     listUserBusinessProfilesService(userId)
-  //       .then(bp => {
-  //         console.log(bp.data?.businessProfiles[0]?.id);
-  //         const bpId: string = bp.data?.businessProfiles[0]?.id;
-  //         listCardsByBusinessProfileIdService(bpId)
-  //           .then(res => console.log(res.data?.cards))
-  //           .catch(e => console.log(e));
-  //       })
-  //       .catch(e => console.log(e));
-  //   }, 2000);
-  // }, []);
-
   const submitSocial = () => {
     // social = true;
     if (website.value !== '') {
@@ -174,6 +162,7 @@ const CreateCard = ({navigation}) => {
   };
 
   const onPlay = async () => {
+    setLoading(true);
     const businessProfileId = 'BSP-ba114e9f-049f-4676-848b-09d333118fe7';
     console.log(cardDetails[0]);
     const data = {...cardDetails[0], userId, businessProfileId};
@@ -182,8 +171,12 @@ const CreateCard = ({navigation}) => {
       .then(userCard => {
         console.log(userCard.data?.card);
         setCardSuccess(true);
+        setLoading(false);
       })
-      .catch(e => console.log(e));
+      .catch(e => {
+        console.log(e);
+        setLoading(false);
+      });
   };
 
   const selectPositionModal = () => {
@@ -580,7 +573,17 @@ const CreateCard = ({navigation}) => {
         bgColor="#316F8A"
         leftSvg={<Back />}
         leftOnPress={() => navigation.goBack()}
-        rightSvg1={<Play />}
+        rightSvg1={
+          loading ? (
+            <ActivityIndicator
+              color={'white'}
+              size={'small'}
+              animating={true}
+            />
+          ) : (
+            <Play />
+          )
+        }
         rightSvg2={<Download />}
         rightSvg3={<More />}
         rightOnPress={() => onPlay()}

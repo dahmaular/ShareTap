@@ -70,7 +70,7 @@ const Home = ({navigation}: Props) => {
   useEffect(() => {
     getUserIdService()
       .then(id => {
-        console.log('Id is here', id);
+        // console.log('Id is here', id);
         setUserId(id);
       })
       .catch(e => console.log(e));
@@ -302,7 +302,9 @@ const Home = ({navigation}: Props) => {
             </View>
 
             <View style={styles.yourCards}>
-              <Text style={styles.yourCardsText}>Your Cards (4)</Text>
+              <Text style={styles.yourCardsText}>
+                Your Cards ({user?.cards?.listUserCards?.cards.length})
+              </Text>
               <Text
                 style={styles.viewAll}
                 onPress={() => {

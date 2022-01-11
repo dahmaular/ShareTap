@@ -11,7 +11,6 @@ import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.asterinet.react.tcpsocket.TcpSocketPackage;
 import com.pusherman.networkinfo.RNNetworkInfoPackage;
 import com.reactlibrary.rnwifi.RNWifiPackage;
-import com.reactnativewifiandhotspotwizard.RNWifiAndHotspotWizardPackage;
 import com.airbnb.android.react.lottie.LottiePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
