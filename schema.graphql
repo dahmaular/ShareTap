@@ -182,8 +182,8 @@ type Mutation {
 	updatePrivacyPolicyPage(data: String): PageData
 	updateTermsAndConditionsPage(data: String): PageData
 	updateSubscriptionFeatures(updateFeatures: UpdateSubscriptionFeaturesInput): UpdateSubscriptionFeaturesPayload
-	sendPushNotification(sendNotification: PushNotificationInput): String
-	updateEndpoint(deviceToken: String): String
+	sendPushNotification(sendNotification: PushNotificationInput): NotificationResponse
+	updateEndpoint(deviceToken: String): NotificationResponse
 }
 
 type NextKey {
@@ -196,6 +196,11 @@ input NextKeyInput {
 	partitionType: String
 	id: String
 	item: String
+}
+
+type NotificationResponse {
+	data: String
+	error: String
 }
 
 type PageData {

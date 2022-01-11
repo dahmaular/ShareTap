@@ -239,8 +239,10 @@ const Home = ({navigation}: Props) => {
       return;
     } else {
       updateUserDeviceToken(token)
-        .then(res => {})
-        .catch(error => {});
+        .then(res => {
+        })
+        .catch(error => {
+        });
     }
   };
 

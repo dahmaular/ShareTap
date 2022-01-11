@@ -225,11 +225,17 @@ export const updateSubscriptionFeatures = /* GraphQL */ `
 `;
 export const sendPushNotification = /* GraphQL */ `
   mutation SendPushNotification($sendNotification: PushNotificationInput) {
-    sendPushNotification(sendNotification: $sendNotification)
+    sendPushNotification(sendNotification: $sendNotification) {
+      data
+      error
+    }
   }
 `;
 export const updateEndpoint = /* GraphQL */ `
   mutation UpdateEndpoint($deviceToken: String) {
-    updateEndpoint(deviceToken: $deviceToken)
+    updateEndpoint(deviceToken: $deviceToken) {
+      data
+      error
+    }
   }
 `;

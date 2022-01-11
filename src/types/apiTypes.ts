@@ -388,7 +388,11 @@ export type SendPushNotificationMutationVariables = {
 };
 
 export type SendPushNotificationMutation = {
-  sendPushNotification: string | null,
+  sendPushNotification:  {
+    __typename: "NotificationResponse",
+    data: string | null,
+    error: string | null,
+  } | null,
 };
 
 export type UpdateEndpointMutationVariables = {
@@ -396,7 +400,11 @@ export type UpdateEndpointMutationVariables = {
 };
 
 export type UpdateEndpointMutation = {
-  updateEndpoint: string | null,
+  updateEndpoint:  {
+    __typename: "NotificationResponse",
+    data: string | null,
+    error: string | null,
+  } | null,
 };
 
 export type ListReceivedCardsQueryVariables = {
