@@ -62,7 +62,7 @@ const Home = ({navigation}: Props) => {
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
-  // console.log('User data @home', user?.cards?.listUserCards?.cards);
+  console.log('User data @home', user?.cards?.listUserCards?.cards);
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -101,7 +101,9 @@ const Home = ({navigation}: Props) => {
             () =>
               navigation.navigate(
                 'Search',
-                user.cards ? {card: user.cards} : null,
+                user.cards.listUserCards
+                  ? {cardd: user?.cards?.listUserCards?.cards[0]}
+                  : null,
               )
           }>
           <Tap />
