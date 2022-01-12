@@ -62,7 +62,7 @@ const Home = ({navigation}: Props) => {
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
-  // console.log('User data @home', user?.cards?.listUserCards?.cards);
+  console.log('User data @home', user?.cards?.listUserCards?.cards);
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -70,7 +70,7 @@ const Home = ({navigation}: Props) => {
   useEffect(() => {
     getUserIdService()
       .then(id => {
-        console.log('Id is here', id);
+        // console.log('Id is here', id);
         setUserId(id);
       })
       .catch(e => console.log(e));
@@ -101,7 +101,9 @@ const Home = ({navigation}: Props) => {
             () =>
               navigation.navigate(
                 'Search',
-                user.cards ? {card: user.cards} : null,
+                user.cards.listUserCards
+                  ? {cardd: user?.cards?.listUserCards?.cards[0]}
+                  : null,
               )
           }>
           <Tap />
@@ -313,7 +315,9 @@ const Home = ({navigation}: Props) => {
             </View>
 
             <View style={styles.yourCards}>
-              <Text style={styles.yourCardsText}>Your Cards (4)</Text>
+              <Text style={styles.yourCardsText}>
+                Your Cards ({user?.cards?.listUserCards?.cards.length})
+              </Text>
               <Text
                 style={styles.viewAll}
                 onPress={() => {

@@ -91,8 +91,8 @@ const Search = ({route}) => {
 
   useEffect(() => {
     if (route.params) {
-      const {card} = route.params;
-      setCard(card);
+      const {cardd} = route.params;
+      card.push(cardd);
       // console.log('This is the card details', card);
     }
   }, []);

@@ -157,7 +157,9 @@ const CardTemplate = ({
                 style={styles.checkBox}
                 color="#219653"
                 disabled={false}
-                status={emailVal ? 'checked' : 'unchecked'}
+                status={
+                  item.email.length > 5 || emailVal ? 'checked' : 'unchecked'
+                }
                 onPress={() => setCheckEmail(!checkEmail)}
               />
               <TextInput
@@ -185,7 +187,7 @@ const CardTemplate = ({
                 style={styles.namer}
                 placeholder="Add telephone no."
                 value={item.phone}
-                keyboardType="number-pad"
+                keyboardType="phone-pad"
                 onChangeText={t => {
                   setTelephone({value: t, error: ''});
                   item.phone = t;
