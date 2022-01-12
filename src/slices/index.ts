@@ -3,7 +3,9 @@ import {ThunkAction} from '@reduxjs/toolkit';
 
 import userReducer from './user';
 
-const rootReducer = combineReducers({user: userReducer});
+import rolodexReducer from './rolodex';
+
+const rootReducer = combineReducers({user: userReducer, rolodex: rolodexReducer});
 
 export type RootState = ReturnType<typeof rootReducer>;
 

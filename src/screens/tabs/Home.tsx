@@ -316,15 +316,14 @@ const Home = ({navigation}: Props) => {
 
             <View style={styles.yourCards}>
               <Text style={styles.yourCardsText}>
-                Your Cards ({user?.cards?.listUserCards?.cards.length})
+                Your Cards ({user?.cards?.listUserCards?.cards?.length})
               </Text>
-              <Text
+              {/* <Text
                 style={styles.viewAll}
                 onPress={() => {
-                  // navigation.navigate('Search');
                 }}>
                 View all
-              </Text>
+              </Text> */}
             </View>
 
             <UserCardSlider />

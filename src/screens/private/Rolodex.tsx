@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -15,7 +15,6 @@ import Header from '../../components/Header';
 import Back from '../../assets/svg/back.svg';
 import More from '../../assets/svg/more.svg';
 import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
-import cats from '../../mock/Categories';
 import {AuthenticatedRoutesParamsList} from '../../types/navigation';
 import TextInputs from '../../components/TextInput';
 import DateSelect from '../../components/DatePicker';
@@ -31,6 +30,10 @@ import EmptyCard from '../../assets/svg/EmptyCard.svg';
 import cardssss from '../../mock/CarouselList';
 import tabs from '../../mock/Tabs';
 import Moment from 'moment';
+import {listCategoriesService} from '../../services/rolodexService';
+import {getUserIdService} from '../../services/userService';
+import {fetchReceivedCards} from '../../slices/rolodex';
+import {useDispatch} from 'react-redux';
 
 type RolodexProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -60,6 +63,7 @@ const deviceHeight = Dimensions.get('window').height;
 
 const Rolodex = ({navigation}: Props) => {
   const [reminderModal, setReminderModal] = useState(false);
+  const dispatch = useDispatch();
   const [reminderCalenderModal, setReminderCalenderModal] = useState(false);
   const [reminder, setreminder] = useState({value: '', error: ''});
   const [reminderFocus, setreminderFocus] = useState(false);
@@ -69,11 +73,36 @@ const Rolodex = ({navigation}: Props) => {
 
   const validateFields = () => {};
 
+  useEffect(() => {
+    const getCategories = async () => {
+      const data = await listCategoriesService();
+
+      const newData = data.data?.map((x, i) => {
+        return {
+          id: i,
+          catName: x,
+        };
+      });
+
+      setCategories(newData as []);
+    };
+    getCategories();
+  }, []);
+
+  useEffect(() => {
+    getUserIdService()
+      .then(id => {
+        console.log('Id is here', id);
+        dispatch(fetchReceivedCards(id));
+      })
+      .catch(e => console.log(e));
+  }, []);
+
   const handlereminderBlur = () => {
     setreminderFocus(true);
   };
   const [modal, setModal] = useState(false);
-  const [categories] = useState<CategoryProps[]>(cats);
+  const [categories, setCategories] = useState<CategoryProps[]>([]);
 
   const [tabsList] = useState<TabsProps[]>(tabs);
   const [cardsList] = useState(cardssss);
@@ -251,10 +280,12 @@ const Rolodex = ({navigation}: Props) => {
           <View style={styles.modal}>
             <TouchableOpacity style={styles.modalActionButton}>
               <Calendar height={24} width={24} />
-              <Text style={styles.modalActionButtonText} onPress={() => {
-                setReminderCalenderModal(false);
-                navigation.navigate('SetMessage');
-              }}>
+              <Text
+                style={styles.modalActionButtonText}
+                onPress={() => {
+                  setReminderCalenderModal(false);
+                  navigation.navigate('SetMessage');
+                }}>
                 Schedule a Message
               </Text>
             </TouchableOpacity>
@@ -363,7 +394,7 @@ const Rolodex = ({navigation}: Props) => {
                   <TouchableOpacity
                     style={{
                       ...styles.addNewChip,
-                      width: 70,
+                      width: 100,
                       borderColor: active
                         ? '#316F8A'
                         : 'rgba(51, 51, 51, 0.51)',
