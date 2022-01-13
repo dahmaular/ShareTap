@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
   Animated,
   ScrollView,
+  Linking,
+  Pressable,
 } from 'react-native';
 import Header from '../../components/Header';
 import Back from '../../assets/svg/back.svg';
@@ -27,13 +29,17 @@ import Link from '../../assets/svg/link_02.svg';
 import Facebook from '../../assets/svg/facebook.svg';
 import Twitter from '../../assets/svg/twitter.svg';
 import EmptyCard from '../../assets/svg/EmptyCard.svg';
-import cardssss from '../../mock/CarouselList';
 import tabs from '../../mock/Tabs';
 import Moment from 'moment';
-import {listCategoriesService} from '../../services/rolodexService';
+import {
+  listCategoriesService,
+  listReceivedCardsService,
+} from '../../services/rolodexService';
 import {getUserIdService} from '../../services/userService';
 import {fetchReceivedCards} from '../../slices/rolodex';
 import {useDispatch} from 'react-redux';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type RolodexProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -57,6 +63,37 @@ interface TabsProps {
   tab: string;
 }
 
+interface CardDetailsProps {
+  id: string;
+  name: string | null;
+  role: string | null;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+  website: string | null;
+  facebook: string | null;
+  twitter: string | null;
+  linkedIn: string | null;
+  createdAt: string | null;
+  businessProfileId: string;
+  userId: string | null;
+  cardTemplateId: string | null;
+  status: string | null;
+  color: string | null;
+  category: string | null;
+}
+
+interface CardTemplateProps {
+  id: string | null;
+  backgroundColor: string | null;
+  borderBottomColor: string | null;
+}
+
+interface ReceivedCardProps {
+  cardDetails: CardDetailsProps;
+  cardTemplate: CardTemplateProps;
+}
+
 const {width} = Dimensions.get('screen');
 
 const deviceHeight = Dimensions.get('window').height;
@@ -67,61 +104,14 @@ const Rolodex = ({navigation}: Props) => {
   const [reminderCalenderModal, setReminderCalenderModal] = useState(false);
   const [reminder, setreminder] = useState({value: '', error: ''});
   const [reminderFocus, setreminderFocus] = useState(false);
-  const [selectDate, setSelectedDate] = useState(
-    Moment(new Date()).format('lll'),
-  );
+  const [visible, setVisible] = React.useState(false);
+  const [pressed, setPressed] = useState(0);
 
-  const validateFields = () => {};
-
-  useEffect(() => {
-    const getCategories = async () => {
-      const data = await listCategoriesService();
-
-      const newData = data.data?.map((x, i) => {
-        return {
-          id: i,
-          catName: x,
-        };
-      });
-
-      setCategories(newData as []);
-    };
-    getCategories();
-  }, []);
-
-  useEffect(() => {
-    getUserIdService()
-      .then(id => {
-        console.log('Id is here', id);
-        dispatch(fetchReceivedCards(id));
-      })
-      .catch(e => console.log(e));
-  }, []);
-
-  const handlereminderBlur = () => {
-    setreminderFocus(true);
-  };
   const [modal, setModal] = useState(false);
   const [categories, setCategories] = useState<CategoryProps[]>([]);
 
   const [tabsList] = useState<TabsProps[]>(tabs);
-  const [cardsList] = useState(cardssss);
-
-  const cardHeight = 250;
-  const cardAmount = cardsList.length;
-  const cardVisibleHeight = 191;
-  const cardVisibleHeightCollapsed = 60;
-  const cardVisibleDelta = cardVisibleHeight - cardVisibleHeightCollapsed;
-  const topOffset = 150;
-  const stackHeight = cardVisibleDelta * cardAmount - cardVisibleDelta;
-  const scrollHeight =
-    deviceHeight + cardVisibleDelta * cardAmount - cardVisibleDelta;
-
-  const [visible, setVisible] = React.useState(false);
-
-  const openMenu = () => setVisible(true);
-
-  const closeMenu = () => setVisible(false);
+  const [cardsList, setCardsList] = useState<ReceivedCardProps[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<CategoryProps>({
     id: null,
@@ -143,7 +133,59 @@ const Rolodex = ({navigation}: Props) => {
 
   const [scrollY] = useState(new Animated.Value(0));
   let offsetY = 0;
-  const [pressed, setPressed] = useState(0);
+  const [selectDate, setSelectedDate] = useState(
+    Moment(new Date()).format('lll'),
+  );
+
+  const validateFields = () => {};
+
+  const openMenu = () => setVisible(true);
+
+  const closeMenu = () => setVisible(false);
+
+  const handlereminderBlur = () => {
+    setreminderFocus(true);
+  };
+
+  const cardHeight = 250;
+  const cardAmount = cardsList.length;
+  const cardVisibleHeight = 191;
+  const cardVisibleHeightCollapsed = 60;
+  const cardVisibleDelta = cardVisibleHeight - cardVisibleHeightCollapsed;
+  const topOffset = 150;
+  const stackHeight = cardVisibleDelta * cardAmount - cardVisibleDelta;
+  const scrollHeight =
+    deviceHeight + cardVisibleDelta * cardAmount - cardVisibleDelta;
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const data = await listCategoriesService();
+
+      const newData = data.data?.map((x, i) => {
+        return {
+          id: i,
+          catName: x,
+        };
+      });
+
+      setCategories(newData as []);
+    };
+    getCategories();
+  }, []);
+
+  useEffect(() => {
+    getUserIdService()
+      .then(id => {
+        console.log('Id is here', id);
+        listReceivedCardsService(id).then(res => {
+          console.log('Daaata', res);
+          setCardsList(res.data as Array<ReceivedCardProps>);
+        });
+
+        dispatch(fetchReceivedCards(id));
+      })
+      .catch(e => console.log(e));
+  }, [dispatch]);
 
   const onPress = (e: any) => {
     const pressY = e.nativeEvent.pageY;
@@ -382,107 +424,138 @@ const Rolodex = ({navigation}: Props) => {
           setReminderCalenderModal(true);
         }}
       />
-      <View style={styles.container}>
-        <View style={{flex: 1}}>
-          <View style={styles.categoriesView}>
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}>
-              {categories.map((k, i) => {
-                const active = selectedCategoryHash[k.id as number];
+      {cardsList.length >= 1 ? (
+        <View style={styles.container}>
+          <View style={{flex: 1}}>
+            <View style={styles.categoriesView}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {categories.map((k, i) => {
+                  const active = selectedCategoryHash[k.id as number];
+                  return (
+                    <Pressable
+                      style={{
+                        ...styles.addNewChip,
+                        width: 70,
+                        borderColor: active
+                          ? '#316F8A'
+                          : 'rgba(51, 51, 51, 0.51)',
+                      }}
+                      key={i}
+                      onPress={() => {
+                        setSelectedCategoryHash({
+                          [k.id as number]: !(
+                            selectedCategoryHash[k.id as number] || false
+                          ),
+                        });
+                        const picked = categories.find(x => x.id == k.id);
+                        setSelectedCategory(picked as CategoryProps);
+                      }}>
+                      <Text numberOfLines={1} style={styles.addNewText}>
+                        {k.catName}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+            </View>
+
+            <>{ListHeader()}</>
+            <View>
+              {cardsList.map((item, index) => {
                 return (
-                  <TouchableOpacity
-                    style={{
-                      ...styles.addNewChip,
-                      width: 100,
-                      borderColor: active
-                        ? '#316F8A'
-                        : 'rgba(51, 51, 51, 0.51)',
-                    }}
-                    key={i}
-                    onPress={() => {
-                      setSelectedCategoryHash({
-                        [k.id as number]: !(
-                          selectedCategoryHash[k.id as number] || false
-                        ),
-                      });
-                      const picked = categories.find(x => x.id == k.id);
-                      setSelectedCategory(picked as CategoryProps);
-                    }}>
-                    <Text style={styles.addNewText}>{k.catName}</Text>
-                  </TouchableOpacity>
+                  <Animated.View
+                    key={index}
+                    style={[
+                      styles.animatedCard,
+                      cardTransform(index),
+                      {
+                        top: index * cardVisibleHeight,
+                        marginTop: -150,
+                      },
+                    ]}>
+                    <TouchableOpacity
+                      onPress={() => console.log('I worked')}
+                      style={{...styles.touchable}}>
+                      <Text style={styles.name}>{item.cardDetails.name}</Text>
+                      <Text style={styles.profession}>
+                        {item.cardDetails.category}
+                      </Text>
+                      <Text style={styles.email}>{item.cardDetails.email}</Text>
+                      <View style={styles.telSocial}>
+                        <View>
+                          <Text style={styles.telephone}>
+                            {item.cardDetails.phone}
+                          </Text>
+                        </View>
+
+                        <View style={styles.rowCenter}>
+                          <Pressable
+                            style={{marginRight: 10}}
+                            onPress={() =>
+                              Linking.openURL(
+                                item.cardDetails.website as string,
+                              )
+                            }>
+                            <Link />
+                          </Pressable>
+
+                          <Pressable
+                            style={{marginRight: 10}}
+                            onPress={() =>
+                              Linking.openURL(
+                                item.cardDetails.facebook as string,
+                              )
+                            }>
+                            <Facebook />
+                          </Pressable>
+
+                          <Pressable
+                            style={{marginRight: 10}}
+                            onPress={() =>
+                              Linking.openURL(
+                                item.cardDetails.twitter as string,
+                              )
+                            }>
+                            <Twitter />
+                          </Pressable>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        ...styles.bottomLine,
+                        backgroundColor: item.cardTemplate
+                          .backgroundColor as string,
+                      }}
+                    />
+                  </Animated.View>
                 );
               })}
-            </ScrollView>
+            </View>
+
+            <Animated.ScrollView
+              onScroll={Animated.event(
+                [{nativeEvent: {contentOffset: {y: scrollY}}}],
+                {
+                  useNativeDriver: true,
+                  listener: (e: any) =>
+                    (offsetY = e.nativeEvent.contentOffset.y),
+                },
+              )}
+              scrollEventThrottle={24}
+              showsVerticalScrollIndicator={false}>
+              <TouchableOpacity
+                // onPress={onPress}
+                style={[{height: scrollHeight}]}
+              />
+            </Animated.ScrollView>
           </View>
-
-          <>{ListHeader()}</>
-          <View>
-            {cardsList.map((item, index) => {
-              return (
-                <Animated.View
-                  key={index}
-                  style={[
-                    styles.animatedCard,
-                    cardTransform(index),
-                    {
-                      top: index * cardVisibleHeight,
-                      marginTop: -150,
-                    },
-                  ]}>
-                  <TouchableOpacity style={{...styles.touchable}}>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.profession}>{item.profession}</Text>
-                    <Text style={styles.email}>{item.email}</Text>
-                    <View style={styles.telSocial}>
-                      <View>
-                        <Text style={styles.telephone}>{item.phone}</Text>
-                      </View>
-
-                      <View style={styles.rowCenter}>
-                        <TouchableOpacity
-                          style={{marginRight: 10}}
-                          onPress={() => <></>}>
-                          <Link />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          style={{marginRight: 10}}
-                          onPress={() => <></>}>
-                          <Facebook />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          style={{marginRight: 10}}
-                          onPress={() => <></>}>
-                          <Twitter />
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                  <View style={styles.bottomLine} />
-                </Animated.View>
-              );
-            })}
-          </View>
-
-          <Animated.ScrollView
-            onScroll={Animated.event(
-              [{nativeEvent: {contentOffset: {y: scrollY}}}],
-              {
-                useNativeDriver: true,
-                listener: (e: any) => (offsetY = e.nativeEvent.contentOffset.y),
-              },
-            )}
-            scrollEventThrottle={24}
-            showsVerticalScrollIndicator={false}>
-            <TouchableOpacity
-              onPress={onPress}
-              style={[{height: scrollHeight}]}
-            />
-          </Animated.ScrollView>
         </View>
-      </View>
+      ) : (
+        <ListEmptyView />
+      )}
     </View>
   );
 };
@@ -546,7 +619,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
-  bottomLine: {width: '100%', height: 7, backgroundColor: '#219653'},
+  bottomLine: {width: '100%', height: 7},
 
   telSocial: {
     width: '100%',

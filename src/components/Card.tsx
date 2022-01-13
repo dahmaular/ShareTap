@@ -32,8 +32,6 @@ export interface CardProps {
 const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
   const [visible, setVisible] = React.useState(false);
 
-  const userId = 2;
-
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
@@ -42,7 +40,7 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
     try {
       var link = await dynamicLinks().buildShortLink(
         {
-          link: `https://tapiolla.page.link/6RQi?id=${userId}`,
+          link: `https://tapiolla.page.link/2qXj?id=${item.cardDetails.id}`,
           domainUriPrefix: 'https://tapiolla.page.link',
           android: {
             packageName: 'com.tapiolla',

@@ -45,6 +45,37 @@ type Props = {
   >;
 };
 
+interface CardDetailsProps {
+  id: string;
+  name: string | null;
+  role: string | null;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+  website: string | null;
+  facebook: string | null;
+  twitter: string | null;
+  linkedIn: string | null;
+  createdAt: string | null;
+  businessProfileId: string;
+  userId: string | null;
+  cardTemplateId: string | null;
+  status: string | null;
+  color: string | null;
+  category: string | null;
+}
+
+interface CardTemplateProps {
+  id: string | null;
+  backgroundColor: string | null;
+  borderBottomColor: string | null;
+}
+
+interface UserCardsProps {
+  cardDetails: CardDetailsProps;
+  cardTemplate: CardTemplateProps;
+}
+
 const {width, height} = Dimensions.get('screen');
 
 const Home = ({navigation}: Props) => {
@@ -62,7 +93,7 @@ const Home = ({navigation}: Props) => {
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
-  console.log('User data @home', user?.cards?.listUserCards?.cards);
+  const [cardsList, setCardsList] = useState<UserCardsProps[]>([]);
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -70,17 +101,11 @@ const Home = ({navigation}: Props) => {
   useEffect(() => {
     getUserIdService()
       .then(id => {
-        // console.log('Id is here', id);
         setUserId(id);
-      })
-      .catch(e => console.log(e));
-  }, []);
-
-  useEffect(() => {
-    listUserCardsService(userId)
-      .then(card => {
-        // console.log('card is here @home', card.data.listUserCards?.cards[0]);
-        // setUserId(id);
+        listUserCardsService(userId).then(card => {
+          console.log('User Cards', card);
+          setCardsList(card.data.listUserCards?.cards as [])
+        });
       })
       .catch(e => console.log(e));
   }, []);
@@ -95,17 +120,7 @@ const Home = ({navigation}: Props) => {
       <View>
         <TouchableOpacity
           style={styles.tap}
-          onPress={
-            // () => setCardModal(true)
-            // scanExample()
-            () =>
-              navigation.navigate(
-                'Search',
-                user.cards.listUserCards
-                  ? {cardd: user?.cards?.listUserCards?.cards[0]}
-                  : null,
-              )
-          }>
+          onPress={() => {navigation.navigate('Search', )}}>
           <Tap />
           <Text style={styles.tapText}>TAP TO SHARE</Text>
         </TouchableOpacity>
@@ -113,13 +128,20 @@ const Home = ({navigation}: Props) => {
     );
   };
 
+  // navigation.navigate(
+  //   'Search',
+  //   user.cards.listUserCards
+  //     ? {cardd: user?.cards?.listUserCards?.cards[0]}
+  //     : null,
+  // )
+
   // ?CARD FLATLIST
   const UserCardSlider = () => {
     return (
       <View style={styles.flatlistView}>
         <FlatList
           horizontal
-          data={user?.cards?.listUserCards?.cards}
+          data={cardsList}
           contentContainerStyle={{paddingVertical: 5}}
           contentInsetAdjustmentBehavior="never"
           snapToAlignment="center"
@@ -241,10 +263,8 @@ const Home = ({navigation}: Props) => {
       return;
     } else {
       updateUserDeviceToken(token)
-        .then(res => {
-        })
-        .catch(error => {
-        });
+        .then(res => {})
+        .catch(error => {});
     }
   };
 
