@@ -469,6 +469,7 @@ const Rolodex = ({navigation}: Props) => {
                     key={index}
                     style={[
                       styles.animatedCard,
+                      {backgroundColor: item.cardTemplate.backgroundColor as string},
                       cardTransform(index),
                       {
                         top: index * cardVisibleHeight,
@@ -527,7 +528,7 @@ const Rolodex = ({navigation}: Props) => {
                       style={{
                         ...styles.bottomLine,
                         backgroundColor: item.cardTemplate
-                          .backgroundColor as string,
+                          .borderBottomColor as string,
                       }}
                     />
                   </Animated.View>
@@ -609,7 +610,6 @@ const styles = StyleSheet.create({
     right: 20,
     borderWidth: 1,
     borderColor: 'rgba(49, 111, 138, 0.16)',
-    backgroundColor: '#FFFFFF',
   },
 
   touchable: {

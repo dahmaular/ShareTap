@@ -94,6 +94,33 @@ const Home = ({navigation}: Props) => {
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
   const [cardsList, setCardsList] = useState<UserCardsProps[]>([]);
+  const [firstIndex, setFirstIndex] = useState<UserCardsProps>({
+    cardDetails: {
+      id: '',
+      name: '',
+      role: '',
+      email: '',
+      phone: '',
+      address: '',
+      website: '',
+      facebook: '',
+      twitter: '',
+      linkedIn: '',
+      createdAt: '',
+      businessProfileId: '',
+      userId: '',
+      cardTemplateId: '',
+      status: '',
+      color: '',
+      category: '',
+    },
+
+    cardTemplate: {
+      id: '',
+      backgroundColor: '',
+      borderBottomColor: '',
+    },
+  });
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -104,7 +131,8 @@ const Home = ({navigation}: Props) => {
         setUserId(id);
         listUserCardsService(userId).then(card => {
           console.log('User Cards', card);
-          setCardsList(card.data.listUserCards?.cards as [])
+          setCardsList(card.data.listUserCards?.cards as []);
+          // setFirstIndex()
         });
       })
       .catch(e => console.log(e));
@@ -120,7 +148,9 @@ const Home = ({navigation}: Props) => {
       <View>
         <TouchableOpacity
           style={styles.tap}
-          onPress={() => {navigation.navigate('Search', )}}>
+          onPress={() => {
+            navigation.navigate('Search');
+          }}>
           <Tap />
           <Text style={styles.tapText}>TAP TO SHARE</Text>
         </TouchableOpacity>
@@ -336,7 +366,7 @@ const Home = ({navigation}: Props) => {
 
             <View style={styles.yourCards}>
               <Text style={styles.yourCardsText}>
-                Your Cards ({user?.cards?.listUserCards?.cards?.length})
+                Your Cards ({cardsList.length})
               </Text>
               {/* <Text
                 style={styles.viewAll}
