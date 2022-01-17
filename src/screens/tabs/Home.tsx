@@ -94,7 +94,7 @@ const Home = ({navigation}: Props) => {
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
   const [cardsList, setCardsList] = useState<UserCardsProps[]>([]);
-  const [firstIndex, setFirstIndex] = useState<UserCardsProps>({
+  const [firstIndex, setFirstIndex] = useState<any>({
     cardDetails: {
       id: '',
       name: '',
@@ -132,7 +132,7 @@ const Home = ({navigation}: Props) => {
         listUserCardsService(userId).then(card => {
           console.log('User Cards', card);
           setCardsList(card.data.listUserCards?.cards as []);
-          // setFirstIndex()
+          setFirstIndex((card?.data?.listUserCards as any).cards[0])
         });
       })
       .catch(e => console.log(e));
@@ -149,7 +149,7 @@ const Home = ({navigation}: Props) => {
         <TouchableOpacity
           style={styles.tap}
           onPress={() => {
-            navigation.navigate('Search');
+            navigation.navigate('Search', {cardd: firstIndex});
           }}>
           <Tap />
           <Text style={styles.tapText}>TAP TO SHARE</Text>

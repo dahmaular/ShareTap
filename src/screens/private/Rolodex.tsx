@@ -12,6 +12,7 @@ import {
   ScrollView,
   Linking,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import Header from '../../components/Header';
 import Back from '../../assets/svg/back.svg';
@@ -20,7 +21,6 @@ import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
 import {AuthenticatedRoutesParamsList} from '../../types/navigation';
 import TextInputs from '../../components/TextInput';
 import DateSelect from '../../components/DatePicker';
-import {Menu} from 'react-native-paper';
 import Modal from 'react-native-modal';
 import Close from '../../assets/svg/phone-verif-close-icon.svg';
 import Calendar from '../../assets/svg/calendar-icon.svg';
@@ -38,8 +38,6 @@ import {
 import {getUserIdService} from '../../services/userService';
 import {fetchReceivedCards} from '../../slices/rolodex';
 import {useDispatch} from 'react-redux';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type RolodexProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -104,10 +102,10 @@ const Rolodex = ({navigation}: Props) => {
   const [reminderCalenderModal, setReminderCalenderModal] = useState(false);
   const [reminder, setreminder] = useState({value: '', error: ''});
   const [reminderFocus, setreminderFocus] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [visible, setVisible] = React.useState(false);
   const [pressed, setPressed] = useState(0);
 
-  const [modal, setModal] = useState(false);
   const [categories, setCategories] = useState<CategoryProps[]>([]);
 
   const [tabsList] = useState<TabsProps[]>(tabs);
@@ -137,12 +135,6 @@ const Rolodex = ({navigation}: Props) => {
     Moment(new Date()).format('lll'),
   );
 
-  const validateFields = () => {};
-
-  const openMenu = () => setVisible(true);
-
-  const closeMenu = () => setVisible(false);
-
   const handlereminderBlur = () => {
     setreminderFocus(true);
   };
@@ -158,22 +150,6 @@ const Rolodex = ({navigation}: Props) => {
     deviceHeight + cardVisibleDelta * cardAmount - cardVisibleDelta;
 
   useEffect(() => {
-    const getCategories = async () => {
-      const data = await listCategoriesService();
-
-      const newData = data.data?.map((x, i) => {
-        return {
-          id: i,
-          catName: x,
-        };
-      });
-
-      setCategories(newData as []);
-    };
-    getCategories();
-  }, []);
-
-  useEffect(() => {
     getUserIdService()
       .then(id => {
         console.log('Id is here', id);
@@ -181,13 +157,27 @@ const Rolodex = ({navigation}: Props) => {
           console.log('Daaata', res);
           setCardsList(res.data as Array<ReceivedCardProps>);
         });
-
+        getCategories();
         dispatch(fetchReceivedCards(id));
       })
-      .catch(e => console.log(e));
+      .catch(e => console.log('Errrrorororororororor', e))
+      .finally(() => setLoading(false));
   }, [dispatch]);
 
-  const onPress = (e: any) => {
+  const getCategories = async () => {
+    const data = await listCategoriesService();
+
+    const newData = data.data?.map((x, i) => {
+      return {
+        id: i,
+        catName: x,
+      };
+    });
+
+    setCategories(newData as []);
+  };
+
+  const pressClick = (e: any) => {
     const pressY = e.nativeEvent.pageY;
     const currentStackHeight =
       stackHeight -
@@ -407,6 +397,14 @@ const Rolodex = ({navigation}: Props) => {
     );
   };
 
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator color={'#316F8A'} size={'large'} animating={true} />
+      </View>
+    );
+  }
+
   return (
     <View style={{flex: 1}}>
       {reminderModal && ReminderModal()}
@@ -469,7 +467,10 @@ const Rolodex = ({navigation}: Props) => {
                     key={index}
                     style={[
                       styles.animatedCard,
-                      {backgroundColor: item.cardTemplate.backgroundColor as string},
+                      {
+                        backgroundColor: item.cardTemplate
+                          .backgroundColor as string,
+                      },
                       cardTransform(index),
                       {
                         top: index * cardVisibleHeight,
@@ -548,7 +549,7 @@ const Rolodex = ({navigation}: Props) => {
               scrollEventThrottle={24}
               showsVerticalScrollIndicator={false}>
               <TouchableOpacity
-                // onPress={onPress}
+                onPress={pressClick}
                 style={[{height: scrollHeight}]}
               />
             </Animated.ScrollView>
@@ -652,6 +653,12 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'normal',
     color: '#333333',
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
   },
 
   telephone: {

@@ -13,6 +13,37 @@ export interface CardProps {
   profession: string;
 }
 
+export interface CardDetailsProps {
+  id: string;
+  name: string | null;
+  role: string | null;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+  website: string | null;
+  facebook: string | null;
+  twitter: string | null;
+  linkedIn: string | null;
+  createdAt: string | null;
+  businessProfileId: string;
+  userId: string | null;
+  cardTemplateId: string | null;
+  status: string | null;
+  color: string | null;
+  category: string | null;
+}
+
+export interface CardTemplateProps {
+  id: string | null;
+  backgroundColor: string | null;
+  borderBottomColor: string | null;
+}
+
+export interface SearchRoute {
+  cardDetails: CardDetailsProps;
+  cardTemplate: CardTemplateProps;
+}
+
 export type TabNavigatorParamsList = {
   Home: undefined;
   Chat: undefined;
@@ -35,7 +66,7 @@ export type UnauthenticatedRoutesParamsList = {
 
 export type AuthenticatedRoutesParamsList = {
   Root: undefined;
-  Search: undefined;
+  Search: Record<'cardd', SearchRoute>;
   Rolodex: undefined;
   SetReminder: undefined;
   SetMessage: undefined;
