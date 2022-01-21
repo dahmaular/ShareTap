@@ -16,6 +16,7 @@ import {
   AuthenticatedRoutesParamsList,
   TabNavigatorParamsList,
 } from '../../types/navigation';
+import NetInfo from '@react-native-community/netinfo';
 import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
 import {Badge} from 'react-native-paper';
 import Menu from '../../assets/svg/menu.svg';
@@ -24,6 +25,7 @@ import Notification from '../../assets/svg/ion-ios-notifications.svg';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
 import Message from '../../components/Message';
+import cards from '../../mock/CarouselList';
 import Card from '../../components/Card';
 import NotificationModal from '../../components/NotificationModal';
 import Modal from 'react-native-modal';
@@ -35,8 +37,6 @@ import {
 import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
-import {GET_FCM_TOKEN, GET_FCM_TOKEN_STATUS} from '../../core/storage';
-import {updateUserDeviceToken} from '../../services/cardService';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -44,37 +44,6 @@ type Props = {
     StackNavigationProp<AuthenticatedRoutesParamsList>
   >;
 };
-
-interface CardDetailsProps {
-  id: string;
-  name: string | null;
-  role: string | null;
-  email: string | null;
-  phone: string | null;
-  address: string | null;
-  website: string | null;
-  facebook: string | null;
-  twitter: string | null;
-  linkedIn: string | null;
-  createdAt: string | null;
-  businessProfileId: string;
-  userId: string | null;
-  cardTemplateId: string | null;
-  status: string | null;
-  color: string | null;
-  category: string | null;
-}
-
-interface CardTemplateProps {
-  id: string | null;
-  backgroundColor: string | null;
-  borderBottomColor: string | null;
-}
-
-interface UserCardsProps {
-  cardDetails: CardDetailsProps;
-  cardTemplate: CardTemplateProps;
-}
 
 const {width, height} = Dimensions.get('screen');
 
@@ -93,34 +62,7 @@ const Home = ({navigation}: Props) => {
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
-  const [cardsList, setCardsList] = useState<UserCardsProps[]>([]);
-  const [firstIndex, setFirstIndex] = useState<any>({
-    cardDetails: {
-      id: '',
-      name: '',
-      role: '',
-      email: '',
-      phone: '',
-      address: '',
-      website: '',
-      facebook: '',
-      twitter: '',
-      linkedIn: '',
-      createdAt: '',
-      businessProfileId: '',
-      userId: '',
-      cardTemplateId: '',
-      status: '',
-      color: '',
-      category: '',
-    },
-
-    cardTemplate: {
-      id: '',
-      backgroundColor: '',
-      borderBottomColor: '',
-    },
-  });
+  console.log('User data @home', user);
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -128,12 +70,17 @@ const Home = ({navigation}: Props) => {
   useEffect(() => {
     getUserIdService()
       .then(id => {
+        // console.log('Id is here', id);
         setUserId(id);
-        listUserCardsService(userId).then(card => {
-          console.log('User Cards', card);
-          setCardsList(card.data.listUserCards?.cards as []);
-          setFirstIndex((card?.data?.listUserCards as any).cards[0])
-        });
+      })
+      .catch(e => console.log(e));
+  }, []);
+
+  useEffect(() => {
+    listUserCardsService(userId)
+      .then(card => {
+        // console.log('card is here @home', card.data.listUserCards?.cards[0]);
+        // setUserId(id);
       })
       .catch(e => console.log(e));
   }, []);
@@ -146,11 +93,19 @@ const Home = ({navigation}: Props) => {
   const TapToShareButton = () => {
     return (
       <View>
-        <TouchableOpacity
+        <TouchableOpacity disabled={!user?.cards?.listUserCards?.cards}
           style={styles.tap}
-          onPress={() => {
-            navigation.navigate('Search', {cardd: firstIndex});
-          }}>
+          onPress={
+            // () => setCardModal(true)
+            // scanExample()
+            () =>
+              navigation.navigate(
+                'Search',
+                user.cards.listUserCards
+                  ? {cardd: user?.cards?.listUserCards?.cards[0]}
+                  : null,
+              )
+          }>
           <Tap />
           <Text style={styles.tapText}>TAP TO SHARE</Text>
         </TouchableOpacity>
@@ -158,20 +113,13 @@ const Home = ({navigation}: Props) => {
     );
   };
 
-  // navigation.navigate(
-  //   'Search',
-  //   user.cards.listUserCards
-  //     ? {cardd: user?.cards?.listUserCards?.cards[0]}
-  //     : null,
-  // )
-
   // ?CARD FLATLIST
   const UserCardSlider = () => {
     return (
       <View style={styles.flatlistView}>
         <FlatList
           horizontal
-          data={cardsList}
+          data={user?.cards?.listUserCards?.cards}
           contentContainerStyle={{paddingVertical: 5}}
           contentInsetAdjustmentBehavior="never"
           snapToAlignment="center"
@@ -279,24 +227,13 @@ const Home = ({navigation}: Props) => {
   };
   useEffect(() => {
     getUserIdService()
-      .then(id => {
-        uploadPushToken();
-        dispatch(fetchUserCards(id));
-      })
+      .then(id => dispatch(fetchUserCards(id)))
       .catch(() => hubDispatch('navigation', 'loggedIn'));
   }, [dispatch]);
 
-  const uploadPushToken = async () => {
-    const isSaved = await GET_FCM_TOKEN_STATUS();
-    const token = await GET_FCM_TOKEN();
-    if (isSaved) {
-      return;
-    } else {
-      updateUserDeviceToken(token)
-        .then(res => {})
-        .catch(error => {});
-    }
-  };
+  // useEffect(() => {
+  //   start();
+  // }, []);
 
   return (
     <View style={{flex: 1}}>
@@ -366,14 +303,15 @@ const Home = ({navigation}: Props) => {
 
             <View style={styles.yourCards}>
               <Text style={styles.yourCardsText}>
-                Your Cards ({cardsList.length})
+                Your Cards ({user?.cards?.listUserCards?.cards.length})
               </Text>
-              {/* <Text
+              <Text
                 style={styles.viewAll}
                 onPress={() => {
+                  // navigation.navigate('Search');
                 }}>
                 View all
-              </Text> */}
+              </Text>
             </View>
 
             <UserCardSlider />

@@ -155,7 +155,7 @@ const Rolodex = ({navigation}: Props) => {
         console.log('Id is here', id);
         listReceivedCardsService(id).then(res => {
           console.log('Daaata', res);
-          setCardsList(res.data as Array<ReceivedCardProps>);
+          // setCardsList(res.data as Array<ReceivedCardProps>);
         });
         getCategories();
         dispatch(fetchReceivedCards(id));

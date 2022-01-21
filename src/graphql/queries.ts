@@ -5,31 +5,8 @@
 export const listReceivedCards = /* GraphQL */ `
   query ListReceivedCards($userId: String) {
     listReceivedCards(userId: $userId) {
-      cards {
-        cardDetails {
-          id
-          name
-          role
-          email
-          phone
-          address
-          website
-          facebook
-          twitter
-          linkedIn
-          createdAt
-          businessProfileId
-          userId
-          cardTemplateId
-          status
-          color
-          category
-        }
-        cardTemplate {
-          id
-          backgroundColor
-          borderBottomColor
-        }
+      cardsData {
+        alphabet
       }
       error
     }

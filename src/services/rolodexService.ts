@@ -37,7 +37,7 @@ export const listReceivedCardsService = async (userId: string) => {
     })) as {
       data: ListReceivedCardsResponse;
     };
-    return {data: data.listReceivedCards?.cards};
+    return {data: data.listReceivedCards?.cardsData};
   } catch (error) {
     throw error;
   }

@@ -216,7 +216,7 @@ input PushNotificationInput {
 }
 
 type Query {
-	listReceivedCards(userId: String): CardsPayload
+	listReceivedCards(userId: String): ReceivedCardsPayload
 	listUserCards(userId: String): CardsPayload
 	listSharedCards(userId: String): CardsPayload
 	listUsersWhoSharedACard(cardId: String): UsersPayload
@@ -239,6 +239,16 @@ type Query {
 	getAboutPage: PageData
 	getPrivacyPolicyPage: PageData
 	getTermsAndConditionsPage: PageData
+}
+
+type ReceivedCardResponse {
+	alphabet: String
+	cards: [CardResponse]
+}
+
+type ReceivedCardsPayload {
+	cardsData: [ReceivedCardResponse]
+	error: String
 }
 
 input RemoveReceivedCardPayload {

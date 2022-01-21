@@ -413,35 +413,10 @@ export type ListReceivedCardsQueryVariables = {
 
 export type ListReceivedCardsQuery = {
   listReceivedCards:  {
-    __typename: "CardsPayload",
-    cards:  Array< {
-      __typename: "CardResponse",
-      cardDetails:  {
-        __typename: "Card",
-        id: string,
-        name: string | null,
-        role: string | null,
-        email: string | null,
-        phone: string | null,
-        address: string | null,
-        website: string | null,
-        facebook: string | null,
-        twitter: string | null,
-        linkedIn: string | null,
-        createdAt: string | null,
-        businessProfileId: string,
-        userId: string | null,
-        cardTemplateId: string | null,
-        status: string | null,
-        color: string | null,
-        category: string | null,
-      } | null,
-      cardTemplate:  {
-        __typename: "CardTemplate",
-        id: string | null,
-        backgroundColor: string | null,
-        borderBottomColor: string | null,
-      } | null,
+    __typename: "ReceivedCardsPayload",
+    cardsData:  Array< {
+      __typename: "ReceivedCardResponse",
+      alphabet: string | null,
     } | null > | null,
     error: string | null,
   } | null,
