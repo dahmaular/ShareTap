@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import Home from './Home';
 import Chat from './Chat';
 import Contacts from './Contacts';
