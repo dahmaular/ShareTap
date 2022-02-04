@@ -59,7 +59,7 @@ const {width} = Dimensions.get('screen');
 
 const deviceHeight = Dimensions.get('window').height;
 let id: number;
-let template;
+let template: any;
 
 const social = {
   websiteIcon: '',

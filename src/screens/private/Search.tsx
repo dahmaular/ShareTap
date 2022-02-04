@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable no-shadow */ /* eslint-disable prettier/prettier */
 import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
@@ -37,10 +37,10 @@ interface WIFIUSER {
   SSID: string;
 }
 
-let sent: Boolean;
-let exchange: Boolean;
+let sent: boolean;
+let exchange: boolean;
 
-const Search = ({route}) => {
+const Search = ({route}: any) => {
   const animation = useRef<LottieView>(null);
 
   const [finish, setFinish] = useState(false);
@@ -65,7 +65,7 @@ const Search = ({route}) => {
   const [transferring, setTransferring] = useState(false);
 
   const [results] = useState<ConnectProps[]>(connects);
-  let navigation = useNavigation();
+  const navigation = useNavigation();
 
   const [connected, setConnected] = useState({
     connected: false,
@@ -79,7 +79,7 @@ const Search = ({route}) => {
   const [chats, setChats] = useState([]);
   const [card, setCard] = useState([]);
   const [ip, setIp] = useState('');
-  const [start, setStart] = useState<Boolean>(false);
+  const [start, setStart] = useState<boolean>(false);
 
   const [client, setClient] = useState(null);
   const [scrollViewWidth, setScrollViewWidth] = useState(0);

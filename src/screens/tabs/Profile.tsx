@@ -9,13 +9,14 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {
   AuthenticatedRoutesParamsList,
   TabNavigatorParamsList,
 } from '../../types/navigation';
-import NotificationModal from '../../components/NotificationModal';
+import TextInputs from '../../components/TextInput';
 import Header from '../../components/Header';
 import Menu from '../../assets/svg/menu.svg';
 import Settings from '../../assets/svg/settings.svg';
@@ -25,7 +26,9 @@ import PImageBg from '../../assets/svg/profile-image-bg.svg';
 import Location from '../../assets/svg/location.svg';
 import Twitter from '../../assets/svg/twitter-colored.svg';
 import Facebook from '../../assets/svg/facebook.svg';
-import {BACKGROUND_COLOR} from '../../core/color';
+import TapLogo from '../../assets/svg/Tapiolla-Full-Icon.svg';
+import Close from '../../assets/svg/phone-verif-close-icon.svg';
+import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -37,50 +40,118 @@ type Props = {
 const {width, height} = Dimensions.get('screen');
 
 const Profile = ({navigation}: Props) => {
-  const [modal, setModal] = useState(false);
+  const [profileModal, setProfileModal] = useState(false);
+  const [role, setRole] = useState({value: '', error: ''});
+  const [organisation, setOrganisation] = useState({value: '', error: ''});
   const dispatch = useDispatch();
 
-  const _onNotificationPressed = () => {
-    setModal(true);
-  };
-
-  const UserCard = () => {
+  const UserProfile = () => {
     return (
       <>
-        <Text>Hello World</Text>
-        <Text style={styles.aboutText}>
-          A eget phasellus maecenas vitae et ultrices non. Ilsa Praesent diam
-          faucibus vel eget ipsum mus lacus.ilsa Proin volutpat urna, congue
-          diam quam mi est ilsa pharetra. Dignissim tris.
-        </Text>
+        <View style={styles.userProfile}>
+          <View style={styles.profileRole}>
+            <TapLogo style={styles.logo} />
+            <View>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={styles.roleText}>UX Designer</Text>
+                <Text style={styles.roleCardNo}>2 cards</Text>
+              </View>
+              <Text style={styles.POrganText}>Tapiolla</Text>
+              <Text style={styles.POrganText}>2015-2021</Text>
+            </View>
+          </View>
+          <View>
+            <TouchableOpacity style={styles.addCardBtn}>
+              <Text style={styles.profileBtnText}>Add card</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.line}></View>
       </>
+    );
+  };
+
+  const addProfileModal = () => {
+    return (
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.resultsBottomModal}
+        isVisible={profileModal}
+        onBackdropPress={() => setProfileModal(false)}
+        onBackButtonPress={() => setProfileModal(false)}>
+        <TouchableOpacity
+          onPress={() => setProfileModal(false)}
+          style={styles.modalCloseBtn}>
+          <Close />
+        </TouchableOpacity>
+        <View style={styles.resultsModal}>
+          <View style={styles.modalHeader}>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.searchResultText}>Add Profile </Text>
+            </View>
+
+            <View style={{marginTop: 10}}>
+              <Text style={styles.searchResultNote}>
+                Add more roles *********
+              </Text>
+            </View>
+          </View>
+          <TextInputs
+            label="Role"
+            placeholderTextColor="rgba(90, 89, 89, 0.55)"
+            placeholder="Add role"
+            autoCapitalize="none"
+            value={role.value}
+            // onFocus={() => setWebsiteFocus(true)}
+            onChangeText={text => {
+              setRole({value: text, error: ''});
+            }}
+            style={styles.socialInputs}
+          />
+          <TextInputs
+            label="Organization"
+            placeholderTextColor="rgba(90, 89, 89, 0.55)"
+            placeholder="Add organization"
+            value={organisation.value}
+            // onFocus={() => setTwitterFocus(true)}
+            onChangeText={text => {
+              setOrganisation({value: text, error: ''});
+            }}
+            style={styles.socialInputs}
+          />
+          <TouchableOpacity
+            style={
+              role.value !== '' || organisation.value !== ''
+                ? styles.modalButton
+                : styles.modalButtonInactive
+            }
+            // onPress={() => submitSocial()}
+          >
+            <Text style={styles.modalBtnText}>CONFIRM</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     );
   };
 
   return (
     <View style={styles.container}>
-      {modal && (
-        <NotificationModal
-          visible={modal}
-          onBackButtonPress={() => setModal(true)}
-          onBackdropPress={() => setModal(true)}
-          onClose={() => setModal(false)}
-        />
-      )}
+      {profileModal && addProfileModal()}
       <Header
         title="PROFILE"
         titleColor="#FFFFFF"
         bgColor="#316F8A"
         leftSvg={<Menu />}
         leftOnPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-        rightSvg={<Settings onPress={_onNotificationPressed} />}
+        rightSvg={<Settings />}
         rightOnPress={() => <></>}
       />
       <View style={{flex: 1}}>
         <ScrollView
           contentContainerStyle={{flexGrow: 1}}
           alwaysBounceVertical={false}
-          showsVerticalScrollIndicator={true}
+          showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled">
           <View style={styles.profileContainer}>
             <View style={styles.rect}>
@@ -127,11 +198,15 @@ const Profile = ({navigation}: Props) => {
             </View>
             <View style={styles.profileView}>
               <Text style={styles.profileText}>Profile</Text>
-              <TouchableOpacity style={styles.addProfileBtn}>
+              <TouchableOpacity
+                style={styles.addProfileBtn}
+                onPress={() => setProfileModal(true)}>
                 <Text style={styles.profileBtnText}>+ Add profile</Text>
               </TouchableOpacity>
             </View>
-            <UserCard />
+            <UserProfile />
+            <UserProfile />
+            <UserProfile />
           </View>
         </ScrollView>
       </View>
@@ -150,8 +225,7 @@ const styles = StyleSheet.create({
     backgroundColor: BACKGROUND_COLOR,
     height: '100%',
     width: width,
-    alignItems: 'center',
-    marginBottom: 50,
+    marginBottom: 70,
     // paddingHorizontal: 15,
   },
   rect: {
@@ -284,5 +358,219 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '500',
     color: '#316F8A',
+  },
+  userProfile: {
+    flexDirection: 'row',
+    padding: 20,
+    alignItems: 'center',
+  },
+  profileRole: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logo: {
+    marginRight: 10,
+  },
+  roleText: {
+    fontFamily: 'Poppins',
+    fontSize: 14,
+    fontWeight: '500',
+    lineHeight: 18,
+  },
+  roleCardNo: {
+    fontFamily: 'Poppins',
+    fontSize: 10,
+    fontWeight: '500',
+    lineHeight: 15,
+    color: '#316F8A',
+    backgroundColor: '#E1EEF4',
+    marginLeft: 10,
+    padding: 2,
+  },
+  POrganText: {
+    fontFamily: 'Poppins',
+    fontSize: 10,
+    fontWeight: '400',
+    color: 'rgba(51, 51, 51, 0.51)',
+    lineHeight: 15,
+  },
+  addCardBtn: {
+    width: 60,
+    height: 22,
+    // flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 2.5,
+    borderWidth: 1,
+    borderColor: '#316F8A',
+    marginLeft: width / 4.5,
+  },
+  line: {
+    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    height: 1,
+    width: '90%',
+    alignSelf: 'center',
+  },
+
+  //profile modal
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 100,
+  },
+  emptyView: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    fontSize: 14,
+    fontWeight: 'normal',
+    fontFamily: 'Poppins',
+    color: '#292929',
+    fontStyle: 'normal',
+    marginTop: 10,
+    textAlign: 'center',
+  },
+
+  resultsBottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+
+  modalCloseBtn: {
+    marginBottom: 24,
+    alignSelf: 'flex-end',
+    paddingHorizontal: 20,
+  },
+
+  resultsModal: {
+    width: '100%',
+    height: 470,
+    backgroundColor: '#FFFFFF',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    paddingHorizontal: 30,
+  },
+
+  modalHeader: {
+    width: '100%',
+    marginTop: 23,
+  },
+
+  modalContent: {
+    width: '100%',
+  },
+
+  searchResultText: {
+    fontFamily: 'Poppins-Bold',
+    fontSize: 20,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    color: '#316F8A',
+  },
+  optionalText: {
+    fontFamily: 'Poppins',
+    fontSize: 16,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    color: 'rgba(51, 51, 51, 0.51)',
+  },
+
+  searchResultNote: {
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    color: '#8C8C8C',
+  },
+
+  socialInputs: {
+    backgroundColor: '#EEEFEF',
+    marginBottom: -5,
+    height: 43,
+  },
+
+  modalButtonInactive: {
+    height: 63,
+    width: width,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#333333',
+    position: 'absolute',
+    bottom: 0,
+  },
+
+  modalButton: {
+    height: 63,
+    width: width,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: PRIMARY_COLOR,
+    position: 'absolute',
+    bottom: 0,
+  },
+
+  modalBtnText: {
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    color: '#FFFFFF',
+    letterSpacing: 0.2,
+  },
+
+  border: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+    marginTop: 22,
+    marginBottom: 22,
+    width: '100%',
+    flexDirection: 'row',
+  },
+
+  connectLine: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  connect: {
+    width: 86,
+    height: 28,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#316F8A',
+    borderRadius: 2,
+  },
+
+  flatList: {width: '100%', marginBottom: 40, marginTop: 40},
+
+  connectName: {
+    fontFamily: 'Poppins',
+    fontSize: 15,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    color: '#333333',
+  },
+
+  connectText: {
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    color: '#316F8A',
+  },
+  eyeView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
 });
