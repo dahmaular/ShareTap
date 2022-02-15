@@ -98,6 +98,17 @@ input ConfirmSignUpPayload {
 	confirmationCode: String
 }
 
+type Conversation {
+	id: String
+	recipients: [String]
+	createdAt: String
+	error: String
+}
+
+input ConversationInput {
+	recipients: [String]
+}
+
 input CreateCardInput {
 	name: String
 	role: String
@@ -159,6 +170,21 @@ type ListUsersPayload {
 	error: String
 }
 
+type Message {
+	id: String
+	message: String
+	sender: String
+	conversationId: String
+	createdAt: String
+	error: String
+}
+
+input MessageInput {
+	message: String
+	sender: String
+	conversationId: String
+}
+
 type Mutation {
 	createCard(card: CreateCardInput!): CreateCardPayload
 	shareCard(shareCardPayload: ShareCardPayload): String
@@ -184,6 +210,9 @@ type Mutation {
 	updateSubscriptionFeatures(updateFeatures: UpdateSubscriptionFeaturesInput): UpdateSubscriptionFeaturesPayload
 	sendPushNotification(sendNotification: PushNotificationInput): NotificationResponse
 	updateEndpoint(deviceToken: String): NotificationResponse
+	updateUserProfile(updateUserProfilePayload: UpdateUserProfileInput): UpdateUserProfilePayload
+	createConversation(conversationPayload: ConversationInput): Conversation
+	createMessage(messagePayload: MessageInput): Message
 }
 
 type NextKey {
@@ -208,6 +237,11 @@ type PageData {
 	data: String
 	updatedAt: String
 	error: String
+}
+
+input PresignedUploadInput {
+	key: String
+	type: String
 }
 
 input PushNotificationInput {
@@ -239,15 +273,22 @@ type Query {
 	getAboutPage: PageData
 	getPrivacyPolicyPage: PageData
 	getTermsAndConditionsPage: PageData
+	getUserProfile(userId: String): UserProfilePayload
+	getPresignedUploadUrl(presignedUploadInput: PresignedUploadInput): String
+	listUserConversations(userId: String): [UserConversation]
+	getConversation(id: String): Conversation
+	listMessagesForConversation(conversationId: String): [Message]
 }
 
-type ReceivedCardResponse {
-	alphabet: String
+type ReceivedCardsData {
 	cards: [CardResponse]
 }
 
 type ReceivedCardsPayload {
-	cardsData: [ReceivedCardResponse]
+	AHdata: [ReceivedCardsData]
+	IOdata: [ReceivedCardsData]
+	PUdata: [ReceivedCardsData]
+	VZdata: [ReceivedCardsData]
 	error: String
 }
 
@@ -267,6 +308,13 @@ input SignupPayload {
 	email: AWSEmail!
 	username: String!
 	password: String!
+}
+
+type Subscription {
+	onCreateConversation: Conversation
+		@aws_subscribe(mutations: ["createConversation"])
+	onCreateMessageByConversationId(conversationId: String): Message
+		@aws_subscribe(mutations: ["createMessage"])
 }
 
 type SubscriptionDetails {
@@ -324,6 +372,23 @@ type UpdateSubscriptionFeaturesPayload {
 	error: String
 }
 
+input UpdateUserProfileInput {
+	id: String
+	backgroundImage: String
+	avatar: String
+	firstName: String
+	lastName: String
+	location: String
+	twitter: String
+	facebook: String
+	biography: String
+}
+
+type UpdateUserProfilePayload {
+	userProfile: User
+	error: String
+}
+
 input UpdateUserSubscriptionPayload {
 	userId: String!
 	customerPlan: String!
@@ -336,12 +401,15 @@ type UpdateUserSubscriptionResponse {
 
 type User {
 	id: ID!
+	backgroundImage: String
+	avatar: String
 	firstName: String
 	lastName: String
+	location: String
+	twitter: String
+	facebook: String
+	biography: String
 	email: String
-	address: String
-	phoneNumber: String
-	avatar: String
 	userName: String
 }
 
@@ -350,8 +418,21 @@ type UserBillingPortalPayload {
 	error: String
 }
 
+type UserConversation {
+	id: String
+	recipient: String
+	createdAt: String
+	error: String
+}
+
 input UserInput {
 	name: String
+}
+
+type UserProfilePayload {
+	userDetails: User
+	userBusinessProfiles: [BusinessProfile]
+	error: String
 }
 
 type UserSubscriptionStatusPayload {

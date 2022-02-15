@@ -5,9 +5,6 @@
 export const listReceivedCards = /* GraphQL */ `
   query ListReceivedCards($userId: String) {
     listReceivedCards(userId: $userId) {
-      cardsData {
-        alphabet
-      }
       error
     }
   }
@@ -83,12 +80,15 @@ export const listUsersWhoSharedACard = /* GraphQL */ `
     listUsersWhoSharedACard(cardId: $cardId) {
       users {
         id
+        backgroundImage
+        avatar
         firstName
         lastName
+        location
+        twitter
+        facebook
+        biography
         email
-        address
-        phoneNumber
-        avatar
         userName
       }
       error
@@ -100,12 +100,15 @@ export const listReceiversFromUser = /* GraphQL */ `
     listReceiversFromUser(userId: $userId) {
       users {
         id
+        backgroundImage
+        avatar
         firstName
         lastName
+        location
+        twitter
+        facebook
+        biography
         email
-        address
-        phoneNumber
-        avatar
         userName
       }
       error
@@ -117,12 +120,15 @@ export const listSendersToUser = /* GraphQL */ `
     listSendersToUser(userId: $userId) {
       users {
         id
+        backgroundImage
+        avatar
         firstName
         lastName
+        location
+        twitter
+        facebook
+        biography
         email
-        address
-        phoneNumber
-        avatar
         userName
       }
       error
@@ -418,6 +424,72 @@ export const getTermsAndConditionsPage = /* GraphQL */ `
       id
       data
       updatedAt
+      error
+    }
+  }
+`;
+export const getUserProfile = /* GraphQL */ `
+  query GetUserProfile($userId: String) {
+    getUserProfile(userId: $userId) {
+      userDetails {
+        id
+        backgroundImage
+        avatar
+        firstName
+        lastName
+        location
+        twitter
+        facebook
+        biography
+        email
+        userName
+      }
+      userBusinessProfiles {
+        id
+        companyName
+        role
+        category
+        startDate
+        endDate
+        userId
+      }
+      error
+    }
+  }
+`;
+export const getPresignedUploadUrl = /* GraphQL */ `
+  query GetPresignedUploadUrl($presignedUploadInput: PresignedUploadInput) {
+    getPresignedUploadUrl(presignedUploadInput: $presignedUploadInput)
+  }
+`;
+export const listUserConversations = /* GraphQL */ `
+  query ListUserConversations($userId: String) {
+    listUserConversations(userId: $userId) {
+      id
+      recipient
+      createdAt
+      error
+    }
+  }
+`;
+export const getConversation = /* GraphQL */ `
+  query GetConversation($id: String) {
+    getConversation(id: $id) {
+      id
+      recipients
+      createdAt
+      error
+    }
+  }
+`;
+export const listMessagesForConversation = /* GraphQL */ `
+  query ListMessagesForConversation($conversationId: String) {
+    listMessagesForConversation(conversationId: $conversationId) {
+      id
+      message
+      sender
+      conversationId
+      createdAt
       error
     }
   }

@@ -239,3 +239,47 @@ export const updateEndpoint = /* GraphQL */ `
     }
   }
 `;
+export const updateUserProfile = /* GraphQL */ `
+  mutation UpdateUserProfile(
+    $updateUserProfilePayload: UpdateUserProfileInput
+  ) {
+    updateUserProfile(updateUserProfilePayload: $updateUserProfilePayload) {
+      userProfile {
+        id
+        backgroundImage
+        avatar
+        firstName
+        lastName
+        location
+        twitter
+        facebook
+        biography
+        email
+        userName
+      }
+      error
+    }
+  }
+`;
+export const createConversation = /* GraphQL */ `
+  mutation CreateConversation($conversationPayload: ConversationInput) {
+    createConversation(conversationPayload: $conversationPayload) {
+      id
+      recipients
+      createdAt
+      error
+    }
+  }
+`;
+export const createMessage = /* GraphQL */ `
+  mutation CreateMessage($messagePayload: MessageInput) {
+    createMessage(messagePayload: $messagePayload) {
+      id
+      message
+      sender
+      conversationId
+      createdAt
+      error
+    }
+  }
+`;

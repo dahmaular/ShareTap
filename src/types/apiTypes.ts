@@ -83,6 +83,28 @@ export type PushNotificationInput = {
   body?: string | null,
 };
 
+export type UpdateUserProfileInput = {
+  id?: string | null,
+  backgroundImage?: string | null,
+  avatar?: string | null,
+  firstName?: string | null,
+  lastName?: string | null,
+  location?: string | null,
+  twitter?: string | null,
+  facebook?: string | null,
+  biography?: string | null,
+};
+
+export type ConversationInput = {
+  recipients?: Array< string | null > | null,
+};
+
+export type MessageInput = {
+  message?: string | null,
+  sender?: string | null,
+  conversationId?: string | null,
+};
+
 export type ListAllUsersInput = {
   limit?: number | null,
   isFirst?: boolean | null,
@@ -93,6 +115,11 @@ export type NextKeyInput = {
   partitionType?: string | null,
   id?: string | null,
   item?: string | null,
+};
+
+export type PresignedUploadInput = {
+  key?: string | null,
+  type?: string | null,
 };
 
 export type CreateCardMutationVariables = {
@@ -407,6 +434,61 @@ export type UpdateEndpointMutation = {
   } | null,
 };
 
+export type UpdateUserProfileMutationVariables = {
+  updateUserProfilePayload?: UpdateUserProfileInput | null,
+};
+
+export type UpdateUserProfileMutation = {
+  updateUserProfile:  {
+    __typename: "UpdateUserProfilePayload",
+    userProfile:  {
+      __typename: "User",
+      id: string,
+      backgroundImage: string | null,
+      avatar: string | null,
+      firstName: string | null,
+      lastName: string | null,
+      location: string | null,
+      twitter: string | null,
+      facebook: string | null,
+      biography: string | null,
+      email: string | null,
+      userName: string | null,
+    } | null,
+    error: string | null,
+  } | null,
+};
+
+export type CreateConversationMutationVariables = {
+  conversationPayload?: ConversationInput | null,
+};
+
+export type CreateConversationMutation = {
+  createConversation:  {
+    __typename: "Conversation",
+    id: string | null,
+    recipients: Array< string | null > | null,
+    createdAt: string | null,
+    error: string | null,
+  } | null,
+};
+
+export type CreateMessageMutationVariables = {
+  messagePayload?: MessageInput | null,
+};
+
+export type CreateMessageMutation = {
+  createMessage:  {
+    __typename: "Message",
+    id: string | null,
+    message: string | null,
+    sender: string | null,
+    conversationId: string | null,
+    createdAt: string | null,
+    error: string | null,
+  } | null,
+};
+
 export type ListReceivedCardsQueryVariables = {
   userId?: string | null,
 };
@@ -414,10 +496,6 @@ export type ListReceivedCardsQueryVariables = {
 export type ListReceivedCardsQuery = {
   listReceivedCards:  {
     __typename: "ReceivedCardsPayload",
-    cardsData:  Array< {
-      __typename: "ReceivedCardResponse",
-      alphabet: string | null,
-    } | null > | null,
     error: string | null,
   } | null,
 };
@@ -512,12 +590,15 @@ export type ListUsersWhoSharedACardQuery = {
     users:  Array< {
       __typename: "User",
       id: string,
+      backgroundImage: string | null,
+      avatar: string | null,
       firstName: string | null,
       lastName: string | null,
+      location: string | null,
+      twitter: string | null,
+      facebook: string | null,
+      biography: string | null,
       email: string | null,
-      address: string | null,
-      phoneNumber: string | null,
-      avatar: string | null,
       userName: string | null,
     } | null > | null,
     error: string | null,
@@ -534,12 +615,15 @@ export type ListReceiversFromUserQuery = {
     users:  Array< {
       __typename: "User",
       id: string,
+      backgroundImage: string | null,
+      avatar: string | null,
       firstName: string | null,
       lastName: string | null,
+      location: string | null,
+      twitter: string | null,
+      facebook: string | null,
+      biography: string | null,
       email: string | null,
-      address: string | null,
-      phoneNumber: string | null,
-      avatar: string | null,
       userName: string | null,
     } | null > | null,
     error: string | null,
@@ -556,12 +640,15 @@ export type ListSendersToUserQuery = {
     users:  Array< {
       __typename: "User",
       id: string,
+      backgroundImage: string | null,
+      avatar: string | null,
       firstName: string | null,
       lastName: string | null,
+      location: string | null,
+      twitter: string | null,
+      facebook: string | null,
+      biography: string | null,
       email: string | null,
-      address: string | null,
-      phoneNumber: string | null,
-      avatar: string | null,
       userName: string | null,
     } | null > | null,
     error: string | null,
@@ -916,6 +1003,119 @@ export type GetTermsAndConditionsPageQuery = {
     id: string | null,
     data: string | null,
     updatedAt: string | null,
+    error: string | null,
+  } | null,
+};
+
+export type GetUserProfileQueryVariables = {
+  userId?: string | null,
+};
+
+export type GetUserProfileQuery = {
+  getUserProfile:  {
+    __typename: "UserProfilePayload",
+    userDetails:  {
+      __typename: "User",
+      id: string,
+      backgroundImage: string | null,
+      avatar: string | null,
+      firstName: string | null,
+      lastName: string | null,
+      location: string | null,
+      twitter: string | null,
+      facebook: string | null,
+      biography: string | null,
+      email: string | null,
+      userName: string | null,
+    } | null,
+    userBusinessProfiles:  Array< {
+      __typename: "BusinessProfile",
+      id: string | null,
+      companyName: string | null,
+      role: string | null,
+      category: string | null,
+      startDate: string | null,
+      endDate: string | null,
+      userId: string | null,
+    } | null > | null,
+    error: string | null,
+  } | null,
+};
+
+export type GetPresignedUploadUrlQueryVariables = {
+  presignedUploadInput?: PresignedUploadInput | null,
+};
+
+export type GetPresignedUploadUrlQuery = {
+  getPresignedUploadUrl: string | null,
+};
+
+export type ListUserConversationsQueryVariables = {
+  userId?: string | null,
+};
+
+export type ListUserConversationsQuery = {
+  listUserConversations:  Array< {
+    __typename: "UserConversation",
+    id: string | null,
+    recipient: string | null,
+    createdAt: string | null,
+    error: string | null,
+  } | null > | null,
+};
+
+export type GetConversationQueryVariables = {
+  id?: string | null,
+};
+
+export type GetConversationQuery = {
+  getConversation:  {
+    __typename: "Conversation",
+    id: string | null,
+    recipients: Array< string | null > | null,
+    createdAt: string | null,
+    error: string | null,
+  } | null,
+};
+
+export type ListMessagesForConversationQueryVariables = {
+  conversationId?: string | null,
+};
+
+export type ListMessagesForConversationQuery = {
+  listMessagesForConversation:  Array< {
+    __typename: "Message",
+    id: string | null,
+    message: string | null,
+    sender: string | null,
+    conversationId: string | null,
+    createdAt: string | null,
+    error: string | null,
+  } | null > | null,
+};
+
+export type OnCreateConversationSubscription = {
+  onCreateConversation:  {
+    __typename: "Conversation",
+    id: string | null,
+    recipients: Array< string | null > | null,
+    createdAt: string | null,
+    error: string | null,
+  } | null,
+};
+
+export type OnCreateMessageByConversationIdSubscriptionVariables = {
+  conversationId?: string | null,
+};
+
+export type OnCreateMessageByConversationIdSubscription = {
+  onCreateMessageByConversationId:  {
+    __typename: "Message",
+    id: string | null,
+    message: string | null,
+    sender: string | null,
+    conversationId: string | null,
+    createdAt: string | null,
     error: string | null,
   } | null,
 };
