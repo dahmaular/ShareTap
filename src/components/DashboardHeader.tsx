@@ -4,21 +4,17 @@ import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 interface HeaderProps {
   leftSvg: any;
-  rightSvg: any;
   title: string;
   bgColor: string;
   titleColor: string;
-  rightOnPress: () => void;
   leftOnPress: () => void;
 }
 
-const Header: FC<HeaderProps> = ({
+const DashboardHeader: FC<HeaderProps> = ({
   leftSvg,
-  rightSvg,
   title,
   bgColor,
   titleColor,
-  rightOnPress,
   leftOnPress,
 }) => {
   return (
@@ -30,15 +26,11 @@ const Header: FC<HeaderProps> = ({
       <View>
         <Text style={{...styles.title, color: titleColor}}>{title}</Text>
       </View>
-
-      <TouchableOpacity onPress={() => rightOnPress()}>
-        {rightSvg}
-      </TouchableOpacity>
     </View>
   );
 };
 
-export default Header;
+export default DashboardHeader;
 
 const styles = StyleSheet.create({
   header: {
@@ -46,7 +38,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: 85,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     paddingHorizontal: 15,
   },
 
@@ -55,5 +47,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontStyle: 'normal',
     fontFamily: 'Poppins',
+    marginLeft: 10,
   },
 });

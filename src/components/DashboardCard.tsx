@@ -29,7 +29,13 @@ export interface CardProps {
   pan: any;
 }
 
-const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
+const DashboardCard = ({
+  item,
+  index,
+  boxWidth,
+  halfBoxDistance,
+  pan,
+}: CardProps) => {
   const [visible, setVisible] = React.useState(false);
 
   const userId = 2;
@@ -86,19 +92,19 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
     <Animated.View
       style={{
         ...styles.animatedCard,
-        transform: [
-          {
-            scale: pan.x.interpolate({
-              inputRange: [
-                (index - 1) * boxWidth - halfBoxDistance,
-                index * boxWidth - halfBoxDistance,
-                (index + 1) * boxWidth - halfBoxDistance, // adjust positioning
-              ],
-              outputRange: [0.8, 1, 0.8], // scale down when out of scope
-              extrapolate: 'clamp',
-            }),
-          },
-        ],
+        // transform: [
+        //   {
+        //     scale: pan.x.interpolate({
+        //       inputRange: [
+        //         (index - 1) * boxWidth - halfBoxDistance,
+        //         index * boxWidth - halfBoxDistance,
+        //         (index + 1) * boxWidth - halfBoxDistance, // adjust positioning
+        //       ],
+        //       outputRange: [0.8, 1, 0.8], // scale down when out of scope
+        //       extrapolate: 'clamp',
+        //     }),
+        //   },
+        // ],
       }}>
       <Menu
         visible={visible}
@@ -106,7 +112,7 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
         style={styles.menu}
         anchor={
           <TouchableOpacity
-            style={{...styles.touchable, width: boxWidth}}
+            style={{...styles.touchable, width: width / 2.5}}
             onLongPress={openMenu}>
             <Text style={styles.name}>{item.cardDetails.name}</Text>
             <Text style={styles.profession}>{item.cardDetails.role}</Text>
@@ -118,35 +124,35 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
 
               <View style={styles.rowCenter}>
                 <TouchableOpacity
-                  style={{marginRight: 10}}
+                  style={{marginRight: 5}}
                   onPress={() =>
                     Linking.openURL(item.cardDetails.website as string)
                   }>
-                  <Link />
+                  <Link width={10} height={10} />
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={{marginRight: 10}}
+                  style={{marginRight: 5}}
                   onPress={() =>
                     Linking.openURL(item.cardDetails.facebook as string)
                   }>
-                  <Facebook />
+                  <Facebook width={10} height={10} />
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={{marginRight: 10}}
+                  style={{marginRight: 5}}
                   onPress={() =>
                     Linking.openURL(item.cardDetails.twitter as string)
                   }>
-                  <Twitter />
+                  <Twitter width={10} height={10} />
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={{marginRight: 10}}
+                  style={{marginRight: 5}}
                   onPress={() =>
                     Linking.openURL(item.cardDetails.linkedIn as string)
                   }>
-                  <LinkedIn />
+                  <LinkedIn width={10} height={10} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -155,7 +161,7 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
         <Menu.Item
           titleStyle={styles.text}
           onPress={() => onShare()}
-          title="Share"
+          title="Recipients"
         />
         <Menu.Item titleStyle={styles.text} onPress={() => {}} title="Edit" />
         <Menu.Item
@@ -173,22 +179,25 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
   );
 };
 
-export default Card;
+export default DashboardCard;
 
 const styles = StyleSheet.create({
   animatedCard: {
-    height: 191,
-    width: width,
+    flex: 1 / 2,
+    // height: 191,
+    width: width / 2.5,
     borderWidth: 1,
     borderColor: 'rgba(49, 111, 138, 0.16)',
     backgroundColor: '#FFFFFF',
-    marginRight: -25,
+    // marginRight: 15,
+    alignItems: 'center',
+    marginBottom: 20,
   },
 
   touchable: {
-    height: 184,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+    height: 104,
+    // paddingHorizontal: 20,
+    paddingVertical: 5,
     justifyContent: 'space-between',
   },
 
@@ -202,18 +211,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  rowCenter: {flexDirection: 'row', alignItems: 'center'},
+  rowCenter: {flexDirection: 'row', alignItems: 'center', position: 'relative'},
 
   name: {
     fontFamily: 'Poppins',
-    fontSize: 15,
+    fontSize: 10,
     fontStyle: 'normal',
-    fontWeight: '600',
+    fontWeight: 'bold',
     color: '#219653',
   },
   profession: {
     fontFamily: 'Poppins',
-    fontSize: 13,
+    fontSize: 9,
     fontStyle: 'normal',
     fontWeight: '300',
     color: '#cccccc',
@@ -221,7 +230,7 @@ const styles = StyleSheet.create({
 
   email: {
     fontFamily: 'Poppins',
-    fontSize: 12,
+    fontSize: 9,
     fontStyle: 'normal',
     fontWeight: 'normal',
     color: '#333333',
@@ -229,7 +238,7 @@ const styles = StyleSheet.create({
 
   telephone: {
     fontFamily: 'Poppins',
-    fontSize: 11,
+    fontSize: 9,
     fontStyle: 'normal',
     fontWeight: 'normal',
     color: '#333333',

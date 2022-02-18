@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */ /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
@@ -31,7 +32,9 @@ const ReminderModal = ({
 
   const [reminder, setreminder] = useState({value: '', error: ''});
   const [reminderFocus, setreminderFocus] = useState(false);
-  const [selectDate, setSelectedDate] = useState(Moment(new Date()).format('lll'));
+  const [selectDate, setSelectedDate] = useState(
+    Moment(new Date()).format('lll'),
+  );
 
   const validateFields = () => {};
 
@@ -83,8 +86,8 @@ const ReminderModal = ({
             placeholder="Select Date"
             dateValue={Moment(selectDate).format('lll')}
             onValueChange={(itemValue: any) => {
-              console.log({itemValue})
-              setSelectedDate(itemValue)
+              console.log({itemValue});
+              setSelectedDate(itemValue);
             }}
           />
         </View>

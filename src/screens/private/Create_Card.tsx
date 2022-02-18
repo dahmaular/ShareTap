@@ -18,6 +18,7 @@ import {
 import Modal from 'react-native-modal';
 import TextInputs from '../../components/TextInput';
 import {TextInput} from 'react-native-paper';
+import SelectDropdown from 'react-native-select-dropdown';
 
 import LottieView from 'lottie-react-native';
 import Header from '../../components/Header';
@@ -61,6 +62,11 @@ const deviceHeight = Dimensions.get('window').height;
 let id: number;
 let template: any;
 
+interface profileProps {
+  label: string;
+  value: string;
+}
+
 const social = {
   websiteIcon: '',
   twitterIcon: '',
@@ -82,10 +88,11 @@ const cardDetails = [
   },
 ];
 
-const CreateCard = ({navigation}) => {
+const CreateCard = ({navigation}: any) => {
   const animation = useRef<LottieView>(null);
   const [positionModal, setPositionModal] = useState(true);
   const [templateModal, setTemplateModal] = useState(false);
+  const [showDraft, setShowDraft] = useState(false);
   const [position, setPosition] = useState('');
   const [editCard, setEditCard] = useState(false);
   const [socialModal, setSocialModal] = useState(false);
@@ -109,6 +116,7 @@ const CreateCard = ({navigation}) => {
   const [linkedInFocus, setLinkedInFocus] = useState(false);
   const [userId, setUserId] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [businessProfile, setBusinessProfile] = useState<profileProps[]>([]);
 
   useEffect(() => {
     getUserIdService()
@@ -129,8 +137,19 @@ const CreateCard = ({navigation}) => {
   }, []);
 
   useEffect(() => {
+    listUserBusinessProfilesService(userId).then(bizProf => {
+      // roles.push(bizProf.data?.businessProfiles);
+      const warefa: any = bizProf.data?.businessProfiles?.map((item, i) => {
+        return {
+          label: item?.role,
+          value: item?.role,
+        };
+      });
+      setBusinessProfile(warefa);
+    });
+    console.log('Bis profile', businessProfile);
     // cardTemplateService;
-  }, []);
+  }, [userId]);
 
   const cardTemplateService = async () => {
     const data = {
@@ -217,26 +236,54 @@ const CreateCard = ({navigation}) => {
                   value: null,
                   color: '#8C8C8C',
                 }}
-                items={[
-                  {label: 'Ux Designer', value: 'Ux Designer'},
-                  {label: 'Engineer', value: 'Engineer'},
-                  {label: 'NFT Artist', value: 'NFT Artist'},
-                ]}
+                // items={[
+                //   {
+                //     label: 'UX Designer',
+                //     value: 'UX Designer',
+                //   },
+                //   {label: 'Agric', value: 'Agric'},
+                // ]}
+                items={businessProfile ? businessProfile : []}
+                // value={position}
+                useNativeAndroidPickerStyle={false}
+                style={{
+                  ...pickerSelectStyles,
+                  iconContainer: {
+                    top: 10,
+                    right: 12,
+                  },
+                }}
+                Icon={() => {
+                  return (
+                    <View
+                      style={{
+                        marginTop: 10,
+                      }}>
+                      <AngleDown width={12} height={12} />
+                    </View>
+                  );
+                }}
               />
             </View>
 
             {/* <View style={styles.searchErrorLottie} /> */}
           </View>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => {
-              if (position !== '') {
+          {position === '' || position === null ? (
+            <TouchableOpacity style={styles.modalButtonInactive}>
+              <Text style={styles.modalBtnText}>CONTINUE</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => {
+                // if (position !== '') {
                 setPositionModal(false);
                 setTemplateModal(true);
-              }
-            }}>
-            <Text style={styles.modalBtnText}>CONTINUE</Text>
-          </TouchableOpacity>
+                // }
+              }}>
+              <Text style={styles.modalBtnText}>CONTINUE</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </Modal>
     );
@@ -452,18 +499,20 @@ const CreateCard = ({navigation}) => {
             }}
             style={styles.socialInputs}
           />
-          <TouchableOpacity
-            style={
-              website.value !== '' ||
-              twitter.value !== '' ||
-              facebook.value !== '' ||
-              linkedIn.value !== ''
-                ? styles.modalButton
-                : styles.modalButtonInactive
-            }
-            onPress={() => submitSocial()}>
-            <Text style={styles.modalBtnText}>CONTINUE</Text>
-          </TouchableOpacity>
+          {website.value !== '' ||
+          twitter.value !== '' ||
+          facebook.value !== '' ||
+          linkedIn.value !== '' ? (
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => submitSocial()}>
+              <Text style={styles.modalBtnText}>CONTINUE</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.modalButtonInactive}>
+              <Text style={styles.modalBtnText}>CONTINUE</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </Modal>
     );
@@ -560,15 +609,67 @@ const CreateCard = ({navigation}) => {
     );
   };
 
+  const draftModal = () => {
+    return (
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.bottomModal}
+        isVisible={showDraft}
+        onBackdropPress={() => setShowDraft(false)}
+        onBackButtonPress={() => setShowDraft(false)}>
+        <TouchableOpacity
+          onPress={() => setShowDraft(false)}
+          style={styles.modalCloseBtn}>
+          <Close />
+        </TouchableOpacity>
+        <View style={styles.draftModal}>
+          <View style={styles.modalContentWrap}>
+            <View style={{marginTop: 23}}>
+              <Text style={styles.modalTitle}>Drafts</Text>
+            </View>
+            <View style={{flexDirection: 'row', marginTop: 20}}>
+              <TouchableOpacity
+                style={{
+                  ...styles.template1,
+                  borderBottomColor: template[4].borderBottomColor,
+                }}
+                onPress={() => {
+                  setTemplateModal(false);
+                  setEditCard(true);
+                  id = 1;
+                  cardDetails[0].cardTemplateId = template[4].id;
+                }}>
+                {/* <View style={styles.bottomLine} /> */}
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  ...styles.template1,
+                  borderBottomColor: template[1].borderBottomColor,
+                }}
+                onPress={() => {
+                  setTemplateModal(false);
+                  setEditCard(true);
+                  id = 2;
+                  cardDetails[0].cardTemplateId = template[1].id;
+                }}>
+                {/* <View style={styles.bottomLine2} /> */}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
   return (
-    // <KeyboardAvoidingView behavior="padding" style={styles.container}>
-    //   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={{flex: 1}}>
       {positionModal && selectPositionModal()}
       {templateModal && selectTemplateModal()}
       {socialModal && socialLinkModal()}
       {textEditor && textEditorModal()}
       {cardSuccess && cardSuccessModal()}
+      {showDraft && draftModal()}
       <CreateCardHeader
         bgColor="#316F8A"
         leftSvg={<Back />}
@@ -634,19 +735,51 @@ const CreateCard = ({navigation}) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.iconContainer}
-            onPress={() => setCardSuccess(true)}>
+            onPress={() => setShowDraft(true)}>
             <Draft width={20} height={20} />
             <Text style={styles.bottomText}>Draft</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
     </View>
-    //   </TouchableWithoutFeedback>
-    // </KeyboardAvoidingView>
   );
 };
 
 export default CreateCard;
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 14,
+    paddingVertical: 8,
+    color: '#000000',
+    paddingRight: 30, // to ensure the text is never behind the icon
+    width: '100%',
+
+    height: 55,
+    borderWidth: 1,
+    borderColor: '#E0E6DD',
+    backgroundColor: '#FFFFFF',
+    // borderRadius: 10,
+    paddingHorizontal: 20,
+  },
+  inputAndroid: {
+    fontSize: 14,
+    paddingVertical: 8,
+    color: '#000000',
+    paddingRight: 30, // to ensure the text is never behind the icon
+    width: '100%',
+
+    height: 55,
+    borderWidth: 1,
+    borderColor: '#E0E6DD',
+    backgroundColor: '#FFFFFF',
+    // borderRadius: 10,
+    paddingHorizontal: 20,
+  },
+  placeholder: {
+    color: '#C7C9C7',
+  },
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -710,6 +843,14 @@ const styles = StyleSheet.create({
   modal: {
     width: '100%',
     height: 300,
+    backgroundColor: '#FFFFFF',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+  },
+
+  draftModal: {
+    width: '100%',
+    height: 200,
     backgroundColor: '#FFFFFF',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,

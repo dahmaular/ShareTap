@@ -7,6 +7,7 @@ import {AuthenticatedRoutesParamsList} from '../types';
 import Search from '../screens/private/Search';
 import Rolodex from '../screens/private/Rolodex';
 import CreateCard from '../screens/private/Create_Card';
+import Dashboard from '../screens/private/Dashboard';
 
 const Drawer = createDrawerNavigator<AuthenticatedRoutesParamsList>();
 
@@ -35,6 +36,12 @@ export default function AuthenticatedRoutes() {
       <Drawer.Screen
         name="CreateCard"
         component={CreateCard}
+        options={{headerShown: false}}
+      />
+
+      <Drawer.Screen
+        name="Dashboard"
+        component={Dashboard}
         options={{headerShown: false}}
       />
     </Drawer.Navigator>

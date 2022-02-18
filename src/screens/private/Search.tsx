@@ -77,7 +77,7 @@ const Search = ({route}: any) => {
 
   const [server, setServer] = useState(null);
   const [chats, setChats] = useState([]);
-  const [card, setCard] = useState([]);
+  const [card, setCard] = useState<any>([]);
   const [ip, setIp] = useState('');
   const [start, setStart] = useState<boolean>(false);
 
@@ -93,11 +93,11 @@ const Search = ({route}: any) => {
     if (route.params) {
       const {cardd} = route.params;
       card.push(cardd);
-      // console.log('This is the card details', card);
+      console.log('This is the card details', card);
     }
   }, []);
 
-  const createServer = (card, setCard) => {
+  const createServer = (card: any, setCard: any) => {
     const server = TcpSocket.createServer(socket => {
       console.log('server connected on ' + socket.address().address);
 
@@ -134,7 +134,7 @@ const Search = ({route}: any) => {
     return server;
   };
 
-  const createClient = ip => {
+  const createClient = (ip: any) => {
     const client = TcpSocket.createConnection({port: 6666, host: ip}, () => {
       console.log('opened client on ' + JSON.stringify(client.address()));
       // client.write('Hello, server! Love, Client.');

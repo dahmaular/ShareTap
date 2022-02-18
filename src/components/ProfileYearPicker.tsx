@@ -4,7 +4,7 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import DownArrow from '../assets/svg/caret-down-icon.svg';
 import Moment from 'moment';
-const DateSelect = (props: any) => {
+const YearSelect = (props: any) => {
   const [pickerMode, setPickerMode] = useState<any>(null);
   const [dateNow, setDateNow] = useState(
     new Date(props.dateValue || undefined),
@@ -12,7 +12,7 @@ const DateSelect = (props: any) => {
   const [display, setDisplay] = useState(null);
 
   const showDatePicker = () => {
-    setPickerMode('datetime');
+    setPickerMode('date');
   };
 
   const hidePicker = () => {
@@ -29,7 +29,7 @@ const DateSelect = (props: any) => {
     }-${newDate.getDate()}`;
     setDateNow(date);
     setDisplay(newDate);
-    props.onValueChange(Moment(date).format('lll'));
+    props.onValueChange(Moment(date).format('l'));
   };
 
   return (
@@ -84,4 +84,4 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
   },
 });
-export default DateSelect;
+export default YearSelect;

@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable no-empty */ /* eslint-disable prettier/prettier */
 import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -8,10 +8,15 @@ import {
   View,
   Dimensions,
   ScrollView,
+  Image,
+  ActivityIndicator,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import Photo from '../../assets/svg/photo-camera.svg';
+import Gallery from '../../assets/svg/image-gallery.svg';
 import {
   AuthenticatedRoutesParamsList,
   TabNavigatorParamsList,
@@ -29,44 +34,378 @@ import Facebook from '../../assets/svg/facebook.svg';
 import TapLogo from '../../assets/svg/Tapiolla-Full-Icon.svg';
 import Close from '../../assets/svg/phone-verif-close-icon.svg';
 import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../../core/color';
+import DateSelect from '../../components/DatePicker';
+import moment, {now} from 'moment';
+import YearSelect from '../../components/ProfileYearPicker';
+import {
+  createUserBusinessProfile,
+  getPresignedUrlUploadService,
+  getUserIdService,
+  getUserProfileService,
+  listUserBusinessProfilesService,
+  listUserCardsService,
+  updateUserProfileService,
+} from '../../services/userService';
+import {userSlice} from '../../selectors';
+import {Avatar} from 'react-native-paper';
+import {CameraOptions, ImageLibraryOptions} from '../../types/imageTypes';
+import {getS3presignedURL, uploadImageNew} from '../../services/storageService';
+
+const DEFAULT_OPTIONS: ImageLibraryOptions & CameraOptions = {
+  mediaType: 'photo',
+  quality: 0.5,
+  maxWidth: 500,
+  maxHeight: 500,
+  includeBase64: true,
+  cameraType: 'back',
+  saveToPhotos: false,
+};
 
 type Props = {
   navigation: CompositeNavigationProp<
-    StackNavigationProp<TabNavigatorParamsList, 'Home'>,
+    StackNavigationProp<TabNavigatorParamsList, 'Profile'>,
     StackNavigationProp<AuthenticatedRoutesParamsList>
   >;
 };
 
 const {width, height} = Dimensions.get('screen');
+let imgeBgUrl: string | null | undefined;
+let avatarUrl: string | null | undefined;
+
+interface profilePictureProps {
+  uri: string | undefined;
+  type: string | undefined;
+}
 
 const Profile = ({navigation}: Props) => {
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [businessProfile, setBusinessProfile] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAv, setIsLoadingAv] = useState(false);
+  const [isLoadingBg, setIsLoadingBg] = useState(false);
+  const [userCards, setUserCards] = useState<any>([]);
+  const [url, setUrl] = useState('');
+  const [userId, setUserId] = useState('');
   const [profileModal, setProfileModal] = useState(false);
+  const [twitterModal, setTwitterModal] = useState(false);
+  const [facebookModal, setFacebookModal] = useState(false);
   const [role, setRole] = useState({value: '', error: ''});
+  const [twitter, setTwitter] = useState({value: '', error: ''});
+  const [facebook, setFacebook] = useState({value: '', error: ''});
   const [organisation, setOrganisation] = useState({value: '', error: ''});
+  const [bgImage, setBgImage] = useState({
+    value: '',
+    error: '',
+  });
+  const [avatar, setAvatar] = useState({value: '', error: ''});
+  const [biography, setBiography] = useState({value: '', error: ''});
+  const [firstName, setFirstName] = useState({value: '', error: ''});
+  const [lName, setLName] = useState({value: '', error: ''});
+  const [location, setLocation] = useState({value: '', error: ''});
+  const [selectStartDate, setSelectedStartDate] = useState(
+    moment(new Date()).format('l'),
+  );
+  const [selectEndDate, setSelectedEndDate] = useState(
+    moment(new Date()).format('l'),
+  );
+  const [pickerModal, setPickerModal] = useState(false);
+  const [avatarModal, setAvatarModal] = useState(false);
+  const [imageDefault, setImageDefault] = useState('');
+  const [defaultAvatar, setDefaultAvatar] = useState('');
+
+  useEffect(() => {
+    getUserIdService()
+      .then(id => {
+        console.log('Id is here', id);
+        setUserId(id);
+      })
+      .catch(e => console.log(e));
+  }, []);
+
+  const getProfile = (id: any) => {
+    getUserProfileService(id).then(profil => {
+      // console.log('User profile', profil.data.getUserProfile?.userDetails);
+      setUserProfile(profil.data.getUserProfile?.userDetails);
+      setBusinessProfile(profil.data.getUserProfile?.userBusinessProfiles);
+    });
+  };
+
+  useEffect(() => {
+    getProfile(userId);
+  }, [userId]);
+
+  const getUserCards = (id: any) => {
+    listUserCardsService(id)
+      .then(card => {
+        setUserCards(card.data.listUserCards?.cards);
+      })
+      .catch(e => console.log(e));
+  };
+
+  useEffect(() => {
+    getUserCards(userId);
+  }, [userId]);
+
   const dispatch = useDispatch();
+
+  const onPress = (type: any) => {
+    setPickerModal(false);
+    type === 'capture'
+      ? launchCamera(DEFAULT_OPTIONS, async response => {
+          if (response.didCancel) {
+          } else if (response.errorCode) {
+          } else {
+            const fileObj: profilePictureProps = {
+              uri: response.assets[0].uri,
+              type: response.assets[0].type,
+            };
+            await handleImageUpload(fileObj);
+          }
+        })
+      : launchImageLibrary(DEFAULT_OPTIONS, async response => {
+          if (response.didCancel) {
+          } else if (response.errorCode) {
+          } else {
+            const fileObj: profilePictureProps = {
+              uri: response.assets[0].uri,
+              type: response.assets[0].type,
+            };
+            await handleImageUpload(fileObj);
+          }
+        });
+  };
+
+  const onPressAvatar = (type: any) => {
+    setAvatarModal(false);
+    type === 'capture'
+      ? launchCamera(DEFAULT_OPTIONS, async response => {
+          if (response.didCancel) {
+          } else if (response.errorCode) {
+          } else {
+            const fileObj: profilePictureProps = {
+              uri: response.assets[0].uri,
+              type: response.assets[0].type,
+            };
+            await handleImageUploadAvatar(fileObj);
+          }
+        })
+      : launchImageLibrary(DEFAULT_OPTIONS, async response => {
+          if (response.didCancel) {
+          } else if (response.errorCode) {
+          } else {
+            const fileObj: profilePictureProps = {
+              uri: response.assets[0].uri,
+              type: response.assets[0].type,
+            };
+            await handleImageUploadAvatar(fileObj);
+          }
+        });
+  };
+
+  const handleImageUpload = async (file: profilePictureProps) => {
+    // console.log('File object here', file);
+    setIsLoadingBg(true);
+    const data = {
+      key: new Date().getTime().toString(),
+      type: file.type.replace('image/', ''),
+    };
+
+    const uploadPresignedUrl: any = await getS3presignedURL(data);
+    const upload = {
+      uri: file.uri,
+    };
+
+    const imageUrl = await uploadImageNew(
+      uploadPresignedUrl,
+      upload.uri,
+      file.type,
+    );
+    const imageStr = `${imageUrl.url.split('?')[0]}`;
+    setImageDefault(imageStr);
+    imgeBgUrl = imageStr;
+    onSubmit();
+  };
+
+  const handleImageUploadAvatar = async (file: profilePictureProps) => {
+    // console.log('File object here', file);
+    setIsLoadingAv(true);
+    const data = {
+      key: new Date().getTime().toString(),
+      type: file.type.replace('image/', ''),
+    };
+
+    const uploadPresignedUrl: any = await getS3presignedURL(data);
+    const upload = {
+      uri: file.uri,
+    };
+
+    const imageUrl = await uploadImageNew(
+      uploadPresignedUrl,
+      upload.uri,
+      file.type,
+    );
+    const imageStr = `${imageUrl.url.split('?')[0]}`;
+    avatarUrl = imageStr;
+    onSubmit();
+  };
+
+  const launchCameraModal = () => {
+    return (
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.bottomModal}
+        isVisible={pickerModal}
+        onBackdropPress={() => setPickerModal(false)}
+        onBackButtonPress={() => setPickerModal(false)}>
+        <View style={styles.modal}>
+          <View style={styles.cameraGallery}>
+            <TouchableOpacity
+              style={styles.centerColumn}
+              onPress={() => onPress('library')}>
+              <Gallery width={40} height={30} />
+              <Text style={styles.textCam}>Library</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => onPress('capture')}
+              style={styles.centerColumn}>
+              <Photo width={40} height={30} />
+              <Text style={styles.textCam}>Camera</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
+  const launchAvatarModal = () => {
+    return (
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.bottomModal}
+        isVisible={avatarModal}
+        onBackdropPress={() => setAvatarModal(false)}
+        onBackButtonPress={() => setAvatarModal(false)}>
+        <View style={styles.modal}>
+          <View style={styles.cameraGallery}>
+            <TouchableOpacity
+              style={styles.centerColumn}
+              onPress={() => onPressAvatar('library')}>
+              <Gallery width={40} height={30} />
+              <Text style={styles.textCam}>Library</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => onPressAvatar('capture')}
+              style={styles.centerColumn}>
+              <Photo width={40} height={30} />
+              <Text style={styles.textCam}>Camera</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
+  const chooseFile = () => {
+    setPickerModal(true);
+  };
+
+  const chooseAvatar = () => {
+    setAvatarModal(true);
+  };
+
+  const submitProfile = async () => {
+    setIsLoading(true);
+    const data = {
+      companyName: organisation.value,
+      role: role.value,
+      category: 'Health',
+      startDate: selectStartDate,
+      endDate: selectEndDate,
+      userId: userId,
+    };
+    console.log('profile data', data);
+    await createUserBusinessProfile(data).then(res => {
+      // console.log(res.data);
+      getProfile(userId);
+      setIsLoading(false);
+      setProfileModal(false);
+      setRole({value: '', error: ''});
+      setOrganisation({value: '', error: ''});
+    });
+  };
+
+  const onSubmit = async () => {
+    setIsLoading(true);
+    const data = {
+      id: userId,
+      backgroundImage: !imgeBgUrl ? userProfile.backgroundImage : imgeBgUrl,
+      avatar: !avatarUrl ? userProfile.avatar : avatarUrl,
+      firstName: !firstName.value ? userProfile?.firstName : firstName.value,
+      lastName: !lName.value ? userProfile.lastName : lName.value,
+      location: !location.value ? userProfile?.location : location.value,
+      twitter: !twitter.value ? userProfile?.twitter : twitter.value,
+      facebook: !facebook.value ? userProfile?.facebook : facebook.value,
+      biography: !biography.value ? userProfile?.biography : biography.value,
+    };
+    // console.log('profile data', data);
+    await updateUserProfileService(data).then(res => {
+      console.log(res.data);
+      getProfile(userId);
+      setIsLoading(false);
+      setIsLoadingAv(false);
+      setIsLoadingBg(false);
+      setTwitterModal(false);
+      setFacebookModal(false);
+    });
+  };
 
   const UserProfile = () => {
     return (
       <>
-        <View style={styles.userProfile}>
-          <View style={styles.profileRole}>
-            <TapLogo style={styles.logo} />
-            <View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={styles.roleText}>UX Designer</Text>
-                <Text style={styles.roleCardNo}>2 cards</Text>
+        {businessProfile?.map((item: any, index: number) => {
+          const sep = item.startDate.split('/');
+          const startYear = sep[2];
+          const splt = item.endDate.split('/');
+          const endYear = splt[2];
+          const result = userCards.filter(
+            (uc: any) => uc.cardDetails.role === item?.role,
+          );
+          console.log('No of cards', result);
+          return (
+            <>
+              <View style={styles.userProfile}>
+                <View style={styles.profileRole}>
+                  <TapLogo style={styles.logo} />
+                  <View>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Text style={styles.roleText}>{item.role}</Text>
+                      <Text style={styles.roleCardNo}>
+                        {result?.length +
+                          `${result?.length > 1 ? ' cards' : ' card'}`}
+                      </Text>
+                    </View>
+                    <Text style={styles.POrganText}>{item.companyName}</Text>
+                    <Text style={styles.POrganText}>
+                      {startYear}-{endYear}
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.btnView}>
+                  <TouchableOpacity
+                    style={styles.addCardBtn}
+                    onPress={() => navigation.navigate('CreateCard')}>
+                    <Text style={styles.profileBtnText}>Add card</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <Text style={styles.POrganText}>Tapiolla</Text>
-              <Text style={styles.POrganText}>2015-2021</Text>
-            </View>
-          </View>
-          <View>
-            <TouchableOpacity style={styles.addCardBtn}>
-              <Text style={styles.profileBtnText}>Add card</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.line}></View>
+              <View style={styles.line}></View>
+            </>
+          );
+        })}
       </>
     );
   };
@@ -120,24 +459,225 @@ const Profile = ({navigation}: Props) => {
             }}
             style={styles.socialInputs}
           />
+          <View style={styles.dateView}>
+            <View style={styles.startDate}>
+              <Text style={styles.dateText}>Start Date</Text>
+              <YearSelect
+                name="doe"
+                placeholder="Start date"
+                dateValue={moment(selectStartDate).format('l')}
+                onValueChange={(itemValue: any) => {
+                  console.log('start year', {itemValue});
+                  setSelectedStartDate(itemValue);
+                }}
+              />
+            </View>
+            <View style={styles.endDate}>
+              <Text style={styles.dateText}>Present</Text>
+              <YearSelect
+                name="doe"
+                placeholder="Present"
+                dateValue={moment(selectEndDate).format('l')}
+                onValueChange={(itemValue: any) => {
+                  console.log('present', {itemValue});
+                  setSelectedEndDate(itemValue);
+                }}
+              />
+            </View>
+          </View>
+          {role.value === '' || organisation.value === '' ? (
+            <TouchableOpacity style={styles.modalButtonInactive}>
+              <Text style={styles.modalBtnText}>CONFIRM</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => submitProfile()}>
+              {isLoading ? (
+                <ActivityIndicator
+                  size={'small'}
+                  color={'white'}
+                  animating={true}
+                />
+              ) : (
+                <Text style={styles.modalBtnText}>CONFIRM</Text>
+              )}
+            </TouchableOpacity>
+          )}
+        </View>
+      </Modal>
+    );
+  };
+
+  const addTwitterModal = () => {
+    return (
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.resultsBottomModal}
+        isVisible={twitterModal}
+        onBackdropPress={() => setTwitterModal(false)}
+        onBackButtonPress={() => setTwitterModal(false)}>
+        <TouchableOpacity
+          onPress={() => setTwitterModal(false)}
+          style={styles.modalCloseBtn}>
+          <Close />
+        </TouchableOpacity>
+        <View style={styles.socialModalBody}>
+          <View style={styles.modalHeader}>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.searchResultText}>Link your Twitter </Text>
+            </View>
+
+            <View style={{marginTop: 10}}>
+              <Text style={styles.searchResultNoteSocial}>
+                Link your Twitter profile to easily find people you follow on
+                Tapiolla
+              </Text>
+            </View>
+          </View>
+          <TextInputs
+            label="Twitter Handle"
+            placeholderTextColor="rgba(90, 89, 89, 0.55)"
+            placeholder="Twitter Handle"
+            autoCapitalize="none"
+            value={twitter.value}
+            // onFocus={() => setWebsiteFocus(true)}
+            onChangeText={text => {
+              setTwitter({value: text, error: ''});
+            }}
+            style={styles.socialInputs}
+          />
+
           <TouchableOpacity
             style={
-              role.value !== '' || organisation.value !== ''
+              twitter.value !== ''
                 ? styles.modalButton
                 : styles.modalButtonInactive
             }
-            // onPress={() => submitSocial()}
-          >
-            <Text style={styles.modalBtnText}>CONFIRM</Text>
+            onPress={() => onSubmit()}>
+            {isLoading ? (
+              <ActivityIndicator
+                size={'small'}
+                color={'white'}
+                animating={true}
+              />
+            ) : (
+              <Text style={styles.modalBtnText}>LINK FACEBOOK</Text>
+            )}
           </TouchableOpacity>
         </View>
       </Modal>
     );
   };
 
+  const addFacebookModal = () => {
+    return (
+      <Modal
+        avoidKeyboard
+        propagateSwipe={true}
+        style={styles.resultsBottomModal}
+        isVisible={facebookModal}
+        onBackdropPress={() => setFacebookModal(false)}
+        onBackButtonPress={() => setFacebookModal(false)}>
+        <TouchableOpacity
+          onPress={() => setFacebookModal(false)}
+          style={styles.modalCloseBtn}>
+          <Close />
+        </TouchableOpacity>
+        <View style={styles.socialModalBody}>
+          <View style={styles.modalHeader}>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.searchResultText}>Link your Facebook </Text>
+            </View>
+
+            <View style={{marginTop: 10}}>
+              <Text style={styles.searchResultNoteSocial}>
+                Link your Facebook profile to easily find people you follow on
+                Tapiolla
+              </Text>
+            </View>
+          </View>
+          <TextInputs
+            label="Facebook Handle"
+            placeholderTextColor="rgba(90, 89, 89, 0.55)"
+            placeholder="Facebook Handle"
+            autoCapitalize="none"
+            value={facebook.value}
+            // onFocus={() => setWebsiteFocus(true)}
+            onChangeText={text => {
+              setFacebook({value: text, error: ''});
+            }}
+            style={styles.socialInputs}
+          />
+
+          <TouchableOpacity
+            style={
+              facebook.value !== ''
+                ? styles.modalButton
+                : styles.modalButtonInactive
+            }
+            onPress={() => onSubmit()}>
+            {isLoading ? (
+              <ActivityIndicator
+                size={'small'}
+                color={'white'}
+                animating={true}
+              />
+            ) : (
+              <Text style={styles.modalBtnText}>LINK FACEBOOK</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  };
+
+  const AlertModal = () => {
+    return (
+      <View style={styles.alertModalView}>
+        <View
+          style={{
+            backgroundColor: '#333333',
+            width: '80%',
+            height: 35,
+            alignSelf: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 10,
+          }}>
+          <Text style={{color: 'white'}}>Account added successfully</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const AlertErrorModal = () => {
+    return (
+      <View style={styles.alertModalView}>
+        <View
+          style={{
+            backgroundColor: '#333333',
+            width: '80%',
+            height: 35,
+            alignSelf: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 10,
+          }}>
+          <Text style={{color: 'white'}}>Account added successfully</Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       {profileModal && addProfileModal()}
+      {pickerModal && launchCameraModal()}
+      {avatarModal && launchAvatarModal()}
+      {twitterModal && addTwitterModal()}
+      {facebookModal && addFacebookModal()}
       <Header
         title="PROFILE"
         titleColor="#FFFFFF"
@@ -155,19 +695,90 @@ const Profile = ({navigation}: Props) => {
           keyboardShouldPersistTaps="handled">
           <View style={styles.profileContainer}>
             <View style={styles.rect}>
-              <Bggroup />
+              {isLoadingBg ? (
+                <ActivityIndicator
+                  size={'small'}
+                  color={'white'}
+                  animating={true}
+                />
+              ) : (
+                <>
+                  {userProfile?.backgroundImage ? (
+                    <Image
+                      style={{width, height: 120}}
+                      source={{
+                        uri: userProfile?.backgroundImage,
+                      }}
+                    />
+                  ) : (
+                    // <Image
+                    //   style={{
+                    //     borderRadius: 0,
+                    //     width,
+                    //     height: 120,
+                    //     backgroundColor: '#D1D1D1',
+                    //   }}
+                    //   // size={120}
+                    //   source={{
+                    //     uri: imageDefault,
+                    //   }}
+                    // />
+                    <Bggroup />
+                  )}
+                </>
+              )}
+
               <View style={styles.bgView}>
-                <TouchableOpacity style={styles.bgCamera}>
+                <TouchableOpacity
+                  style={styles.dashboardView}
+                  onPress={() => navigation.navigate('Dashboard')}>
+                  <Text style={styles.dashboardText}>Dashboard</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.bgCamera} onPress={chooseFile}>
                   <Camera />
                 </TouchableOpacity>
-                <Text style={styles.bgText}>Add background image</Text>
+                <Text style={styles.bgText}>
+                  {userProfile?.backgroundImage ? '' : 'Add background image'}
+                </Text>
               </View>
             </View>
             <View style={styles.proImageView}>
               <View style={styles.pImageBg}>
-                <PImageBg />
+                {userProfile?.avatar ? (
+                  <>
+                    {isLoadingAv ? (
+                      <ActivityIndicator
+                        size={'small'}
+                        color={'white'}
+                        animating={true}
+                      />
+                    ) : (
+                      <Avatar.Image
+                        size={98}
+                        // style={{width, height: 120}}
+                        source={{
+                          uri: userProfile?.avatar,
+                        }}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {isLoadingAv ? (
+                      <ActivityIndicator
+                        size={'small'}
+                        color={'white'}
+                        animating={true}
+                      />
+                    ) : (
+                      <PImageBg />
+                    )}
+                  </>
+                )}
               </View>
-              <TouchableOpacity style={styles.profCamera}>
+              <TouchableOpacity
+                style={styles.profCamera}
+                onPress={chooseAvatar}>
                 <Camera />
               </TouchableOpacity>
             </View>
@@ -179,14 +790,30 @@ const Profile = ({navigation}: Props) => {
               </View>
             </View>
             <View style={styles.locationView}>
-              <View style={styles.socialView}>
+              <TouchableOpacity
+                style={styles.socialView}
+                onPress={() => setTwitterModal(true)}>
                 <Twitter />
-                <Text style={styles.twitter}>Add Twitter</Text>
-              </View>
-              <View style={styles.socialView}>
+                <Text
+                  style={styles.twitter}
+                  numberOfLines={1}
+                  ellipsizeMode="tail">
+                  {userProfile?.twitter ? userProfile?.twitter : 'Add Twitter'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.socialView}
+                onPress={() => setFacebookModal(true)}>
                 <Facebook />
-                <Text style={styles.facebook}>Add Facebbok</Text>
-              </View>
+                <Text
+                  style={styles.facebook}
+                  numberOfLines={1}
+                  ellipsizeMode="tail">
+                  {userProfile?.facebook
+                    ? userProfile?.facebook
+                    : 'Add Twitter'}
+                </Text>
+              </TouchableOpacity>
             </View>
             <View style={styles.about}>
               <Text style={styles.aboutHeading}>About Peter</Text>
@@ -205,8 +832,7 @@ const Profile = ({navigation}: Props) => {
               </TouchableOpacity>
             </View>
             <UserProfile />
-            <UserProfile />
-            <UserProfile />
+            {/* <AlertModal /> */}
           </View>
         </ScrollView>
       </View>
@@ -220,6 +846,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  alertModalView: {
+    // flex: 1,
+    position: 'absolute',
+    marginTop: 10,
+    width,
   },
   profileContainer: {
     backgroundColor: BACKGROUND_COLOR,
@@ -237,7 +869,23 @@ const styles = StyleSheet.create({
   bgView: {
     position: 'absolute',
     alignSelf: 'center',
+    alignItems: 'center',
     marginTop: 20,
+    width: '93%',
+  },
+  dashboardView: {
+    alignSelf: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.50)',
+    padding: 7,
+    marginTop: -10,
+    position: 'absolute',
+    borderRadius: 5,
+  },
+  dashboardText: {
+    fontFamily: 'Poppins',
+    color: 'white',
+    fontSize: 12,
+    margin: 3,
   },
   bgCamera: {
     backgroundColor: 'white',
@@ -262,15 +910,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   profCamera: {
-    left: 30,
+    left: 70,
     backgroundColor: 'white',
     alignSelf: 'center',
     padding: 5,
     borderRadius: 50,
     elevation: 2,
+    position: 'absolute',
+    top: 70,
   },
   pImageBg: {
-    marginTop: 20,
+    // marginTop: 5,
   },
   name: {
     alignSelf: 'center',
@@ -300,6 +950,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'normal',
     marginLeft: 5,
+    width: 60,
   },
   facebook: {
     color: 'rgba(51, 51, 51, 0.51)',
@@ -307,6 +958,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'normal',
     marginLeft: 5,
+    width: 60,
   },
   socialView: {
     flexDirection: 'row',
@@ -384,8 +1036,9 @@ const styles = StyleSheet.create({
     lineHeight: 15,
     color: '#316F8A',
     backgroundColor: '#E1EEF4',
-    marginLeft: 10,
+    marginLeft: width / 4,
     padding: 2,
+    position: 'absolute',
   },
   POrganText: {
     fontFamily: 'Poppins',
@@ -393,6 +1046,12 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: 'rgba(51, 51, 51, 0.51)',
     lineHeight: 15,
+  },
+  btnView: {
+    width: 100,
+    // padding: 10,
+    position: 'absolute',
+    marginLeft: width / 1.3,
   },
   addCardBtn: {
     width: 60,
@@ -403,7 +1062,7 @@ const styles = StyleSheet.create({
     borderRadius: 2.5,
     borderWidth: 1,
     borderColor: '#316F8A',
-    marginLeft: width / 4.5,
+    // position: 'relative',
   },
   line: {
     backgroundColor: 'rgba(0, 0, 0, 0.08)',
@@ -434,6 +1093,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
+  dateView: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginTop: 15,
+  },
+
+  dateText: {
+    padding: 5,
+    color: 'rgba(90, 89, 89, 0.55)',
+  },
+  startDate: {width: '45%', marginRight: 30},
+  endDate: {width: '45%'},
+
   resultsBottomModal: {
     justifyContent: 'flex-end',
     margin: 0,
@@ -447,7 +1119,16 @@ const styles = StyleSheet.create({
 
   resultsModal: {
     width: '100%',
-    height: 470,
+    height: 400,
+    backgroundColor: '#FFFFFF',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    paddingHorizontal: 30,
+  },
+
+  socialModalBody: {
+    width: '100%',
+    height: 280,
     backgroundColor: '#FFFFFF',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
@@ -484,6 +1165,16 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'normal',
     color: '#8C8C8C',
+  },
+
+  searchResultNoteSocial: {
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    color: '#8C8C8C',
+    width: '80%',
+    lineHeight: 18,
   },
 
   socialInputs: {
@@ -572,5 +1263,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
+  },
+  bottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+
+  modal: {
+    width: '100%',
+    height: 120,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    borderTopRightRadius: 23,
+    borderTopLeftRadius: 23,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+
+  cameraGallery: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    flexDirection: 'row',
+  },
+
+  centerColumn: {flexDirection: 'column', alignItems: 'center'},
+
+  textCam: {
+    fontSize: 14,
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+    fontFamily: 'Montserrat-Regular',
+    color: '#A8A8A8',
+    marginTop: 5,
   },
 });

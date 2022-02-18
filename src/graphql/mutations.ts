@@ -225,11 +225,61 @@ export const updateSubscriptionFeatures = /* GraphQL */ `
 `;
 export const sendPushNotification = /* GraphQL */ `
   mutation SendPushNotification($sendNotification: PushNotificationInput) {
-    sendPushNotification(sendNotification: $sendNotification)
+    sendPushNotification(sendNotification: $sendNotification) {
+      data
+      error
+    }
   }
 `;
 export const updateEndpoint = /* GraphQL */ `
   mutation UpdateEndpoint($deviceToken: String) {
-    updateEndpoint(deviceToken: $deviceToken)
+    updateEndpoint(deviceToken: $deviceToken) {
+      data
+      error
+    }
+  }
+`;
+export const updateUserProfile = /* GraphQL */ `
+  mutation UpdateUserProfile(
+    $updateUserProfilePayload: UpdateUserProfileInput
+  ) {
+    updateUserProfile(updateUserProfilePayload: $updateUserProfilePayload) {
+      userProfile {
+        id
+        backgroundImage
+        avatar
+        firstName
+        lastName
+        location
+        twitter
+        facebook
+        biography
+        email
+        userName
+      }
+      error
+    }
+  }
+`;
+export const createConversation = /* GraphQL */ `
+  mutation CreateConversation($conversationPayload: ConversationInput) {
+    createConversation(conversationPayload: $conversationPayload) {
+      id
+      recipients
+      createdAt
+      error
+    }
+  }
+`;
+export const createMessage = /* GraphQL */ `
+  mutation CreateMessage($messagePayload: MessageInput) {
+    createMessage(messagePayload: $messagePayload) {
+      id
+      message
+      sender
+      conversationId
+      createdAt
+      error
+    }
   }
 `;

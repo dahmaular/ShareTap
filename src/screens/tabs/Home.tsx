@@ -303,7 +303,7 @@ const Home = ({navigation}: Props) => {
 
             <View style={styles.yourCards}>
               <Text style={styles.yourCardsText}>
-                Your Cards ({user?.cards?.listUserCards?.cards.length})
+                Your Cards ({user?.cards?.listUserCards?.cards?.length})
               </Text>
               <Text
                 style={styles.viewAll}
