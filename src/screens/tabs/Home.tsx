@@ -62,7 +62,7 @@ const Home = ({navigation}: Props) => {
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
-  console.log('User data @home', user);
+  // console.log('User data @home', user?.cards?.listUserCards?.cards);
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -93,7 +93,8 @@ const Home = ({navigation}: Props) => {
   const TapToShareButton = () => {
     return (
       <View>
-        <TouchableOpacity disabled={!user?.cards?.listUserCards?.cards}
+        <TouchableOpacity
+          disabled={!user?.cards?.listUserCards?.cards}
           style={styles.tap}
           onPress={
             // () => setCardModal(true)
@@ -303,7 +304,7 @@ const Home = ({navigation}: Props) => {
 
             <View style={styles.yourCards}>
               <Text style={styles.yourCardsText}>
-                Your Cards ({user?.cards?.listUserCards?.cards.length})
+                Your Cards ({user?.cards?.listUserCards?.cards?.length})
               </Text>
               <Text
                 style={styles.viewAll}

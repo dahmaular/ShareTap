@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */ /* eslint-disable no-extra-boolean-cast */ /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
 import {Hub, HubCapsule} from '@aws-amplify/core';
 import {

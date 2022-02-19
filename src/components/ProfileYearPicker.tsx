@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Platform} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import DownArrow from '../assets/svg/caret-down-icon.svg';
 import Moment from 'moment';
-const DateSelect = (props: any) => {
+const YearSelect = (props: any) => {
   const [pickerMode, setPickerMode] = useState<any>(null);
   const [dateNow, setDateNow] = useState(
     new Date(props.dateValue || undefined),
@@ -12,7 +12,7 @@ const DateSelect = (props: any) => {
   const [display, setDisplay] = useState(null);
 
   const showDatePicker = () => {
-    setPickerMode('datetime');
+    setPickerMode('date');
   };
 
   const hidePicker = () => {
@@ -29,14 +29,14 @@ const DateSelect = (props: any) => {
     }-${newDate.getDate()}`;
     setDateNow(date);
     setDisplay(newDate);
-    props.onValueChange(date.toISOString()); // toISOString to get the expected format by the Event calendar
+    props.onValueChange(Moment(date).format('l'));
   };
 
   return (
     <View style={{width: '100%'}}>
       <TouchableOpacity style={styles.dateTimeButton} onPress={showDatePicker}>
         <Text style={styles.dateTimeButtonText}>
-          {display ? display : props.placeholder}
+          {display || props.dateValue || props.placeholder || 'Select Date'}
         </Text>
         <DownArrow />
       </TouchableOpacity>
@@ -46,12 +46,23 @@ const DateSelect = (props: any) => {
         onConfirm={handleConfirm}
         onCancel={hidePicker}
         date={dateNow}
-        display={Platform.OS === 'ios' ? 'inline' : 'default'}
       />
     </View>
   );
 };
 const styles = StyleSheet.create({
+  dateContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#C4C4C4',
+    width: '100%',
+    height: 50,
+    borderRadius: 5,
+    padding: 7,
+    marginTop: 10,
+  },
+
   dateTimeButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -61,7 +72,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D9',
     paddingHorizontal: 14,
     borderRadius: 4,
-    marginTop: 30,
   },
 
   dateTimeButtonText: {
@@ -74,4 +84,4 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
   },
 });
-export default DateSelect;
+export default YearSelect;
