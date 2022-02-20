@@ -1,541 +1,463 @@
 type AdminDashboardPayload {
-  totalUsers: Int
-  totalInactiveUsers: Int
-  totalCardsCreated: Int
-  totalCardsShared: Int
-  totalEarnings: String
-  error: String
+	totalUsers: Int
+	totalInactiveUsers: Int
+	totalCardsCreated: Int
+	totalCardsShared: Int
+	totalEarnings: String
+	error: String
 }
 
 type BusinessProfile {
-  id: String
-  companyName: String
-  role: String
-  category: String
-  startDate: String
-  endDate: String
-  userId: String
+	id: String
+	companyName: String
+	role: String
+	category: String
+	startDate: String
+	endDate: String
+	userId: String
 }
 
 input BusinessProfilePayload {
-  companyName: String
-  role: String
-  category: String
-  startDate: String
-  endDate: String
-  userId: String
+	companyName: String
+	role: String
+	category: String
+	startDate: String
+	endDate: String
+	userId: String
 }
 
 type BusinessProfileResponse {
-  businessProfile: BusinessProfile
-  error: String
+	businessProfile: BusinessProfile
+	error: String
 }
 
 type BusinessProfilesPayload {
-  businessProfiles: [BusinessProfile]
-  error: String
+	businessProfiles: [BusinessProfile]
+	error: String
 }
 
 type CancelUserSubscriptionResponse {
-  data: String
-  error: String
+	data: String
+	error: String
 }
 
 type Card {
-  id: ID!
-  name: String
-  role: String
-  email: String
-  phone: String
-  address: String
-  website: String
-  facebook: String
-  twitter: String
-  linkedIn: String
-  createdAt: String
-  businessProfileId: String!
-  userId: String
-  cardTemplateId: String
-  status: String
-  color: String
-  category: String
+	id: ID!
+	name: String
+	role: String
+	email: String
+	phone: String
+	address: String
+	website: String
+	facebook: String
+	twitter: String
+	linkedIn: String
+	createdAt: String
+	businessProfileId: String!
+	userId: String
+	cardTemplateId: String
+	status: String
+	color: String
+	category: String
 }
 
 type CardResponse {
-  cardDetails: Card
-  cardTemplate: CardTemplate
+	cardDetails: Card
+	cardTemplate: CardTemplate
 }
 
 type CardTemplate {
-  id: String
-  backgroundColor: String
-  borderBottomColor: String
+	id: String
+	backgroundColor: String
+	borderBottomColor: String
 }
 
 input CardTemplateInput {
-  backgroundColor: String
-  borderBottomColor: String
+	backgroundColor: String
+	borderBottomColor: String
 }
 
 type CardTemplateResponse {
-  cardTemplate: CardTemplate
-  error: String
+	cardTemplate: CardTemplate
+	error: String
 }
 
 type CardVersion {
-  id: ID!
-  name: String
-  design: [String]
+	id: ID!
+	name: String
+	design: [String]
 }
 
 type CardsPayload {
-  cards: [CardResponse]
-  error: String
+	cards: [CardResponse]
+	error: String
 }
 
 input ConfirmSignUpPayload {
-  username: String
-  confirmationCode: String
+	username: String
+	confirmationCode: String
 }
 
 type Conversation {
-  id: String
-  recipients: [String]
-  createdAt: String
-  error: String
+	id: String
+	recipients: [String]
+	createdAt: String
+	error: String
 }
 
 input ConversationInput {
-  recipients: [String]
-}
-
-type Conversation {
-  id: String
-  recipients: [String]
-  createdAt: String
-  error: String
-}
-
-input ConversationInput {
-  recipients: [String]
+	recipients: [String]
 }
 
 input CreateCardInput {
-  name: String
-  role: String
-  email: String
-  phone: String
-  address: String
-  website: String
-  facebook: String
-  twitter: String
-  linkedIn: String
-  userId: String
-  businessProfileId: String
-  cardTemplateId: String
+	name: String
+	role: String
+	email: String
+	phone: String
+	address: String
+	website: String
+	facebook: String
+	twitter: String
+	linkedIn: String
+	userId: String
+	businessProfileId: String
+	cardTemplateId: String
 }
 
 type CreateCardPayload {
-  card: Card
-  error: String
+	card: Card
+	error: String
 }
 
 input CreateSubscriptionSessionPayload {
-  userId: String!
-  customerPlan: String!
+	userId: String!
+	customerPlan: String!
 }
 
 input ListAllUsersInput {
-  limit: Int
-  isFirst: Boolean
-  lastEvaluatedKey: NextKeyInput
+	limit: Int
+	isFirst: Boolean
+	lastEvaluatedKey: NextKeyInput
 }
 
 type ListCardTemplatesPayload {
-  cardTemplates: [CardTemplate]
-  error: String
+	cardTemplates: [CardTemplate]
+	error: String
 }
 
 type ListCategoriesPayload {
-  categories: [String]
-  error: String
+	categories: [String]
+	error: String
 }
 
 type ListUser {
-  id: ID!
-  positionId: Int
-  firstName: String
-  lastName: String
-  email: String
-  avatar: String
-  userName: String
-  totalCards: Int
-  subscriptionPlan: String
-  group: String
+	id: ID!
+	positionId: Int
+	firstName: String
+	lastName: String
+	email: String
+	avatar: String
+	userName: String
+	totalCards: Int
+	subscriptionPlan: String
+	group: String
 }
 
 type ListUsersPayload {
-  users: [ListUser]
-  total: Int
-  lastEvaluatedKey: NextKey
-  error: String
+	users: [ListUser]
+	total: Int
+	lastEvaluatedKey: NextKey
+	error: String
 }
 
 type Message {
-  id: String
-  message: String
-  sender: String
-  conversationId: String
-  createdAt: String
-  error: String
+	id: String
+	message: String
+	sender: String
+	conversationId: String
+	createdAt: String
+	error: String
 }
 
 input MessageInput {
-  message: String
-  sender: String
-  conversationId: String
-}
-
-type Message {
-  id: String
-  message: String
-  sender: String
-  conversationId: String
-  createdAt: String
-  error: String
-}
-
-input MessageInput {
-  message: String
-  sender: String
-  conversationId: String
+	message: String
+	sender: String
+	conversationId: String
 }
 
 type Mutation {
-  createCard(card: CreateCardInput!): CreateCardPayload
-  shareCard(shareCardPayload: ShareCardPayload): String
-  createBusinessProfile(
-    createBusinessProfilePayload: BusinessProfilePayload
-  ): BusinessProfileResponse
-  deleteBusinessProfile(id: String): String
-  updateBusinessProfile(
-    businessProfilePayload: UpdateBusinessProfilePayload!
-  ): BusinessProfileResponse
-  activateUser(userId: String): String
-  removeUser(userId: String): String
-  suspendUser(userId: String): String
-  subscriptionSession(
-    subscriptionSessionPayload: CreateSubscriptionSessionPayload
-  ): SubscriptionSessionPayload
-  updateUserSubscription(
-    updateUserSubscriptionPayload: UpdateUserSubscriptionPayload!
-  ): UpdateUserSubscriptionResponse
-  cancelUserSubscription(userId: String): CancelUserSubscriptionResponse
-  userBillingPortal(userId: String): UserBillingPortalPayload
-  disableUserCard(cardId: String): String
-  signUp(signUpPayload: SignupPayload): String
-  confirmSignUp(confirmSignUpPayload: ConfirmSignUpPayload): String
-  createCardTemplate(
-    cardTemplatePayload: CardTemplateInput
-  ): CardTemplateResponse
-  removeReceivedCard(
-    removeReceivedCardPayload: RemoveReceivedCardPayload
-  ): String
-  activateUserCard(cardId: String): String
-  updateAboutPage(data: String): PageData
-  updatePrivacyPolicyPage(data: String): PageData
-  updateTermsAndConditionsPage(data: String): PageData
-  updateSubscriptionFeatures(
-    updateFeatures: UpdateSubscriptionFeaturesInput
-  ): UpdateSubscriptionFeaturesPayload
-  sendPushNotification(
-    sendNotification: PushNotificationInput
-  ): NotificationResponse
-  updateEndpoint(deviceToken: String): NotificationResponse
-  updateUserProfile(
-    updateUserProfilePayload: UpdateUserProfileInput
-  ): UpdateUserProfilePayload
-  createConversation(conversationPayload: ConversationInput): Conversation
-  createMessage(messagePayload: MessageInput): Message
+	createCard(card: CreateCardInput!): CreateCardPayload
+	shareCard(shareCardPayload: ShareCardPayload): String
+	createBusinessProfile(createBusinessProfilePayload: BusinessProfilePayload): BusinessProfileResponse
+	deleteBusinessProfile(id: String): String
+	updateBusinessProfile(businessProfilePayload: UpdateBusinessProfilePayload!): BusinessProfileResponse
+	activateUser(userId: String): String
+	removeUser(userId: String): String
+	suspendUser(userId: String): String
+	subscriptionSession(subscriptionSessionPayload: CreateSubscriptionSessionPayload): SubscriptionSessionPayload
+	updateUserSubscription(updateUserSubscriptionPayload: UpdateUserSubscriptionPayload!): UpdateUserSubscriptionResponse
+	cancelUserSubscription(userId: String): CancelUserSubscriptionResponse
+	userBillingPortal(userId: String): UserBillingPortalPayload
+	disableUserCard(cardId: String): String
+	signUp(signUpPayload: SignupPayload): String
+	confirmSignUp(confirmSignUpPayload: ConfirmSignUpPayload): String
+	createCardTemplate(cardTemplatePayload: CardTemplateInput): CardTemplateResponse
+	removeReceivedCard(removeReceivedCardPayload: RemoveReceivedCardPayload): String
+	activateUserCard(cardId: String): String
+	updateAboutPage(data: String): PageData
+	updatePrivacyPolicyPage(data: String): PageData
+	updateTermsAndConditionsPage(data: String): PageData
+	updateSubscriptionFeatures(updateFeatures: UpdateSubscriptionFeaturesInput): UpdateSubscriptionFeaturesPayload
+	sendPushNotification(sendNotification: PushNotificationInput): NotificationResponse
+	updateEndpoint(deviceToken: String): NotificationResponse
+	updateUserProfile(updateUserProfilePayload: UpdateUserProfileInput): UpdateUserProfilePayload
+	createConversation(conversationPayload: ConversationInput): Conversation
+	createMessage(messagePayload: MessageInput): Message
+	createScheduleMessage(scheduleMessagePayload: ScheduleMessageInput): String
 }
 
 type NextKey {
-  partitionType: String
-  id: String
-  item: String
+	partitionType: String
+	id: String
+	item: String
 }
 
 input NextKeyInput {
-  partitionType: String
-  id: String
-  item: String
+	partitionType: String
+	id: String
+	item: String
 }
 
 type NotificationResponse {
-  data: String
-  error: String
-}
-
-type NotificationResponse {
-  data: String
-  error: String
+	data: String
+	error: String
 }
 
 type PageData {
-  id: String
-  data: String
-  updatedAt: String
-  error: String
+	id: String
+	data: String
+	updatedAt: String
+	error: String
 }
 
 input PresignedUploadInput {
-  key: String
-  type: String
-}
-
-input PresignedUploadInput {
-  key: String
-  type: String
+	key: String
+	type: String
 }
 
 input PushNotificationInput {
-  title: String
-  body: String
+	title: String
+	body: String
 }
 
 type Query {
-  listReceivedCards(userId: String): ReceivedCardsPayload
-  listUserCards(userId: String): CardsPayload
-  listSharedCards(userId: String): CardsPayload
-  listUsersWhoSharedACard(cardId: String): UsersPayload
-  listReceiversFromUser(userId: String): UsersPayload
-  listSendersToUser(userId: String): UsersPayload
-  listUserBusinessProfiles(userId: String): BusinessProfilesPayload
-  getBusinessProfileById(id: String): BusinessProfileResponse
-  listCardsByBusinessProfileId(businessProfileId: String): CardsPayload
-  adminDashboard: AdminDashboardPayload
-  listAllUsers(listUsers: ListAllUsersInput): ListUsersPayload
-  mostSharedCards(userId: String): CardsPayload
-  countUserCards(userId: String): Int
-  listSubscriptionPlans: SubscriptionPlansPayload
-  getUserSubscriptionStatus(userId: String): UserSubscriptionStatusPayload
-  getUsersBySubscriptionPlan(plan: String): ListUsersPayload
-  listDisabledUserCards(userId: String): CardsPayload
-  listBusinessCategories: ListCategoriesPayload
-  listCardTemplates: ListCardTemplatesPayload
-  getCardTemplateById(id: String): CardTemplateResponse
-  getAboutPage: PageData
-  getPrivacyPolicyPage: PageData
-  getTermsAndConditionsPage: PageData
-  getUserProfile(userId: String): UserProfilePayload
-  getPresignedUploadUrl(presignedUploadInput: PresignedUploadInput): String
-  listUserConversations(userId: String): [UserConversation]
-  getConversation(id: String): Conversation
-  listMessagesForConversation(conversationId: String): [Message]
+	listReceivedCards(userId: String): ReceivedCardsPayload
+	listUserCards(userId: String): CardsPayload
+	listSharedCards(userId: String): CardsPayload
+	listUsersWhoSharedACard(cardId: String): UsersPayload
+	listReceiversFromUser(userId: String): UsersPayload
+	listSendersToUser(userId: String): UsersPayload
+	listUserBusinessProfiles(userId: String): BusinessProfilesPayload
+	getBusinessProfileById(id: String): BusinessProfileResponse
+	listCardsByBusinessProfileId(businessProfileId: String): CardsPayload
+	adminDashboard: AdminDashboardPayload
+	listAllUsers(listUsers: ListAllUsersInput): ListUsersPayload
+	mostSharedCards(userId: String): CardsPayload
+	countUserCards(userId: String): Int
+	listSubscriptionPlans: SubscriptionPlansPayload
+	getUserSubscriptionStatus(userId: String): UserSubscriptionStatusPayload
+	getUsersBySubscriptionPlan(plan: String): ListUsersPayload
+	listDisabledUserCards(userId: String): CardsPayload
+	listBusinessCategories: ListCategoriesPayload
+	listCardTemplates: ListCardTemplatesPayload
+	getCardTemplateById(id: String): CardTemplateResponse
+	getAboutPage: PageData
+	getPrivacyPolicyPage: PageData
+	getTermsAndConditionsPage: PageData
+	getUserProfile(userId: String): UserProfilePayload
+	getPresignedUploadUrl(presignedUploadInput: PresignedUploadInput): String
+	listUserConversations(userId: String): [UserConversation]
+	getConversation(id: String): Conversation
+	listMessagesForConversation(conversationId: String): [Message]
 }
 
 type ReceivedCardsData {
-  cards: [CardResponse]
+	cards: [CardResponse]
 }
 
 type ReceivedCardsPayload {
-  AHdata: [ReceivedCardsData]
-  IOdata: [ReceivedCardsData]
-  PUdata: [ReceivedCardsData]
-  VZdata: [ReceivedCardsData]
-  error: String
+	AHdata: [ReceivedCardsData]
+	IOdata: [ReceivedCardsData]
+	PUdata: [ReceivedCardsData]
+	VZdata: [ReceivedCardsData]
+	error: String
 }
 
 input RemoveReceivedCardPayload {
-  cardId: String
-  userId: String
+	cardId: String
+	userId: String
+}
+
+input ScheduleMessageInput {
+	message: String
+	sender: String
+	conversationId: String
+	minute: String
+	hour: String
+	day: String
+	month: String
+	year: String
 }
 
 input ShareCardPayload {
-  sender: String
-  cardId: String
-  recipient: String
+	sender: String
+	cardId: String
+	recipient: String
 }
 
 input SignupPayload {
-  phone_number: AWSPhone!
-  email: AWSEmail!
-  username: String!
-  password: String!
+	phone_number: AWSPhone!
+	email: AWSEmail!
+	username: String!
+	password: String!
 }
 
 type Subscription {
-  onCreateConversation: Conversation
-    @aws_subscribe(mutations: ["createConversation"])
-  onCreateMessageByConversationId(conversationId: String): Message
-    @aws_subscribe(mutations: ["createMessage"])
-}
-
-type Subscription {
-  onCreateConversation: Conversation
-    @aws_subscribe(mutations: ["createConversation"])
-  onCreateMessageByConversationId(conversationId: String): Message
-    @aws_subscribe(mutations: ["createMessage"])
+	onCreateConversation: Conversation
+		@aws_subscribe(mutations: ["createConversation"])
+	onCreateMessageByConversationId(conversationId: String): Message
+		@aws_subscribe(mutations: ["createMessage"])
 }
 
 type SubscriptionDetails {
-  customerPlan: String
-  subscriptionPrice: String
+	customerPlan: String
+	subscriptionPrice: String
 }
 
 type SubscriptionFeatures {
-  premiumFeatures: String
-  standardFeatures: String
+	premiumFeatures: String
+	standardFeatures: String
 }
 
 type SubscriptionPlanResponse {
-  plan: String
-  currency: String
-  price: String
-  features: String
+	plan: String
+	currency: String
+	price: String
+	features: String
 }
 
 type SubscriptionPlansPayload {
-  subscriptionPlans: [SubscriptionPlanResponse]
-  error: String
+	subscriptionPlans: [SubscriptionPlanResponse]
+	error: String
 }
 
 type SubscriptionResponse {
-  id: String
-  subscriptionData: SubscriptionDetails
-  createdAt: AWSDateTime
-  updatedAt: AWSDateTime
+	id: String
+	subscriptionData: SubscriptionDetails
+	createdAt: AWSDateTime
+	updatedAt: AWSDateTime
 }
 
 type SubscriptionSessionPayload {
-  url: String
-  error: String
+	url: String
+	error: String
 }
 
 input UpdateBusinessProfilePayload {
-  id: String
-  companyName: String
-  role: String
-  category: String
-  startDate: String
-  endDate: String
+	id: String
+	companyName: String
+	role: String
+	category: String
+	startDate: String
+	endDate: String
 }
 
 input UpdateSubscriptionFeaturesInput {
-  premiumFeatures: String
-  standardFeatures: String
+	premiumFeatures: String
+	standardFeatures: String
 }
 
 type UpdateSubscriptionFeaturesPayload {
-  id: String
-  features: SubscriptionFeatures
-  updatedAt: String
-  error: String
+	id: String
+	features: SubscriptionFeatures
+	updatedAt: String
+	error: String
 }
 
 input UpdateUserProfileInput {
-  id: String
-  backgroundImage: String
-  avatar: String
-  firstName: String
-  lastName: String
-  location: String
-  twitter: String
-  facebook: String
-  biography: String
+	id: String
+	backgroundImage: String
+	avatar: String
+	firstName: String
+	lastName: String
+	location: String
+	twitter: String
+	facebook: String
+	biography: String
 }
 
 type UpdateUserProfilePayload {
-  userProfile: User
-  error: String
-}
-
-input UpdateUserProfileInput {
-  id: String
-  backgroundImage: String
-  avatar: String
-  firstName: String
-  lastName: String
-  location: String
-  twitter: String
-  facebook: String
-  biography: String
-}
-
-type UpdateUserProfilePayload {
-  userProfile: User
-  error: String
+	userProfile: User
+	error: String
 }
 
 input UpdateUserSubscriptionPayload {
-  userId: String!
-  customerPlan: String!
+	userId: String!
+	customerPlan: String!
 }
 
 type UpdateUserSubscriptionResponse {
-  userSubscriptionData: SubscriptionResponse
-  error: String
+	userSubscriptionData: SubscriptionResponse
+	error: String
 }
 
 type User {
-  id: ID!
-  backgroundImage: String
-  avatar: String
-  firstName: String
-  lastName: String
-  location: String
-  twitter: String
-  facebook: String
-  biography: String
-  email: String
-  userName: String
+	id: ID!
+	backgroundImage: String
+	avatar: String
+	firstName: String
+	lastName: String
+	location: String
+	twitter: String
+	facebook: String
+	biography: String
+	email: String
+	userName: String
 }
 
 type UserBillingPortalPayload {
-  url: String
-  error: String
+	url: String
+	error: String
 }
 
 type UserConversation {
-  id: String
-  recipient: String
-  createdAt: String
-  error: String
-}
-
-type UserConversation {
-  id: String
-  recipient: String
-  createdAt: String
-  error: String
+	id: String
+	recipient: String
+	createdAt: String
+	error: String
 }
 
 input UserInput {
-  name: String
+	name: String
 }
 
 type UserProfilePayload {
-  userDetails: User
-  userBusinessProfiles: [BusinessProfile]
-  error: String
-}
-
-type UserProfilePayload {
-  userDetails: User
-  userBusinessProfiles: [BusinessProfile]
-  error: String
+	userDetails: User
+	userBusinessProfiles: [BusinessProfile]
+	error: String
 }
 
 type UserSubscriptionStatusPayload {
-  userSubscriptionData: SubscriptionResponse
-  renewalDate: String
-  cardLastDigits: String
-  cardBrand: String
-  currency: String
-  error: String
+	userSubscriptionData: SubscriptionResponse
+	renewalDate: String
+	cardLastDigits: String
+	cardBrand: String
+	currency: String
+	error: String
 }
 
 type UsersPayload {
-  users: [User]
-  error: String
+	users: [User]
+	error: String
 }
+

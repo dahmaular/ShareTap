@@ -105,6 +105,17 @@ export type MessageInput = {
   conversationId?: string | null,
 };
 
+export type ScheduleMessageInput = {
+  message?: string | null,
+  sender?: string | null,
+  conversationId?: string | null,
+  minute?: string | null,
+  hour?: string | null,
+  day?: string | null,
+  month?: string | null,
+  year?: string | null,
+};
+
 export type ListAllUsersInput = {
   limit?: number | null,
   isFirst?: boolean | null,
@@ -487,6 +498,14 @@ export type CreateMessageMutation = {
     createdAt: string | null,
     error: string | null,
   } | null,
+};
+
+export type CreateScheduleMessageMutationVariables = {
+  scheduleMessagePayload?: ScheduleMessageInput | null,
+};
+
+export type CreateScheduleMessageMutation = {
+  createScheduleMessage: string | null,
 };
 
 export type ListReceivedCardsQueryVariables = {

@@ -283,3 +283,10 @@ export const createMessage = /* GraphQL */ `
     }
   }
 `;
+export const createScheduleMessage = /* GraphQL */ `
+  mutation CreateScheduleMessage(
+    $scheduleMessagePayload: ScheduleMessageInput
+  ) {
+    createScheduleMessage(scheduleMessagePayload: $scheduleMessagePayload)
+  }
+`;
