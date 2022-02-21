@@ -71,6 +71,7 @@ export type AuthenticatedRoutesParamsList = {
   SetReminder: undefined;
   SetMessage: undefined;
   CreateCard: undefined;
+  ChatMessage: undefined;
   ReminderCalendar: Record<'item', ReminderCalenderRoute>;
 };
 

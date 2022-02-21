@@ -11,6 +11,7 @@ import ReminderCalendar from '../screens/private/ReminderCalendar';
 import SetMessage from '../screens/private/SetMessage';
 import CreateCard from '../screens/private/Create_Card';
 import Dashboard from '../screens/private/Dashboard';
+import ChatMessage from '../screens/private/ChatMessage';
 
 const Drawer = createDrawerNavigator<AuthenticatedRoutesParamsList>();
 
@@ -48,10 +49,7 @@ export default function AuthenticatedRoutes() {
         options={{headerShown: false}}
       />
 
-      <Drawer.Screen
-        name="ReminderCalendar"
-        component={ReminderCalendar}
-      />
+      <Drawer.Screen name="ReminderCalendar" component={ReminderCalendar} />
 
       <Drawer.Screen
         name="CreateCard"
@@ -62,6 +60,12 @@ export default function AuthenticatedRoutes() {
       <Drawer.Screen
         name="Dashboard"
         component={Dashboard}
+        options={{headerShown: false}}
+      />
+
+      <Drawer.Screen
+        name="ChatMessage"
+        component={ChatMessage}
         options={{headerShown: false}}
       />
     </Drawer.Navigator>

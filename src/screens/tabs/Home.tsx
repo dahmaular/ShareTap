@@ -94,7 +94,6 @@ const Home = ({navigation}: Props) => {
     return (
       <View>
         <TouchableOpacity
-          disabled={!user?.cards?.listUserCards?.cards}
           style={styles.tap}
           onPress={
             // () => setCardModal(true)

@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   Dimensions,
   TextInput,
   TouchableOpacity,
@@ -35,7 +34,7 @@ type Props = {
 
 const Chat = ({navigation}: Props) => {
   const [filteredDataSource, setFilteredDataSource] = useState([]);
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState(Array(20));
   const [search, setSearch] = useState('');
   const _onNotificationPressed = () => {};
 
@@ -51,6 +50,10 @@ const Chat = ({navigation}: Props) => {
           <Text style={styles.emptyText}>
             To start a conversation, send a message {'\n'} to your contact
           </Text>
+
+          <TouchableOpacity style={styles.emptyBtn}>
+            <Text style={styles.emptyBtnText}>GO TO CONTACTS</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -77,11 +80,6 @@ const Chat = ({navigation}: Props) => {
       />
 
       <View style={styles.container}>
-        {/* <ScrollView
-          contentContainerStyle={{flexGrow: 1}}
-          alwaysBounceVertical={false}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"> */}
         <View style={styles.chatContainer}>
           <View style={styles.paddingH}>
             <View style={styles.searchView}>
@@ -121,15 +119,47 @@ const Chat = ({navigation}: Props) => {
             keyExtractor={(item, index) => index.toString()}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={ListEmptyView}
-            style={{flex: 1, width: '100%', marginTop: 13}}
+            style={styles.flatlist}
             contentContainerStyle={{flexGrow: 1}}
-            renderItem={({item}) => <TouchableOpacity>
+            renderItem={({item}) => (
+              <TouchableOpacity
+                style={styles.chatCard}
+                onPress={() => navigation.navigate('ChatMessage')}>
+                <View style={{flex: 0.18}}>
+                  <Avatar.Image
+                    size={50}
+                    source={require('../../assets/img/avatar.png')}
+                  />
+                </View>
 
+                <View style={{flex: 0.82, justifyContent: 'space-between'}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <View>
+                      <Text style={styles.name}>Paul Nathan</Text>
+                      <Text numberOfLines={2} style={styles.chat}>
+                        Seen it earlier, pretty nice. He’s good... not everytime
+                        though.
+                      </Text>
+                    </View>
 
-            </TouchableOpacity>}
+                    <View>
+                      <Text style={styles.time}>07:22</Text>
+                      <Badge size={15} style={styles.badge}>
+                        12
+                      </Badge>
+                    </View>
+                  </View>
+
+                  <View style={{...styles.border, marginTop: 8}}></View>
+                </View>
+              </TouchableOpacity>
+            )}
           />
         </View>
-        {/* </ScrollView> */}
       </View>
     </View>
   );
@@ -146,6 +176,12 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 
+  badge: {
+    backgroundColor: '#316F8A',
+    color: '#FFFFFF',
+    marginTop: 4,
+  },
+
   container: {
     flex: 1,
   },
@@ -155,7 +191,6 @@ const styles = StyleSheet.create({
     backgroundColor: BACKGROUND_COLOR,
     width: width,
     alignItems: 'center',
-    // paddingHorizontal: 15,
   },
 
   searchView: {
@@ -231,5 +266,65 @@ const styles = StyleSheet.create({
     color: '#8C8C8C',
     fontStyle: 'normal',
     textAlign: 'center',
+    marginTop: 16,
+  },
+
+  emptyBtn: {
+    width: 200,
+    height: 40,
+    borderRadius: 2,
+    backgroundColor: '#316F8A',
+    marginTop: 70,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  emptyBtnText: {
+    fontSize: 12,
+    fontWeight: '500',
+    fontFamily: 'Poppins',
+    color: '#FFFFFF',
+    fontStyle: 'normal',
+  },
+
+  name: {
+    fontSize: 14,
+    fontWeight: 'normal',
+    fontFamily: 'Poppins',
+    color: '#333333',
+    fontStyle: 'normal',
+  },
+
+  chat: {
+    fontSize: 12,
+    fontWeight: 'normal',
+    fontFamily: 'Poppins',
+    color: 'rgba(51, 51, 51, 0.51)',
+    fontStyle: 'normal',
+    marginTop: 2,
+  },
+
+  time: {
+    fontSize: 12,
+    fontWeight: 'normal',
+    fontFamily: 'Poppins',
+    color: 'rgba(51, 51, 51, 0.51)',
+    fontStyle: 'normal',
+  },
+
+  flatlist: {
+    flex: 1,
+    width: '100%',
+    marginTop: 13,
+    paddingHorizontal: 15,
+    marginBottom: 60,
+  },
+
+  chatCard: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'row',
+    marginBottom: 15,
   },
 });
