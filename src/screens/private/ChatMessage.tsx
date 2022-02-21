@@ -227,6 +227,7 @@ const ChatMessage = ({navigation, route}: Props) => {
         }}>
         <Composer
           {...props}
+          placeholder="Write a message. . ."
           placeholderTextColor="rgba(51, 51, 51, 0.51)"
           textInputStyle={styles.textI}
           composerHeight={48}
@@ -294,7 +295,6 @@ const ChatMessage = ({navigation, route}: Props) => {
           scrollToBottomComponent={scrollToBottomComponent}
           renderAvatar={() => avatar}
           renderInputToolbar={customtInputToolbar}
-          placeholder="Write a message. . ."
           renderChatEmpty={ListEmptyView}
           renderLoading={renderLoading}
         />

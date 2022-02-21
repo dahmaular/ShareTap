@@ -1294,7 +1294,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'normal',
     fontStyle: 'normal',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: 'Poppins',
     color: '#A8A8A8',
     marginTop: 5,
   },
