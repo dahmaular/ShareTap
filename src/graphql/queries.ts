@@ -494,3 +494,77 @@ export const listMessagesForConversation = /* GraphQL */ `
     }
   }
 `;
+export const listScheduledMessages = /* GraphQL */ `
+  query ListScheduledMessages($userId: String) {
+    listScheduledMessages(userId: $userId) {
+      scheduledMessages {
+        message
+        sender
+        conversationId
+        minute
+        hour
+        day
+        month
+        year
+      }
+      error
+    }
+  }
+`;
+export const listDrafts = /* GraphQL */ `
+  query ListDrafts($userId: String) {
+    listDrafts(userId: $userId) {
+      drafts {
+        id
+        createdAt
+        name
+        role
+        email
+        phone
+        address
+        website
+        facebook
+        twitter
+        linkedIn
+        businessProfileId
+        userId
+        cardTemplateId
+        status
+        color
+        category
+      }
+      error
+    }
+  }
+`;
+export const listContacts = /* GraphQL */ `
+  query ListContacts($userId: String) {
+    listContacts(userId: $userId) {
+      contacts {
+        id
+        createdAt
+        userId
+        contactId
+        name
+        phone
+      }
+      error
+    }
+  }
+`;
+export const listUserReminders = /* GraphQL */ `
+  query ListUserReminders($userId: String) {
+    listUserReminders(userId: $userId) {
+      reminders {
+        userId
+        message
+        minute
+        hour
+        day
+        month
+        year
+      }
+      error
+    }
+  }
+`;
