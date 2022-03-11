@@ -283,3 +283,62 @@ export const createMessage = /* GraphQL */ `
     }
   }
 `;
+export const createScheduleMessage = /* GraphQL */ `
+  mutation CreateScheduleMessage(
+    $scheduleMessagePayload: ScheduleMessageInput
+  ) {
+    createScheduleMessage(scheduleMessagePayload: $scheduleMessagePayload) {
+      data
+      error
+    }
+  }
+`;
+export const createDraft = /* GraphQL */ `
+  mutation CreateDraft($draft: CreateDraftInput) {
+    createDraft(draft: $draft) {
+      draft {
+        id
+        createdAt
+        name
+        role
+        email
+        phone
+        address
+        website
+        facebook
+        twitter
+        linkedIn
+        businessProfileId
+        userId
+        cardTemplateId
+        status
+        color
+        category
+      }
+      error
+    }
+  }
+`;
+export const addContact = /* GraphQL */ `
+  mutation AddContact($contact: AddContactInput) {
+    addContact(contact: $contact) {
+      contact {
+        id
+        createdAt
+        userId
+        contactId
+        name
+        phone
+      }
+      error
+    }
+  }
+`;
+export const setReminder = /* GraphQL */ `
+  mutation SetReminder($reminderPayload: ReminderInput) {
+    setReminder(reminderPayload: $reminderPayload) {
+      data
+      error
+    }
+  }
+`;

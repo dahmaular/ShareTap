@@ -1,3 +1,10 @@
+input AddContactInput {
+  userId: String
+  contactId: String
+  name: String
+  phone: String
+}
+
 type AdminDashboardPayload {
   totalUsers: Int
   totalInactiveUsers: Int
@@ -98,6 +105,20 @@ input ConfirmSignUpPayload {
   confirmationCode: String
 }
 
+type Contact {
+  id: String
+  createdAt: String
+  userId: String
+  contactId: String
+  name: String
+  phone: String
+}
+
+type ContactPayload {
+  contact: Contact
+  error: String
+}
+
 type Conversation {
   id: String
   recipients: [String]
@@ -129,9 +150,52 @@ type CreateCardPayload {
   error: String
 }
 
+input CreateDraftInput {
+  name: String
+  role: String
+  email: String
+  phone: String
+  address: String
+  website: String
+  facebook: String
+  twitter: String
+  linkedIn: String
+  businessProfileId: String
+  userId: String
+  cardTemplateId: String
+  status: String
+  color: String
+  category: String
+}
+
 input CreateSubscriptionSessionPayload {
   userId: String!
   customerPlan: String!
+}
+
+type Draft {
+  id: String
+  createdAt: String
+  name: String
+  role: String
+  email: String
+  phone: String
+  address: String
+  website: String
+  facebook: String
+  twitter: String
+  linkedIn: String
+  businessProfileId: String!
+  userId: String
+  cardTemplateId: String
+  status: String
+  color: String
+  category: String
+}
+
+type DraftPayload {
+  draft: Draft
+  error: String
 }
 
 input ListAllUsersInput {
@@ -147,6 +211,26 @@ type ListCardTemplatesPayload {
 
 type ListCategoriesPayload {
   categories: [String]
+  error: String
+}
+
+type ListContactsPayload {
+  contacts: [Contact]
+  error: String
+}
+
+type ListDraftsPayload {
+  drafts: [Draft]
+  error: String
+}
+
+type ListRemindersPayload {
+  reminders: [Reminder]
+  error: String
+}
+
+type ListScheduledMessagesPayload {
+  scheduledMessages: [ScheduleMessage]
   error: String
 }
 
@@ -231,6 +315,12 @@ type Mutation {
   ): UpdateUserProfilePayload
   createConversation(conversationPayload: ConversationInput): Conversation
   createMessage(messagePayload: MessageInput): Message
+  createScheduleMessage(
+    scheduleMessagePayload: ScheduleMessageInput
+  ): ScheduleMessagePayload
+  createDraft(draft: CreateDraftInput): DraftPayload
+  addContact(contact: AddContactInput): ContactPayload
+  setReminder(reminderPayload: ReminderInput): ReminderPayload
 }
 
 type NextKey {
@@ -296,6 +386,10 @@ type Query {
   listUserConversations(userId: String): [UserConversation]
   getConversation(id: String): Conversation
   listMessagesForConversation(conversationId: String): [Message]
+  listScheduledMessages(userId: String): ListScheduledMessagesPayload
+  listDrafts(userId: String): ListDraftsPayload
+  listContacts(userId: String): ListContactsPayload
+  listUserReminders(userId: String): ListRemindersPayload
 }
 
 type ReceivedCardsData {
@@ -310,9 +404,61 @@ type ReceivedCardsPayload {
   error: String
 }
 
+type Reminder {
+  userId: String
+  message: String
+  minute: String
+  hour: String
+  day: String
+  month: String
+  year: String
+}
+
+input ReminderInput {
+  userId: String
+  message: String
+  minute: String
+  hour: String
+  day: String
+  month: String
+  year: String
+}
+
+type ReminderPayload {
+  data: String
+  error: String
+}
+
 input RemoveReceivedCardPayload {
   cardId: String
   userId: String
+}
+
+type ScheduleMessage {
+  message: String
+  sender: String
+  conversationId: String
+  minute: String
+  hour: String
+  day: String
+  month: String
+  year: String
+}
+
+input ScheduleMessageInput {
+  message: String
+  sender: String
+  conversationId: String
+  minute: String
+  hour: String
+  day: String
+  month: String
+  year: String
+}
+
+type ScheduleMessagePayload {
+  data: String
+  error: String
 }
 
 input ShareCardPayload {

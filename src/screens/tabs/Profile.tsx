@@ -10,11 +10,14 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
+  TextInput,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+// import {TextInput} from 'react-native-paper';
+
 import Photo from '../../assets/svg/photo-camera.svg';
 import Gallery from '../../assets/svg/image-gallery.svg';
 import {
@@ -24,6 +27,7 @@ import {
 import TextInputs from '../../components/TextInput';
 import Header from '../../components/Header';
 import Menu from '../../assets/svg/menu.svg';
+import Pencil from '../../assets/svg/pencil.svg';
 import Settings from '../../assets/svg/settings.svg';
 import Bggroup from '../../assets/svg/bg-group.svg';
 import Camera from '../../assets/svg/camera.svg';
@@ -50,6 +54,7 @@ import {userSlice} from '../../selectors';
 import {Avatar} from 'react-native-paper';
 import {CameraOptions, ImageLibraryOptions} from '../../types/imageTypes';
 import {getS3presignedURL, uploadImageNew} from '../../services/storageService';
+import Button from '../../components/Button';
 
 const DEFAULT_OPTIONS: ImageLibraryOptions & CameraOptions = {
   mediaType: 'photo',
@@ -98,7 +103,10 @@ const Profile = ({navigation}: Props) => {
     error: '',
   });
   const [avatar, setAvatar] = useState({value: '', error: ''});
-  const [biography, setBiography] = useState({value: '', error: ''});
+  const [biography, setBiography] = useState({
+    value: '',
+    error: '',
+  });
   const [firstName, setFirstName] = useState({value: '', error: ''});
   const [lName, setLName] = useState({value: '', error: ''});
   const [location, setLocation] = useState({value: '', error: ''});
@@ -112,6 +120,9 @@ const Profile = ({navigation}: Props) => {
   const [avatarModal, setAvatarModal] = useState(false);
   const [imageDefault, setImageDefault] = useState('');
   const [defaultAvatar, setDefaultAvatar] = useState('');
+  const [editBio, setEditBio] = useState(false);
+  const [biographyFocus, setBiographyFocus] = useState(false);
+  const [bioModal, setBioModal] = useState(false);
 
   useEffect(() => {
     getUserIdService()
@@ -374,7 +385,7 @@ const Profile = ({navigation}: Props) => {
           const result = userCards.filter(
             (uc: any) => uc.cardDetails.role === item?.role,
           );
-          console.log('No of cards', result);
+          // console.log('No of cards', result);
           return (
             <>
               <View style={styles.userProfile}>
@@ -815,13 +826,72 @@ const Profile = ({navigation}: Props) => {
                 </Text>
               </TouchableOpacity>
             </View>
+            {/* <Bio /> */}
             <View style={styles.about}>
-              <Text style={styles.aboutHeading}>About Peter</Text>
-              <Text style={styles.aboutText}>
-                A eget phasellus maecenas vitae et ultrices non. Ilsa Praesent
-                diam faucibus vel eget ipsum mus lacus.ilsa Proin volutpat urna,
-                congue diam quam mi est ilsa pharetra. Dignissim tris.
-              </Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={styles.aboutHeading}>About Peter</Text>
+                <TouchableOpacity
+                  onPress={() => setEditBio(true)}
+                  style={{
+                    alignItems: 'center',
+                    alignContent: 'center',
+                    alignSelf: 'center',
+                    marginLeft: 10,
+                    width: 50,
+                  }}>
+                  <Pencil />
+                </TouchableOpacity>
+              </View>
+
+              {editBio ? (
+                <>
+                  <View>
+                    <TextInput
+                      multiline={true}
+                      numberOfLines={5}
+                      value={biography.value}
+                      autoFocus={true}
+                      scrollEnabled={true}
+                      textAlignVertical="top"
+                      onFocus={() => setBiographyFocus(true)}
+                      onChangeText={text => {
+                        setBiography({value: text, error: ''});
+                      }}
+                      style={{
+                        ...styles.aboutText,
+                        height: 90,
+                        backgroundColor: 'white',
+                        borderWidth: 0,
+                        borderBottomWidth: 0,
+                      }}
+                    />
+                  </View>
+
+                  <TouchableOpacity
+                    style={{
+                      width: 70,
+                      height: 22,
+                      // flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 2.5,
+                      borderWidth: 1,
+                      borderColor: '#316F8A',
+                    }}
+                    onPress={() => {
+                      onSubmit();
+                      setEditBio(false);
+                    }}>
+                    <Text style={styles.profileBtnText}>Add Bio</Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <Text style={styles.aboutText}>
+                  {userProfile?.biography === ''
+                    ? 'A eget phasellus maecenas vitae et ultrices non. Ilsa Praesent diam faucibus vel eget ipsum mus lacus.ilsa Proin volutpat urna, congue diam quam mi est ilsa pharetra. Dignissim tris.'
+                    : userProfile?.biography}
+                </Text>
+              )}
             </View>
             <View style={styles.profileView}>
               <Text style={styles.profileText}>Profile</Text>
@@ -1294,7 +1364,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'normal',
     fontStyle: 'normal',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: 'Poppins',
     color: '#A8A8A8',
     marginTop: 5,
   },

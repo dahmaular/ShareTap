@@ -267,6 +267,107 @@ export type Message = {
   error?: string | null,
 };
 
+export type ScheduleMessageInput = {
+  message?: string | null,
+  sender?: string | null,
+  conversationId?: string | null,
+  minute?: string | null,
+  hour?: string | null,
+  day?: string | null,
+  month?: string | null,
+  year?: string | null,
+};
+
+export type ScheduleMessagePayload = {
+  __typename: "ScheduleMessagePayload",
+  data?: string | null,
+  error?: string | null,
+};
+
+export type CreateDraftInput = {
+  name?: string | null,
+  role?: string | null,
+  email?: string | null,
+  phone?: string | null,
+  address?: string | null,
+  website?: string | null,
+  facebook?: string | null,
+  twitter?: string | null,
+  linkedIn?: string | null,
+  businessProfileId?: string | null,
+  userId?: string | null,
+  cardTemplateId?: string | null,
+  status?: string | null,
+  color?: string | null,
+  category?: string | null,
+};
+
+export type DraftPayload = {
+  __typename: "DraftPayload",
+  draft?: Draft | null,
+  error?: string | null,
+};
+
+export type Draft = {
+  __typename: "Draft",
+  id?: string | null,
+  createdAt?: string | null,
+  name?: string | null,
+  role?: string | null,
+  email?: string | null,
+  phone?: string | null,
+  address?: string | null,
+  website?: string | null,
+  facebook?: string | null,
+  twitter?: string | null,
+  linkedIn?: string | null,
+  businessProfileId: string,
+  userId?: string | null,
+  cardTemplateId?: string | null,
+  status?: string | null,
+  color?: string | null,
+  category?: string | null,
+};
+
+export type AddContactInput = {
+  userId?: string | null,
+  contactId?: string | null,
+  name?: string | null,
+  phone?: string | null,
+};
+
+export type ContactPayload = {
+  __typename: "ContactPayload",
+  contact?: Contact | null,
+  error?: string | null,
+};
+
+export type Contact = {
+  __typename: "Contact",
+  id?: string | null,
+  createdAt?: string | null,
+  userId?: string | null,
+  contactId?: string | null,
+  name?: string | null,
+  phone?: string | null,
+};
+
+export type ReminderInput = {
+  userId?: string | null,
+  message?: string | null,
+  minute?: string | null,
+  hour?: string | null,
+  day?: string | null,
+  month?: string | null,
+  year?: string | null,
+};
+
+export type ReminderPayload = {
+  __typename: "ReminderPayload",
+  data?: string | null,
+  error?: string | null,
+};
+
 export type ReceivedCardsPayload = {
   __typename: "ReceivedCardsPayload",
   AHdata?:  Array<ReceivedCardsData | null > | null,
@@ -410,6 +511,53 @@ export type UserConversation = {
   recipient?: string | null,
   createdAt?: string | null,
   error?: string | null,
+};
+
+export type ListScheduledMessagesPayload = {
+  __typename: "ListScheduledMessagesPayload",
+  scheduledMessages?:  Array<ScheduleMessage | null > | null,
+  error?: string | null,
+};
+
+export type ScheduleMessage = {
+  __typename: "ScheduleMessage",
+  message?: string | null,
+  sender?: string | null,
+  conversationId?: string | null,
+  minute?: string | null,
+  hour?: string | null,
+  day?: string | null,
+  month?: string | null,
+  year?: string | null,
+};
+
+export type ListDraftsPayload = {
+  __typename: "ListDraftsPayload",
+  drafts?:  Array<Draft | null > | null,
+  error?: string | null,
+};
+
+export type ListContactsPayload = {
+  __typename: "ListContactsPayload",
+  contacts?:  Array<Contact | null > | null,
+  error?: string | null,
+};
+
+export type ListRemindersPayload = {
+  __typename: "ListRemindersPayload",
+  reminders?:  Array<Reminder | null > | null,
+  error?: string | null,
+};
+
+export type Reminder = {
+  __typename: "Reminder",
+  userId?: string | null,
+  message?: string | null,
+  minute?: string | null,
+  hour?: string | null,
+  day?: string | null,
+  month?: string | null,
+  year?: string | null,
 };
 
 export type CreateCardMutationVariables = {
@@ -775,6 +923,81 @@ export type CreateMessageMutation = {
     sender?: string | null,
     conversationId?: string | null,
     createdAt?: string | null,
+    error?: string | null,
+  } | null,
+};
+
+export type CreateScheduleMessageMutationVariables = {
+  scheduleMessagePayload?: ScheduleMessageInput | null,
+};
+
+export type CreateScheduleMessageMutation = {
+  createScheduleMessage?:  {
+    __typename: "ScheduleMessagePayload",
+    data?: string | null,
+    error?: string | null,
+  } | null,
+};
+
+export type CreateDraftMutationVariables = {
+  draft?: CreateDraftInput | null,
+};
+
+export type CreateDraftMutation = {
+  createDraft?:  {
+    __typename: "DraftPayload",
+    draft?:  {
+      __typename: "Draft",
+      id?: string | null,
+      createdAt?: string | null,
+      name?: string | null,
+      role?: string | null,
+      email?: string | null,
+      phone?: string | null,
+      address?: string | null,
+      website?: string | null,
+      facebook?: string | null,
+      twitter?: string | null,
+      linkedIn?: string | null,
+      businessProfileId: string,
+      userId?: string | null,
+      cardTemplateId?: string | null,
+      status?: string | null,
+      color?: string | null,
+      category?: string | null,
+    } | null,
+    error?: string | null,
+  } | null,
+};
+
+export type AddContactMutationVariables = {
+  contact?: AddContactInput | null,
+};
+
+export type AddContactMutation = {
+  addContact?:  {
+    __typename: "ContactPayload",
+    contact?:  {
+      __typename: "Contact",
+      id?: string | null,
+      createdAt?: string | null,
+      userId?: string | null,
+      contactId?: string | null,
+      name?: string | null,
+      phone?: string | null,
+    } | null,
+    error?: string | null,
+  } | null,
+};
+
+export type SetReminderMutationVariables = {
+  reminderPayload?: ReminderInput | null,
+};
+
+export type SetReminderMutation = {
+  setReminder?:  {
+    __typename: "ReminderPayload",
+    data?: string | null,
     error?: string | null,
   } | null,
 };
@@ -1382,6 +1605,100 @@ export type ListMessagesForConversationQuery = {
     createdAt?: string | null,
     error?: string | null,
   } | null > | null,
+};
+
+export type ListScheduledMessagesQueryVariables = {
+  userId?: string | null,
+};
+
+export type ListScheduledMessagesQuery = {
+  listScheduledMessages?:  {
+    __typename: "ListScheduledMessagesPayload",
+    scheduledMessages?:  Array< {
+      __typename: "ScheduleMessage",
+      message?: string | null,
+      sender?: string | null,
+      conversationId?: string | null,
+      minute?: string | null,
+      hour?: string | null,
+      day?: string | null,
+      month?: string | null,
+      year?: string | null,
+    } | null > | null,
+    error?: string | null,
+  } | null,
+};
+
+export type ListDraftsQueryVariables = {
+  userId?: string | null,
+};
+
+export type ListDraftsQuery = {
+  listDrafts?:  {
+    __typename: "ListDraftsPayload",
+    drafts?:  Array< {
+      __typename: "Draft",
+      id?: string | null,
+      createdAt?: string | null,
+      name?: string | null,
+      role?: string | null,
+      email?: string | null,
+      phone?: string | null,
+      address?: string | null,
+      website?: string | null,
+      facebook?: string | null,
+      twitter?: string | null,
+      linkedIn?: string | null,
+      businessProfileId: string,
+      userId?: string | null,
+      cardTemplateId?: string | null,
+      status?: string | null,
+      color?: string | null,
+      category?: string | null,
+    } | null > | null,
+    error?: string | null,
+  } | null,
+};
+
+export type ListContactsQueryVariables = {
+  userId?: string | null,
+};
+
+export type ListContactsQuery = {
+  listContacts?:  {
+    __typename: "ListContactsPayload",
+    contacts?:  Array< {
+      __typename: "Contact",
+      id?: string | null,
+      createdAt?: string | null,
+      userId?: string | null,
+      contactId?: string | null,
+      name?: string | null,
+      phone?: string | null,
+    } | null > | null,
+    error?: string | null,
+  } | null,
+};
+
+export type ListUserRemindersQueryVariables = {
+  userId?: string | null,
+};
+
+export type ListUserRemindersQuery = {
+  listUserReminders?:  {
+    __typename: "ListRemindersPayload",
+    reminders?:  Array< {
+      __typename: "Reminder",
+      userId?: string | null,
+      message?: string | null,
+      minute?: string | null,
+      hour?: string | null,
+      day?: string | null,
+      month?: string | null,
+      year?: string | null,
+    } | null > | null,
+    error?: string | null,
+  } | null,
 };
 
 export type OnCreateConversationSubscription = {
