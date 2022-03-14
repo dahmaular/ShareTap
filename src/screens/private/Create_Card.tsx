@@ -131,7 +131,7 @@ const CreateCard = ({navigation}: any) => {
     listUserCardTemplateService()
       .then(temp => {
         template = temp.data.listCardTemplates.cardTemplates;
-        // console.log(template[4].borderBottomColor);
+        console.log(template);
       })
       .catch(e => console.log(e));
   }, []);

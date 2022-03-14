@@ -50,7 +50,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 
             <View style={{marginLeft: 20}}>
               <Text style={styles.name}>Ayo Moses</Text>
-              <Text style={styles.editProfile}>Edit Profile</Text>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate('Profile')}>
+                <Text style={styles.editProfile}>Edit Profile</Text>
+              </TouchableOpacity>
             </View>
           </View>
 

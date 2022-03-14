@@ -93,7 +93,7 @@ const Search = ({route}: any) => {
     if (route.params) {
       const {cardd} = route.params;
       card.push(cardd);
-      console.log('This is the card details', card);
+      // console.log('This is the card details', card);
     }
   }, []);
 

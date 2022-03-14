@@ -37,6 +37,7 @@ import {
 import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
+import {APPSYNC_APIKEY} from 'react-native-dotenv';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -72,6 +73,7 @@ const Home = ({navigation}: Props) => {
       .then(id => {
         // console.log('Id is here', id);
         setUserId(id);
+        console.log('app sync ', APPSYNC_APIKEY.toString());
       })
       .catch(e => console.log(e));
   }, []);
