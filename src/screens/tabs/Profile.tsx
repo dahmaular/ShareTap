@@ -388,7 +388,7 @@ const Profile = ({navigation}: Props) => {
           // console.log('No of cards', result);
           return (
             <>
-              <View style={styles.userProfile}>
+              <View style={styles.userProfile} key={index}>
                 <View style={styles.profileRole}>
                   <TapLogo style={styles.logo} />
                   <View>

@@ -466,7 +466,10 @@ export const listUserConversations = /* GraphQL */ `
   query ListUserConversations($userId: String) {
     listUserConversations(userId: $userId) {
       id
-      recipient
+      recipientUserId
+      recipientUsername
+      recipientAvatar
+      lastMessage
       createdAt
       error
     }

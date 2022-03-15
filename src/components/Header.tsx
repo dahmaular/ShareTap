@@ -28,7 +28,7 @@ const Header: FC<HeaderProps> = ({
       </TouchableOpacity>
 
       <View>
-        <Text style={{...styles.title, color: titleColor}}>{title}</Text>
+        <Text style={{...styles.title, color: titleColor, textTransform: 'capitalize'}}>{title}</Text>
       </View>
 
       <TouchableOpacity onPress={() => rightOnPress()}>

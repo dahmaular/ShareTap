@@ -28,7 +28,12 @@ import {
 import DocumentPicker from 'react-native-document-picker';
 import {v4 as uuidv4} from 'uuid';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {getUserIdService} from '../../services/userService';
+import {
+  createMessageService,
+  listenToConversationsByIdService,
+  listUserConversationsByIdService,
+} from '../../services/chatService';
+import {MessageInput} from '../../types/apiTypes';
 
 type ChatMessageProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -47,31 +52,80 @@ type Props = {
 
 const ChatMessage = ({navigation, route}: Props) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const [userId, setUserId] = useState('');
+  const [loading, setLoading] = useState(false);
   const [avatar] = useState(null);
+  const {item} = route.params;
+
+  console.log('Item on Chat Message', item)
 
   useEffect(() => {
-    getUserIdService()
-      .then(id => {
-        setUserId(id);
-      })
-      .catch(e => console.log(e));
-  }, []);
+    const getConversationMessages = async () => {
+      await listUserConversationsByIdService(item.id as string)
+        .then(res => {
+          const msg = res.data
+            ?.map(x => {
+              return {
+                _id: uuidv4(),
+                text: x?.message,
+                createdAt: x?.createdAt,
+                user: {
+                  _id: x?.sender,
+                },
+                // image: x.image_url,
+              };
+            })
+            .reverse();
+          setMessages(msg as []);
+        })
+        .catch(e => {
+          throw e;
+        });
+    };
+
+    getConversationMessages();
+  }, [item.id]);
 
   useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello, would the meeting still go ahead as on the first day of the month as planned.',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'Sam Adeyemo',
-        },
-        image: '',
-      },
-    ]);
-  }, []);
+    const getListener = async () => {
+      // const token = await GET_TOKEN();
+      // const pusher = new Pusher(PUSHER_APP_KEY, {
+      //   cluster: PUSHER_APP_CLUSTER,
+      //   encrypted: false,
+      //   authEndpoint: 'https://safelybuy-api.herokuapp.com/broadcasting/auth',
+      //   auth: {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //       Accept: 'application/json',
+      //     },
+      //   },
+      // });
+
+      // const channel = pusher.subscribe('private-userChat');
+      // channel.bind('App\\Events\\MessageSent', (e) => {
+      //   const newObj = {
+      //     _id: uuidv4(),
+      //     text: e.message.message,
+      //     createdAt: e.message.created_at,
+      //     user: {
+      //       _id: e.message.sender_id,
+      //     },
+      //     image: e.message.image_url,
+      //   };
+
+      //   if (newObj.user._id == user?.data?.id) {
+      //     return;
+      //   }
+
+      //   setMessages((previousMessages) => {
+      //     return GiftedChat.append(previousMessages, newObj);
+      //   });
+      // });
+
+      const res = await listenToConversationsByIdService(item.id as string);
+      console.log('Listening response', res);
+    };
+    getListener();
+  }, [item.id]);
 
   const handleSend = useCallback((newMessage = []) => {
     const message = [
@@ -82,14 +136,27 @@ const ChatMessage = ({navigation, route}: Props) => {
         user: {
           _id: newMessage[0].user._id,
         },
-        image: newMessage[0].image,
+        // image: newMessage[0].image,
       },
     ];
 
     setMessages(previousMessages => {
       return GiftedChat.append(previousMessages, message);
     });
+
+    handleServer(newMessage);
   }, []);
+
+  const handleServer = async (newMessage: any) => {
+    const body: MessageInput = {
+      message: newMessage[0].text,
+      sender: newMessage[0].user._id,
+      conversationId: item.id,
+    };
+    const res = await createMessageService(body);
+
+    console.log('Server Response', res);
+  };
 
   const pickFile = async () => {
     // Opening Document Picker to select one file
@@ -138,7 +205,7 @@ const ChatMessage = ({navigation, route}: Props) => {
     return (
       <Bubble
         {...props}
-        position={message_sender_id == userId ? 'right' : 'left'}
+        position={message_sender_id == item.recipientUserId ? 'right' : 'left'}
         wrapperStyle={{
           right: {
             backgroundColor: '#316F8A',
@@ -273,12 +340,12 @@ const ChatMessage = ({navigation, route}: Props) => {
   return (
     <View style={{flex: 1}}>
       <Header
-        title="Paul Nathan"
+        title={item.recipientUsername as string}
         titleColor="#FFFFFF"
         bgColor="#316F8A"
         leftSvg={<ArrowBack />}
         leftOnPress={() => navigation.goBack()}
-        rightSvg={<More />}
+        rightSvg={<></>}
         rightOnPress={() => <></>}
       />
 
@@ -287,7 +354,7 @@ const ChatMessage = ({navigation, route}: Props) => {
           messages={messages as any}
           onSend={newMessage => handleSend(newMessage)}
           user={{
-            _id: userId,
+            _id: item.recipientUserId as string,
           }}
           renderBubble={renderBubble}
           alwaysShowSend

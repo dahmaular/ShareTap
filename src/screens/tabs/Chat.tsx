@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -22,6 +22,9 @@ import {
   AuthenticatedRoutesParamsList,
 } from '../../types/navigation';
 import {BACKGROUND_COLOR} from '../../core/color';
+import {listUserConversationsService} from '../../services/chatService';
+import {getUserIdService} from '../../services/userService';
+import Moment from 'moment';
 
 const {width} = Dimensions.get('screen');
 
@@ -32,14 +35,63 @@ type Props = {
   >;
 };
 
+interface UserConversationsProps {
+  id: string | null;
+  recipientUserId: string | null;
+  recipientUsername: string | null;
+  recipientAvatar: string | null;
+  lastMessage: string | null;
+  createdAt: string | null;
+  error: string | null;
+}
+
 const Chat = ({navigation}: Props) => {
-  const [filteredDataSource, setFilteredDataSource] = useState([]);
-  const [chats, setChats] = useState(Array(20));
+  const [filteredDataSource, setFilteredDataSource] = useState<
+    UserConversationsProps[]
+  >([]);
+  const [chats, setChats] = useState<UserConversationsProps[]>([]);
   const [search, setSearch] = useState('');
   const _onNotificationPressed = () => {};
 
+  useEffect(() => {
+    getUserIdService()
+      .then(id => {
+        listUserConversationsService(id)
+          .then(res => {
+            console.log('List User Conversations Response', res);
+            if (res.data) {
+              setChats(res.data as []);
+              setFilteredDataSource(res.data as []);
+            }
+          })
+          .catch(e => {
+            console.log('List Error', e);
+          });
+      })
+      .catch(e => console.log(e));
+  }, [navigation]);
+
   const searchFilterFunction = (text: string) => {
-    setSearch(text);
+    // Check if searched text is not blank
+    if (text) {
+      // Inserted text is not blank
+      // Filter the chats lists
+      // Update FilteredDataSource
+      const newData = chats.filter(function (item) {
+        const itemData = item.lastMessage
+          ? item.lastMessage.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredDataSource(newData);
+      setSearch(text);
+    } else {
+      // Inserted text is blank
+      // Update FilteredDataSource with chats
+      setFilteredDataSource(chats);
+      setSearch(text);
+    }
   };
 
   const ListEmptyView = () => {
@@ -89,7 +141,7 @@ const Chat = ({navigation}: Props) => {
               <View style={{flex: 0.9}}>
                 <TextInput
                   style={styles.textInput}
-                  placeholder="Search Business Contact"
+                  placeholder="Search Conversations"
                   placeholderTextColor="rgba(51, 51, 51, 0.51)"
                   onChangeText={text => searchFilterFunction(text)}
                   value={search}
@@ -115,7 +167,7 @@ const Chat = ({navigation}: Props) => {
           <View style={styles.border}></View>
 
           <FlatList
-            data={chats}
+            data={filteredDataSource}
             keyExtractor={(item, index) => index.toString()}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={ListEmptyView}
@@ -124,11 +176,11 @@ const Chat = ({navigation}: Props) => {
             renderItem={({item}) => (
               <TouchableOpacity
                 style={styles.chatCard}
-                onPress={() => navigation.navigate('ChatMessage')}>
+                onPress={() => navigation.navigate('ChatMessage', {item})}>
                 <View style={{flex: 0.18}}>
                   <Avatar.Image
                     size={50}
-                    source={require('../../assets/img/avatar.png')}
+                    source={{uri: item.recipientAvatar as string}}
                   />
                 </View>
 
@@ -139,18 +191,19 @@ const Chat = ({navigation}: Props) => {
                       justifyContent: 'space-between',
                     }}>
                     <View>
-                      <Text style={styles.name}>Paul Nathan</Text>
+                      <Text style={styles.name}>{item.recipientUsername}</Text>
                       <Text numberOfLines={2} style={styles.chat}>
-                        Seen it earlier, pretty nice. He’s good... not everytime
-                        though.
+                        {item.lastMessage}
                       </Text>
                     </View>
 
                     <View>
-                      <Text style={styles.time}>07:22</Text>
-                      <Badge size={15} style={styles.badge}>
+                      <Text style={styles.time}>
+                        {Moment(item.createdAt).format('LT')}
+                      </Text>
+                      {/* <Badge size={15} style={styles.badge}>
                         12
-                      </Badge>
+                      </Badge> */}
                     </View>
                   </View>
 
@@ -294,6 +347,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins',
     color: '#333333',
     fontStyle: 'normal',
+    textTransform: 'capitalize',
   },
 
   chat: {

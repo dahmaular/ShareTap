@@ -71,7 +71,7 @@ export type AuthenticatedRoutesParamsList = {
   SetReminder: undefined;
   SetMessage: undefined;
   CreateCard: undefined;
-  ChatMessage: undefined;
+  ChatMessage:Record<'item', ListChatMessagesRoute>;
   ReminderCalendar: Record<'item', ReminderCalenderRoute>;
 };
 
@@ -114,4 +114,14 @@ export interface ReminderCalenderRoute {
   description: string;
   startDate: any;
   endDate: any;
+}
+
+export interface ListChatMessagesRoute {
+  id: string | null;
+  recipientUserId: string | null;
+  recipientUsername: string | null;
+  recipientAvatar: string | null;
+  lastMessage: string | null;
+  createdAt: string | null;
+  error: string | null;
 }

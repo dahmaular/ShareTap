@@ -1179,7 +1179,10 @@ export type ListUserConversationsQuery = {
   listUserConversations:  Array< {
     __typename: "UserConversation",
     id: string | null,
-    recipient: string | null,
+    recipientUserId: string | null,
+    recipientUsername: string | null,
+    recipientAvatar: string | null,
+    lastMessage: string | null,
     createdAt: string | null,
     error: string | null,
   } | null > | null,
