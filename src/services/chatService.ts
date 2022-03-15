@@ -74,19 +74,4 @@ export const createMessageService = async (messagePayload: MessageInput) => {
   }
 };
 
-export const listenToConversationsByIdService = async (
-  conversationId: string,
-) => {
-  try {
-    const {data} = (await API.graphql({
-      query: onCreateMessageByConversationId,
-      variables: {conversationId},
-      authMode: GRAPHQL_AUTH_MODE.API_KEY,
-    })) as {
-      data: ListenToUserConversationsByIdResponse;
-    };
-    return {data: data.onCreateMessageByConversationId};
-  } catch (error) {
-    throw error;
-  }
-};
+

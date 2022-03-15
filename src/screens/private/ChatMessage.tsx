@@ -8,6 +8,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
+import {API, Auth, graphqlOperation} from 'aws-amplify';
+import {GRAPHQL_AUTH_MODE} from '@aws-amplify/api';
+import * as subscriptions from '../../graphql/subscriptions';
 import {RouteProp} from '@react-navigation/native';
 import {AuthenticatedRoutesParamsList} from '../../types/navigation';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -30,10 +33,10 @@ import {v4 as uuidv4} from 'uuid';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {
   createMessageService,
-  listenToConversationsByIdService,
   listUserConversationsByIdService,
 } from '../../services/chatService';
 import {MessageInput} from '../../types/apiTypes';
+import {onCreateMessageByConversationId} from '../../graphql/subscriptions';
 
 type ChatMessageProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -56,7 +59,9 @@ const ChatMessage = ({navigation, route}: Props) => {
   const [avatar] = useState(null);
   const {item} = route.params;
 
-  console.log('Item on Chat Message', item)
+  const id = item.id;
+
+  console.log('Item on Chat Message', item);
 
   useEffect(() => {
     const getConversationMessages = async () => {
@@ -86,45 +91,33 @@ const ChatMessage = ({navigation, route}: Props) => {
   }, [item.id]);
 
   useEffect(() => {
-    const getListener = async () => {
-      // const token = await GET_TOKEN();
-      // const pusher = new Pusher(PUSHER_APP_KEY, {
-      //   cluster: PUSHER_APP_CLUSTER,
-      //   encrypted: false,
-      //   authEndpoint: 'https://safelybuy-api.herokuapp.com/broadcasting/auth',
-      //   auth: {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //       Accept: 'application/json',
-      //     },
-      //   },
-      // });
+    const subscription = (
+      API.graphql({
+        query: onCreateMessageByConversationId,
+        variables: {id},
+        authMode: GRAPHQL_AUTH_MODE.API_KEY,
+      }) as any
+    ).subscribe((res: any) => {
+      console.log('Res', res);
+      const newObj = {
+        _id: uuidv4(),
+        text: res?.message,
+        createdAt: res?.createdAt,
+        user: {
+          _id: res?.sender,
+        },
+        // image: x.image_url,
+      };
+      if (newObj.user._id == item.recipientUserId) {
+        return;
+      }
 
-      // const channel = pusher.subscribe('private-userChat');
-      // channel.bind('App\\Events\\MessageSent', (e) => {
-      //   const newObj = {
-      //     _id: uuidv4(),
-      //     text: e.message.message,
-      //     createdAt: e.message.created_at,
-      //     user: {
-      //       _id: e.message.sender_id,
-      //     },
-      //     image: e.message.image_url,
-      //   };
+      setMessages(previousMessages => {
+        return GiftedChat.append(previousMessages, newObj as any);
+      });
+    });
 
-      //   if (newObj.user._id == user?.data?.id) {
-      //     return;
-      //   }
-
-      //   setMessages((previousMessages) => {
-      //     return GiftedChat.append(previousMessages, newObj);
-      //   });
-      // });
-
-      const res = await listenToConversationsByIdService(item.id as string);
-      console.log('Listening response', res);
-    };
-    getListener();
+    subscription.unsubscribe();
   }, [item.id]);
 
   const handleSend = useCallback((newMessage = []) => {

@@ -25,6 +25,7 @@ import {BACKGROUND_COLOR} from '../../core/color';
 import {listUserConversationsService} from '../../services/chatService';
 import {getUserIdService} from '../../services/userService';
 import Moment from 'moment';
+import {useFocusEffect} from '@react-navigation/native';
 
 const {width} = Dimensions.get('screen');
 
@@ -53,23 +54,25 @@ const Chat = ({navigation}: Props) => {
   const [search, setSearch] = useState('');
   const _onNotificationPressed = () => {};
 
-  useEffect(() => {
-    getUserIdService()
-      .then(id => {
-        listUserConversationsService(id)
-          .then(res => {
-            console.log('List User Conversations Response', res);
-            if (res.data) {
-              setChats(res.data as []);
-              setFilteredDataSource(res.data as []);
-            }
-          })
-          .catch(e => {
-            console.log('List Error', e);
-          });
-      })
-      .catch(e => console.log(e));
-  }, [navigation]);
+  useFocusEffect(
+    React.useCallback(() => {
+      getUserIdService()
+        .then(id => {
+          listUserConversationsService(id)
+            .then(res => {
+              console.log('List User Conversations Response', res);
+              if (res.data) {
+                setChats(res.data as []);
+                setFilteredDataSource(res.data as []);
+              }
+            })
+            .catch(e => {
+              console.log('List Error', e);
+            });
+        })
+        .catch(e => console.log(e));
+    }, []),
+  );
 
   const searchFilterFunction = (text: string) => {
     // Check if searched text is not blank
