@@ -131,7 +131,7 @@ const CreateCard = ({navigation}: any) => {
     listUserCardTemplateService()
       .then(temp => {
         template = temp.data.listCardTemplates.cardTemplates;
-        console.log(template);
+        console.log('Template here', template);
       })
       .catch(e => console.log(e));
   }, []);
@@ -319,13 +319,13 @@ const CreateCard = ({navigation}: any) => {
               <TouchableOpacity
                 style={{
                   ...styles.template1,
-                  borderBottomColor: template[4].borderBottomColor,
+                  borderBottomColor: template[0].borderBottomColor,
                 }}
                 onPress={() => {
                   setTemplateModal(false);
                   setEditCard(true);
                   id = 1;
-                  cardDetails[0].cardTemplateId = template[4].id;
+                  cardDetails[0].cardTemplateId = template[0]?.id;
                 }}>
                 {/* <View style={styles.bottomLine} /> */}
               </TouchableOpacity>
@@ -338,7 +338,7 @@ const CreateCard = ({navigation}: any) => {
                   setTemplateModal(false);
                   setEditCard(true);
                   id = 2;
-                  cardDetails[0].cardTemplateId = template[1].id;
+                  cardDetails[0].cardTemplateId = template[1]?.id;
                 }}>
                 {/* <View style={styles.bottomLine2} /> */}
               </TouchableOpacity>
@@ -353,20 +353,20 @@ const CreateCard = ({navigation}: any) => {
                   setTemplateModal(false);
                   setEditCard(true);
                   id = 3;
-                  cardDetails[0].cardTemplateId = template[4].id;
+                  cardDetails[0].cardTemplateId = template[2]?.id;
                 }}>
                 {/* <View style={styles.bottomLine3} /> */}
               </TouchableOpacity>
               <TouchableOpacity
                 style={{
                   ...styles.template4,
-                  borderBottomColor: template[6].borderBottomColor,
+                  borderBottomColor: template[3].borderBottomColor,
                 }}
                 onPress={() => {
                   setTemplateModal(false);
                   setEditCard(true);
                   id = 4;
-                  cardDetails[0].cardTemplateId = template[4].id;
+                  cardDetails[0].cardTemplateId = template[3]?.id;
                 }}>
                 {/* <View style={styles.bottomLine4} /> */}
               </TouchableOpacity>
