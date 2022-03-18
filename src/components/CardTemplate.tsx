@@ -46,7 +46,7 @@ export interface cardTemplate {
   boxWidth: number;
   halfBoxDistance: number;
   pan: any;
-  id: number;
+  idColor: any;
   social: {
     websiteIcon: string;
     twitterIcon: string;
@@ -61,7 +61,7 @@ const CardTemplate = ({
   boxWidth,
   halfBoxDistance,
   pan,
-  id,
+  idColor,
   social,
 }: cardTemplate) => {
   const [visible, setVisible] = React.useState(false);
@@ -241,10 +241,18 @@ const CardTemplate = ({
           </View>
         }
       />
-      {id === 1 && <View style={styles.bottomLine} />}
-      {id === 2 && <View style={styles.bottomLine2} />}
-      {id === 3 && <View style={styles.bottomLine3} />}
-      {id === 4 && <View style={styles.bottomLine4} />}
+      {idColor && (
+        <View style={{...styles.bottomLine, backgroundColor: `${idColor}`}} />
+      )}
+      {/* {idColor && (
+        <View style={{...styles.bottomLine2, backgroundColor: `${idColor}`}} />
+      )}
+      {idColor && (
+        <View style={{...styles.bottomLine3, backgroundColor: `${idColor}`}} />
+      )}
+      {idColor && (
+        <View style={{...styles.bottomLine4, backgroundColor: `${idColor}`}} />
+      )} */}
     </Animated.View>
   );
 };
@@ -283,7 +291,7 @@ const styles = StyleSheet.create({
   },
   social: {marginRight: 10},
 
-  bottomLine: {width: '100%', height: 7, backgroundColor: '#219653'},
+  bottomLine: {width: '100%', height: 7},
   bottomLine2: {
     // position: 'absolute',
     // bottom: 0,
