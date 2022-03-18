@@ -165,96 +165,101 @@ const Profile = ({navigation}: Props) => {
       ? launchCamera(DEFAULT_OPTIONS, async response => {
           if (response.didCancel) {
           } else if (response.errorCode) {
-          } else {
+          } else if (response.assets) {
             const fileObj: profilePictureProps = {
               uri: response.assets[0].uri,
               type: response.assets[0].type,
             };
-            await handleImageUpload(fileObj);
+            await handleImageUpload(
+              response.assets[0].uri as string,
+              response.assets[0].type as string,
+            );
           }
         })
       : launchImageLibrary(DEFAULT_OPTIONS, async response => {
           if (response.didCancel) {
           } else if (response.errorCode) {
-          } else {
+          } else if (response.assets) {
             const fileObj: profilePictureProps = {
               uri: response.assets[0].uri,
               type: response.assets[0].type,
             };
-            await handleImageUpload(fileObj);
+            await handleImageUpload(
+              response.assets[0].uri as string,
+              response.assets[0].type as string,
+            );
           }
         });
   };
 
   const onPressAvatar = (type: any) => {
+    console.log('Type', type);
     setAvatarModal(false);
     type === 'capture'
       ? launchCamera(DEFAULT_OPTIONS, async response => {
           if (response.didCancel) {
           } else if (response.errorCode) {
-          } else {
+          } else if (response.assets) {
             const fileObj: profilePictureProps = {
               uri: response.assets[0].uri,
               type: response.assets[0].type,
             };
-            await handleImageUploadAvatar(fileObj);
+            await handleImageUploadAvatar(
+              response.assets[0].uri as string,
+              response.assets[0].type as string,
+            );
           }
         })
       : launchImageLibrary(DEFAULT_OPTIONS, async response => {
           if (response.didCancel) {
           } else if (response.errorCode) {
-          } else {
+          } else if (response.assets) {
             const fileObj: profilePictureProps = {
               uri: response.assets[0].uri,
               type: response.assets[0].type,
             };
-            await handleImageUploadAvatar(fileObj);
+            await handleImageUploadAvatar(
+              response.assets[0].uri as string,
+              response.assets[0].type as string,
+            );
           }
         });
   };
 
-  const handleImageUpload = async (file: profilePictureProps) => {
+  const handleImageUpload = async (uri: string, type: string) => {
     // console.log('File object here', file);
     setIsLoadingBg(true);
     const data = {
       key: new Date().getTime().toString(),
-      type: file.type.replace('image/', ''),
+      type: type.replace('image/', ''),
     };
 
     const uploadPresignedUrl: any = await getS3presignedURL(data);
     const upload = {
-      uri: file.uri,
+      uri: uri,
     };
 
-    const imageUrl = await uploadImageNew(
-      uploadPresignedUrl,
-      upload.uri,
-      file.type,
-    );
+    const imageUrl = await uploadImageNew(uploadPresignedUrl, upload.uri, type);
     const imageStr = `${imageUrl.url.split('?')[0]}`;
     setImageDefault(imageStr);
     imgeBgUrl = imageStr;
     onSubmit();
   };
 
-  const handleImageUploadAvatar = async (file: profilePictureProps) => {
+  const handleImageUploadAvatar = async (uri: string, type: string) => {
     // console.log('File object here', file);
     setIsLoadingAv(true);
     const data = {
       key: new Date().getTime().toString(),
-      type: file.type.replace('image/', ''),
+      type: type.replace('image/', ''),
     };
 
     const uploadPresignedUrl: any = await getS3presignedURL(data);
     const upload = {
-      uri: file.uri,
+      uri: uri,
     };
 
-    const imageUrl = await uploadImageNew(
-      uploadPresignedUrl,
-      upload.uri,
-      file.type,
-    );
+    const imageUrl = await uploadImageNew(uploadPresignedUrl, upload.uri, type);
     const imageStr = `${imageUrl.url.split('?')[0]}`;
     avatarUrl = imageStr;
     onSubmit();
