@@ -167,7 +167,7 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
       <View
         style={{
           ...styles.bottomLine,
-          backgroundColor: `${item.cardTemplate.borderBottomColor}`,
+          backgroundColor: `${item?.cardTemplate?.borderBottomColor}`,
         }}></View>
     </Animated.View>
   );
