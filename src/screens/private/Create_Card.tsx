@@ -60,6 +60,7 @@ const {width} = Dimensions.get('screen');
 
 const deviceHeight = Dimensions.get('window').height;
 let id: number;
+let idColor: any;
 let template: any;
 
 interface profileProps {
@@ -117,6 +118,7 @@ const CreateCard = ({navigation}: any) => {
   const [userId, setUserId] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
   const [businessProfile, setBusinessProfile] = useState<profileProps[]>([]);
+  const [templat, setTemplat] = useState<any>(null);
 
   useEffect(() => {
     getUserIdService()
@@ -131,7 +133,8 @@ const CreateCard = ({navigation}: any) => {
     listUserCardTemplateService()
       .then(temp => {
         template = temp.data.listCardTemplates.cardTemplates;
-        console.log('Template here', template);
+        setTemplat(temp?.data?.listCardTemplates?.cardTemplates);
+        // console.log('Template here', template);
       })
       .catch(e => console.log(e));
   }, []);
@@ -315,61 +318,33 @@ const CreateCard = ({navigation}: any) => {
                 Select a template to create a card
               </Text>
             </View>
-            <View style={{flexDirection: 'row', marginTop: 20}}>
-              <TouchableOpacity
-                style={{
-                  ...styles.template1,
-                  borderBottomColor: template[0].borderBottomColor,
-                }}
-                onPress={() => {
-                  setTemplateModal(false);
-                  setEditCard(true);
-                  id = 1;
-                  cardDetails[0].cardTemplateId = template[0]?.id;
-                }}>
-                {/* <View style={styles.bottomLine} /> */}
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  ...styles.template1,
-                  borderBottomColor: template[1].borderBottomColor,
-                }}
-                onPress={() => {
-                  setTemplateModal(false);
-                  setEditCard(true);
-                  id = 2;
-                  cardDetails[0].cardTemplateId = template[1]?.id;
-                }}>
-                {/* <View style={styles.bottomLine2} /> */}
-              </TouchableOpacity>
-            </View>
-            <View style={{flexDirection: 'row', marginTop: 20}}>
-              <TouchableOpacity
-                style={{
-                  ...styles.template3,
-                  borderBottomColor: template[2].borderBottomColor,
-                }}
-                onPress={() => {
-                  setTemplateModal(false);
-                  setEditCard(true);
-                  id = 3;
-                  cardDetails[0].cardTemplateId = template[2]?.id;
-                }}>
-                {/* <View style={styles.bottomLine3} /> */}
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  ...styles.template4,
-                  borderBottomColor: template[3].borderBottomColor,
-                }}
-                onPress={() => {
-                  setTemplateModal(false);
-                  setEditCard(true);
-                  id = 4;
-                  cardDetails[0].cardTemplateId = template[3]?.id;
-                }}>
-                {/* <View style={styles.bottomLine4} /> */}
-              </TouchableOpacity>
+            {/* Flatlist here */}
+            <View style={{height: 270}}>
+              <FlatList
+                data={templat}
+                contentContainerStyle={{paddingVertical: 5}}
+                contentInsetAdjustmentBehavior="never"
+                snapToAlignment="center"
+                decelerationRate="fast"
+                automaticallyAdjustContentInsets={false}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                numColumns={2}
+                keyExtractor={(item, index) => `${index}-${item}`}
+                renderItem={({item, index}) => (
+                  <TouchableOpacity
+                    style={{
+                      ...styles.template4,
+                      borderBottomColor: item.borderBottomColor,
+                    }}
+                    onPress={() => {
+                      setTemplateModal(false);
+                      setEditCard(true);
+                      idColor = item.borderBottomColor;
+                      cardDetails[0].cardTemplateId = item.id;
+                    }}></TouchableOpacity>
+                )}
+              />
             </View>
           </View>
         </View>
@@ -415,7 +390,7 @@ const CreateCard = ({navigation}: any) => {
               boxWidth={boxWidth}
               halfBoxDistance={halfBoxDistance}
               pan={pan}
-              id={id}
+              idColor={idColor}
               social={social}
             />
           )}
@@ -1087,6 +1062,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(49, 111, 138, 0.16)',
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 7,
+    marginBottom: 15,
   },
   modalTitleText: {
     marginTop: 23,
