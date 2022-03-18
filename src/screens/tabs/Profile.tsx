@@ -166,10 +166,6 @@ const Profile = ({navigation}: Props) => {
           if (response.didCancel) {
           } else if (response.errorCode) {
           } else if (response.assets) {
-            const fileObj: profilePictureProps = {
-              uri: response.assets[0].uri,
-              type: response.assets[0].type,
-            };
             await handleImageUpload(
               response.assets[0].uri as string,
               response.assets[0].type as string,
@@ -180,10 +176,6 @@ const Profile = ({navigation}: Props) => {
           if (response.didCancel) {
           } else if (response.errorCode) {
           } else if (response.assets) {
-            const fileObj: profilePictureProps = {
-              uri: response.assets[0].uri,
-              type: response.assets[0].type,
-            };
             await handleImageUpload(
               response.assets[0].uri as string,
               response.assets[0].type as string,
@@ -200,10 +192,6 @@ const Profile = ({navigation}: Props) => {
           if (response.didCancel) {
           } else if (response.errorCode) {
           } else if (response.assets) {
-            const fileObj: profilePictureProps = {
-              uri: response.assets[0].uri,
-              type: response.assets[0].type,
-            };
             await handleImageUploadAvatar(
               response.assets[0].uri as string,
               response.assets[0].type as string,
@@ -214,10 +202,6 @@ const Profile = ({navigation}: Props) => {
           if (response.didCancel) {
           } else if (response.errorCode) {
           } else if (response.assets) {
-            const fileObj: profilePictureProps = {
-              uri: response.assets[0].uri,
-              type: response.assets[0].type,
-            };
             await handleImageUploadAvatar(
               response.assets[0].uri as string,
               response.assets[0].type as string,
