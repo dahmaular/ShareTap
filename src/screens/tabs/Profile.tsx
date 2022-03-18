@@ -11,6 +11,7 @@ import {
   Image,
   ActivityIndicator,
   TextInput,
+  Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
@@ -159,8 +160,13 @@ const Profile = ({navigation}: Props) => {
 
   const dispatch = useDispatch();
 
-  const onPress = (type: any) => {
-    setPickerModal(false);
+  const delay = (ms: any) => new Promise(res => setTimeout(res, ms));
+
+  const onPress = async (type: any) => {
+    await setPickerModal(false);
+    if (Platform.OS == 'ios') {
+      await delay(1000);
+    }
     type === 'capture'
       ? launchCamera(DEFAULT_OPTIONS, async response => {
           if (response.didCancel) {
@@ -184,9 +190,11 @@ const Profile = ({navigation}: Props) => {
         });
   };
 
-  const onPressAvatar = (type: any) => {
-    console.log('Type', type);
-    setAvatarModal(false);
+  const onPressAvatar = async (type: any) => {
+    await setAvatarModal(false);
+    if (Platform.OS == 'ios') {
+      await delay(1000);
+    }
     type === 'capture'
       ? launchCamera(DEFAULT_OPTIONS, async response => {
           if (response.didCancel) {
@@ -211,7 +219,6 @@ const Profile = ({navigation}: Props) => {
   };
 
   const handleImageUpload = async (uri: string, type: string) => {
-    // console.log('File object here', file);
     setIsLoadingBg(true);
     const data = {
       key: new Date().getTime().toString(),
