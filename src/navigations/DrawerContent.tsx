@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -21,8 +21,12 @@ import SupportIcon from '../assets/svg/support-icon.svg';
 import {useSelector} from 'react-redux';
 import {signOutService} from '../services/authService';
 import {hubDispatch} from '../core/awsExports';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getUserIdService, getUserProfileService} from '../services/userService';
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [userId, setUserId] = useState('');
   const handleLogOut = async () => {
     try {
       await signOutService();
@@ -31,6 +35,29 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       hubDispatch('alert', error.message);
     }
   };
+
+  useEffect(() => {
+    getUserIdService()
+      .then(id => {
+        console.log('Id is here', id);
+        setUserId(id);
+      })
+      .catch(e => console.log(e));
+  }, []);
+
+  const getProfile = (id: any) => {
+    getUserProfileService(id).then(profil => {
+      console.log(
+        'User profile @drawer menu',
+        profil.data.getUserProfile?.userDetails,
+      );
+      setUserProfile(profil.data.getUserProfile?.userDetails);
+    });
+  };
+
+  useEffect(() => {
+    getProfile(userId);
+  }, [userId]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -44,12 +71,18 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
             <View>
               <Avatar.Image
                 size={50}
-                source={require('../assets/img/avatar-demo-image.png')}
+                source={
+                  userProfile?.avatar
+                    ? {uri: `${userProfile?.avatar}`}
+                    : require('../assets/img/avatar-demo-image.png')
+                }
               />
             </View>
 
             <View style={{marginLeft: 20}}>
-              <Text style={styles.name}>Ayo Moses</Text>
+              <Text style={styles.name}>
+                {userProfile?.userName ? userProfile?.userName : 'Ayo Moses'}
+              </Text>
               <TouchableOpacity
                 onPress={() => props.navigation.navigate('Profile')}>
                 <Text style={styles.editProfile}>Edit Profile</Text>
