@@ -9,6 +9,7 @@ interface HeaderProps {
   rightSvg3: any;
   bgColor: string;
   rightOnPress: () => void;
+  rightSvg2OnPress: () => void;
   leftOnPress: () => void;
 }
 
@@ -19,6 +20,7 @@ const CreateCardHeader: FC<HeaderProps> = ({
   rightSvg3,
   bgColor,
   rightOnPress,
+  rightSvg2OnPress,
   leftOnPress,
 }) => {
   return (
@@ -39,8 +41,7 @@ const CreateCardHeader: FC<HeaderProps> = ({
         </TouchableOpacity>
         <TouchableOpacity
           style={{marginRight: 30}}
-          //   onPress={() => rightOnPress()}
-        >
+          onPress={() => rightSvg2OnPress()}>
           {rightSvg2}
         </TouchableOpacity>
         <TouchableOpacity

@@ -22,6 +22,7 @@ import {useSelector} from 'react-redux';
 import {signOutService} from '../services/authService';
 import {hubDispatch} from '../core/awsExports';
 import {getUserIdService, getUserProfileService} from '../services/userService';
+import PImageBg from '../../assets/svg/profile-image-bg.svg';
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [userProfile, setUserProfile] = useState<any>(null);
@@ -68,7 +69,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
                 source={
                   userProfile?.avatar
                     ? {uri: `${userProfile?.avatar}`}
-                    : require('../assets/img/avatar-demo-image.png')
+                    : require('../assets/img/user_avater.png')
                 }
               />
             </View>

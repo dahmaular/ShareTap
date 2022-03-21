@@ -58,7 +58,7 @@ const Dashboard = ({navigation}) => {
 
   useEffect(() => {
     getUserCards(userId);
-  }, [userId]);
+  }, [userId, navigation]);
 
   const NoActivity = () => {
     return (

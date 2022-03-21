@@ -143,7 +143,7 @@ const Profile = ({navigation}: Props) => {
 
   useEffect(() => {
     getProfile(userId);
-  }, [userId]);
+  }, [userId, navigation]);
 
   const getUserCards = (id: any) => {
     listUserCardsService(id)
@@ -155,7 +155,7 @@ const Profile = ({navigation}: Props) => {
 
   useEffect(() => {
     getUserCards(userId);
-  }, [userId]);
+  }, [userId, navigation]);
 
   const dispatch = useDispatch();
 

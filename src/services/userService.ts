@@ -6,14 +6,18 @@ import {
   getPresignedUploadUrl,
   getUserProfile,
   listCardTemplates,
+  listDrafts,
   listUserBusinessProfiles,
   listUserCards,
 } from '../graphql/queries';
 import {
   BusinessProfilePayload,
   CreateBusinessProfileMutation,
+  CreateDraftInput,
+  CreateDraftMutation,
   GetPresignedUploadUrlQuery,
   GetUserProfileQuery,
+  ListDraftsQuery,
   ListUserBusinessProfilesQuery,
   ListUserCardsQuery,
   PresignedUploadInput,
@@ -22,7 +26,11 @@ import {
   UpdateUserProfilePayload,
 } from '../types/apiTypes';
 import {ExtractType} from '../types/extractApiTypes';
-import {createBusinessProfile, updateUserProfile} from '../graphql/mutations';
+import {
+  createBusinessProfile,
+  createDraft,
+  updateUserProfile,
+} from '../graphql/mutations';
 
 export type ListUserCardsResponse = ExtractType<ListUserCardsQuery>;
 
@@ -41,6 +49,10 @@ export type CreateBusinessProfileResponse =
 export type UpdateUserProfileResponse = ExtractType<UpdateUserProfileMutation>;
 
 export type GetPresignedUrlResponse = ExtractType<GetPresignedUploadUrlQuery>;
+
+export type ListDraftResponse = ExtractType<ListDraftsQuery>;
+
+export type CreateDraftResponse = ExtractType<CreateDraftMutation>;
 
 export const getUserIdService = async () => {
   try {
@@ -63,6 +75,7 @@ export const listUserCardsService = async (userId: string) => {
     })) as {
       data: ListUserCardsResponse;
     };
+
     return {data: data};
   } catch (error) {
     throw error;
@@ -77,7 +90,23 @@ export const listUserCardTemplateService = async () => {
     })) as {
       data: ListCardTemplateResponse;
     };
+    console.log(data.listUserCards?.cards);
     return {data: data};
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const listDraftService = async (userId: string) => {
+  try {
+    const {data} = (await API.graphql({
+      query: listDrafts,
+      variables: {userId},
+      authMode: GRAPHQL_AUTH_MODE.API_KEY,
+    })) as {
+      data: ListDraftResponse;
+    };
+    return {data: data.listDrafts?.drafts};
   } catch (error) {
     throw error;
   }
@@ -166,5 +195,20 @@ export const updateUserProfileService = async (
     return {data: data};
   } catch (e) {
     throw e;
+  }
+};
+
+export const createDraftService = async (draft: CreateDraftInput) => {
+  try {
+    const {data} = (await API.graphql({
+      query: createDraft,
+      variables: {draft},
+      authMode: GRAPHQL_AUTH_MODE.API_KEY,
+    })) as {
+      data: CreateDraftResponse;
+    };
+    return {data: data};
+  } catch (error) {
+    throw error;
   }
 };

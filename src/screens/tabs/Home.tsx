@@ -63,7 +63,8 @@ const Home = ({navigation}: Props) => {
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
-  console.log('User data @home', user);
+  const [userCards, setUserCards] = useState<any>(null);
+  // console.log('User data @home', user);
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -81,11 +82,11 @@ const Home = ({navigation}: Props) => {
   useEffect(() => {
     listUserCardsService(userId)
       .then(card => {
-        // console.log('card is here @home', card.data.listUserCards?.cards[0]);
-        // setUserId(id);
+        console.log('card is here @home', card.data.listUserCards?.cards);
+        setUserCards(card.data.listUserCards?.cards);
       })
       .catch(e => console.log(e));
-  }, []);
+  }, [userId, navigation]);
 
   const confirmToVerify = () => {
     setCardModal(false);
@@ -121,7 +122,7 @@ const Home = ({navigation}: Props) => {
       <View style={styles.flatlistView}>
         <FlatList
           horizontal
-          data={user?.cards?.listUserCards?.cards}
+          data={userCards}
           contentContainerStyle={{paddingVertical: 5}}
           contentInsetAdjustmentBehavior="never"
           snapToAlignment="center"
