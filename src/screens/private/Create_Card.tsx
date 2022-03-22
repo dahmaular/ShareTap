@@ -448,7 +448,7 @@ const CreateCard = ({navigation}: any) => {
       <View style={styles.flatlistView}>
         <FlatList
           horizontal
-          data={cardDetails}
+          data={drafts}
           contentContainerStyle={{paddingVertical: 5}}
           contentInsetAdjustmentBehavior="never"
           snapToAlignment="center"
@@ -760,7 +760,7 @@ const CreateCard = ({navigation}: any) => {
         <View style={{flex: 1}}>
           <View style={styles.categoriesView}>
             {editCard && <UserCardSlider />}
-            {editDraft && <UserCardSlider />}
+            {editDraft && <DraftCard />}
           </View>
 
           <View />
