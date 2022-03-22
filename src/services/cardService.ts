@@ -1,7 +1,12 @@
 /* eslint-disable no-useless-catch */ /* eslint-disable prettier/prettier */
 import {GRAPHQL_AUTH_MODE} from '@aws-amplify/api-graphql';
 import {API} from 'aws-amplify';
-import {createCard, createCardTemplate, shareCard} from '../graphql/mutations';
+import {
+  createCard,
+  createCardTemplate,
+  shareCard,
+  updateEndpoint,
+} from '../graphql/mutations';
 import {listCardsByBusinessProfileId} from '../graphql/queries';
 import {
   CardTemplateInput,
@@ -11,6 +16,7 @@ import {
   ListCardsByBusinessProfileIdQuery,
   ShareCardMutation,
   ShareCardPayload,
+  UpdateEndpointMutation,
 } from '../types/apiTypes';
 import {ExtractType} from '../types/extractApiTypes';
 
@@ -22,6 +28,7 @@ export type CreateCardTemplateResponse =
   ExtractType<CreateCardTemplateMutation>;
 
 export type ShareCardResponse = ExtractType<ShareCardMutation>;
+export type UpdateEndpointResponse = ExtractType<UpdateEndpointMutation>;
 
 export const createUserCard = async (cardPayload: CreateCardInput) => {
   try {
@@ -34,6 +41,21 @@ export const createUserCard = async (cardPayload: CreateCardInput) => {
     };
     console.log('This is response data', data);
     return {data: data.createCard};
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const updateUserDeviceToken = async (token: string) => {
+  try {
+    const {data} = (await API.graphql({
+      query: updateEndpoint,
+      variables: {deviceToken: token},
+      authMode: GRAPHQL_AUTH_MODE.API_KEY,
+    })) as {
+      data: UpdateEndpointResponse;
+    };
+    return {data: data.updateEndpoint};
   } catch (e) {
     throw e;
   }
