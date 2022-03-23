@@ -17,6 +17,33 @@ export type CreateCardInput = {
   cardTemplateId?: string | null,
 };
 
+export type CreateCardPayload = {
+  __typename: "CreateCardPayload",
+  card?: Card | null,
+  error?: string | null,
+};
+
+export type Card = {
+  __typename: "Card",
+  id: string,
+  name?: string | null,
+  role?: string | null,
+  email?: string | null,
+  phone?: string | null,
+  address?: string | null,
+  website?: string | null,
+  facebook?: string | null,
+  twitter?: string | null,
+  linkedIn?: string | null,
+  createdAt?: string | null,
+  businessProfileId: string,
+  userId?: string | null,
+  cardTemplateId?: string | null,
+  status?: string | null,
+  color?: string | null,
+  category?: string | null,
+};
+
 export type ShareCardPayload = {
   sender?: string | null,
   cardId?: string | null,
@@ -24,6 +51,23 @@ export type ShareCardPayload = {
 };
 
 export type BusinessProfilePayload = {
+  companyName?: string | null,
+  role?: string | null,
+  category?: string | null,
+  startDate?: string | null,
+  endDate?: string | null,
+  userId?: string | null,
+};
+
+export type BusinessProfileResponse = {
+  __typename: "BusinessProfileResponse",
+  businessProfile?: BusinessProfile | null,
+  error?: string | null,
+};
+
+export type BusinessProfile = {
+  __typename: "BusinessProfile",
+  id?: string | null,
   companyName?: string | null,
   role?: string | null,
   category?: string | null,
@@ -46,9 +90,47 @@ export type CreateSubscriptionSessionPayload = {
   customerPlan: string,
 };
 
+export type SubscriptionSessionPayload = {
+  __typename: "SubscriptionSessionPayload",
+  url?: string | null,
+  error?: string | null,
+};
+
 export type UpdateUserSubscriptionPayload = {
   userId: string,
   customerPlan: string,
+};
+
+export type UpdateUserSubscriptionResponse = {
+  __typename: "UpdateUserSubscriptionResponse",
+  userSubscriptionData?: SubscriptionResponse | null,
+  error?: string | null,
+};
+
+export type SubscriptionResponse = {
+  __typename: "SubscriptionResponse",
+  id?: string | null,
+  subscriptionData?: SubscriptionDetails | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+};
+
+export type SubscriptionDetails = {
+  __typename: "SubscriptionDetails",
+  customerPlan?: string | null,
+  subscriptionPrice?: string | null,
+};
+
+export type CancelUserSubscriptionResponse = {
+  __typename: "CancelUserSubscriptionResponse",
+  data?: string | null,
+  error?: string | null,
+};
+
+export type UserBillingPortalPayload = {
+  __typename: "UserBillingPortalPayload",
+  url?: string | null,
+  error?: string | null,
 };
 
 export type SignupPayload = {
@@ -68,9 +150,30 @@ export type CardTemplateInput = {
   borderBottomColor?: string | null,
 };
 
+export type CardTemplateResponse = {
+  __typename: "CardTemplateResponse",
+  cardTemplate?: CardTemplate | null,
+  error?: string | null,
+};
+
+export type CardTemplate = {
+  __typename: "CardTemplate",
+  id?: string | null,
+  backgroundColor?: string | null,
+  borderBottomColor?: string | null,
+};
+
 export type RemoveReceivedCardPayload = {
   cardId?: string | null,
   userId?: string | null,
+};
+
+export type PageData = {
+  __typename: "PageData",
+  id?: string | null,
+  data?: string | null,
+  updatedAt?: string | null,
+  error?: string | null,
 };
 
 export type UpdateSubscriptionFeaturesInput = {
@@ -78,9 +181,29 @@ export type UpdateSubscriptionFeaturesInput = {
   standardFeatures?: string | null,
 };
 
+export type UpdateSubscriptionFeaturesPayload = {
+  __typename: "UpdateSubscriptionFeaturesPayload",
+  id?: string | null,
+  features?: SubscriptionFeatures | null,
+  updatedAt?: string | null,
+  error?: string | null,
+};
+
+export type SubscriptionFeatures = {
+  __typename: "SubscriptionFeatures",
+  premiumFeatures?: string | null,
+  standardFeatures?: string | null,
+};
+
 export type PushNotificationInput = {
   title?: string | null,
   body?: string | null,
+};
+
+export type NotificationResponse = {
+  __typename: "NotificationResponse",
+  data?: string | null,
+  error?: string | null,
 };
 
 export type UpdateUserProfileInput = {
@@ -95,14 +218,53 @@ export type UpdateUserProfileInput = {
   biography?: string | null,
 };
 
+export type UpdateUserProfilePayload = {
+  __typename: "UpdateUserProfilePayload",
+  userProfile?: User | null,
+  error?: string | null,
+};
+
+export type User = {
+  __typename: "User",
+  id: string,
+  backgroundImage?: string | null,
+  avatar?: string | null,
+  firstName?: string | null,
+  lastName?: string | null,
+  location?: string | null,
+  twitter?: string | null,
+  facebook?: string | null,
+  biography?: string | null,
+  email?: string | null,
+  userName?: string | null,
+};
+
 export type ConversationInput = {
   recipients?: Array< string | null > | null,
+};
+
+export type Conversation = {
+  __typename: "Conversation",
+  id?: string | null,
+  recipients?: Array< string | null > | null,
+  createdAt?: string | null,
+  error?: string | null,
 };
 
 export type MessageInput = {
   message?: string | null,
   sender?: string | null,
   conversationId?: string | null,
+};
+
+export type Message = {
+  __typename: "Message",
+  id?: string | null,
+  message?: string | null,
+  sender?: string | null,
+  conversationId?: string | null,
+  createdAt?: string | null,
+  error?: string | null,
 };
 
 export type ScheduleMessageInput = {
@@ -114,6 +276,12 @@ export type ScheduleMessageInput = {
   day?: string | null,
   month?: string | null,
   year?: string | null,
+};
+
+export type ScheduleMessagePayload = {
+  __typename: "ScheduleMessagePayload",
+  data?: string | null,
+  error?: string | null,
 };
 
 export type CreateDraftInput = {
@@ -134,7 +302,50 @@ export type CreateDraftInput = {
   category?: string | null,
 };
 
+export type DraftPayload = {
+  __typename: "DraftPayload",
+  draft?: Draft | null,
+  error?: string | null,
+};
+
+export type Draft = {
+  __typename: "Draft",
+  id?: string | null,
+  createdAt?: string | null,
+  name?: string | null,
+  role?: string | null,
+  email?: string | null,
+  phone?: string | null,
+  address?: string | null,
+  website?: string | null,
+  facebook?: string | null,
+  twitter?: string | null,
+  linkedIn?: string | null,
+  businessProfileId: string,
+  userId?: string | null,
+  cardTemplateId?: string | null,
+  status?: string | null,
+  color?: string | null,
+  category?: string | null,
+};
+
 export type AddContactInput = {
+  userId?: string | null,
+  contactId?: string | null,
+  name?: string | null,
+  phone?: string | null,
+};
+
+export type ContactPayload = {
+  __typename: "ContactPayload",
+  contact?: Contact | null,
+  error?: string | null,
+};
+
+export type Contact = {
+  __typename: "Contact",
+  id?: string | null,
+  createdAt?: string | null,
   userId?: string | null,
   contactId?: string | null,
   name?: string | null,
@@ -151,6 +362,60 @@ export type ReminderInput = {
   year?: string | null,
 };
 
+export type ReminderPayload = {
+  __typename: "ReminderPayload",
+  data?: string | null,
+  error?: string | null,
+};
+
+export type ReceivedCardsPayload = {
+  __typename: "ReceivedCardsPayload",
+  AHdata?:  Array<ReceivedCardsData | null > | null,
+  IOdata?:  Array<ReceivedCardsData | null > | null,
+  PUdata?:  Array<ReceivedCardsData | null > | null,
+  VZdata?:  Array<ReceivedCardsData | null > | null,
+  error?: string | null,
+};
+
+export type ReceivedCardsData = {
+  __typename: "ReceivedCardsData",
+  cards?:  Array<CardResponse | null > | null,
+};
+
+export type CardResponse = {
+  __typename: "CardResponse",
+  cardDetails?: Card | null,
+  cardTemplate?: CardTemplate | null,
+};
+
+export type CardsPayload = {
+  __typename: "CardsPayload",
+  cards?:  Array<CardResponse | null > | null,
+  error?: string | null,
+};
+
+export type UsersPayload = {
+  __typename: "UsersPayload",
+  users?:  Array<User | null > | null,
+  error?: string | null,
+};
+
+export type BusinessProfilesPayload = {
+  __typename: "BusinessProfilesPayload",
+  businessProfiles?:  Array<BusinessProfile | null > | null,
+  error?: string | null,
+};
+
+export type AdminDashboardPayload = {
+  __typename: "AdminDashboardPayload",
+  totalUsers?: number | null,
+  totalInactiveUsers?: number | null,
+  totalCardsCreated?: number | null,
+  totalCardsShared?: number | null,
+  totalEarnings?: string | null,
+  error?: string | null,
+};
+
 export type ListAllUsersInput = {
   limit?: number | null,
   isFirst?: boolean | null,
@@ -163,9 +428,139 @@ export type NextKeyInput = {
   item?: string | null,
 };
 
+export type ListUsersPayload = {
+  __typename: "ListUsersPayload",
+  users?:  Array<ListUser | null > | null,
+  total?: number | null,
+  lastEvaluatedKey?: NextKey | null,
+  error?: string | null,
+};
+
+export type ListUser = {
+  __typename: "ListUser",
+  id: string,
+  positionId?: number | null,
+  firstName?: string | null,
+  lastName?: string | null,
+  email?: string | null,
+  avatar?: string | null,
+  userName?: string | null,
+  totalCards?: number | null,
+  subscriptionPlan?: string | null,
+  group?: string | null,
+};
+
+export type NextKey = {
+  __typename: "NextKey",
+  partitionType?: string | null,
+  id?: string | null,
+  item?: string | null,
+};
+
+export type SubscriptionPlansPayload = {
+  __typename: "SubscriptionPlansPayload",
+  subscriptionPlans?:  Array<SubscriptionPlanResponse | null > | null,
+  error?: string | null,
+};
+
+export type SubscriptionPlanResponse = {
+  __typename: "SubscriptionPlanResponse",
+  plan?: string | null,
+  currency?: string | null,
+  price?: string | null,
+  features?: string | null,
+};
+
+export type UserSubscriptionStatusPayload = {
+  __typename: "UserSubscriptionStatusPayload",
+  userSubscriptionData?: SubscriptionResponse | null,
+  renewalDate?: string | null,
+  cardLastDigits?: string | null,
+  cardBrand?: string | null,
+  currency?: string | null,
+  error?: string | null,
+};
+
+export type ListCategoriesPayload = {
+  __typename: "ListCategoriesPayload",
+  categories?: Array< string | null > | null,
+  error?: string | null,
+};
+
+export type ListCardTemplatesPayload = {
+  __typename: "ListCardTemplatesPayload",
+  cardTemplates?:  Array<CardTemplate | null > | null,
+  error?: string | null,
+};
+
+export type UserProfilePayload = {
+  __typename: "UserProfilePayload",
+  userDetails?: User | null,
+  userBusinessProfiles?:  Array<BusinessProfile | null > | null,
+  error?: string | null,
+};
+
 export type PresignedUploadInput = {
   key?: string | null,
   type?: string | null,
+};
+
+export type UserConversation = {
+  __typename: "UserConversation",
+  id?: string | null,
+  recipientUserId?: string | null,
+  recipientUsername?: string | null,
+  recipientAvatar?: string | null,
+  lastMessage?: string | null,
+  createdAt?: string | null,
+  error?: string | null,
+};
+
+export type ListScheduledMessagesPayload = {
+  __typename: "ListScheduledMessagesPayload",
+  scheduledMessages?:  Array<ScheduleMessage | null > | null,
+  error?: string | null,
+};
+
+export type ScheduleMessage = {
+  __typename: "ScheduleMessage",
+  message?: string | null,
+  sender?: string | null,
+  conversationId?: string | null,
+  minute?: string | null,
+  hour?: string | null,
+  day?: string | null,
+  month?: string | null,
+  year?: string | null,
+};
+
+export type ListDraftsPayload = {
+  __typename: "ListDraftsPayload",
+  drafts?:  Array<Draft | null > | null,
+  error?: string | null,
+};
+
+export type ListContactsPayload = {
+  __typename: "ListContactsPayload",
+  contacts?:  Array<Contact | null > | null,
+  error?: string | null,
+};
+
+export type ListRemindersPayload = {
+  __typename: "ListRemindersPayload",
+  reminders?:  Array<Reminder | null > | null,
+  error?: string | null,
+};
+
+export type Reminder = {
+  __typename: "Reminder",
+  userId?: string | null,
+  message?: string | null,
+  minute?: string | null,
+  hour?: string | null,
+  day?: string | null,
+  month?: string | null,
+  year?: string | null,
 };
 
 export type CreateCardMutationVariables = {
@@ -173,29 +568,29 @@ export type CreateCardMutationVariables = {
 };
 
 export type CreateCardMutation = {
-  createCard:  {
+  createCard?:  {
     __typename: "CreateCardPayload",
-    card:  {
+    card?:  {
       __typename: "Card",
       id: string,
-      name: string | null,
-      role: string | null,
-      email: string | null,
-      phone: string | null,
-      address: string | null,
-      website: string | null,
-      facebook: string | null,
-      twitter: string | null,
-      linkedIn: string | null,
-      createdAt: string | null,
+      name?: string | null,
+      role?: string | null,
+      email?: string | null,
+      phone?: string | null,
+      address?: string | null,
+      website?: string | null,
+      facebook?: string | null,
+      twitter?: string | null,
+      linkedIn?: string | null,
+      createdAt?: string | null,
       businessProfileId: string,
-      userId: string | null,
-      cardTemplateId: string | null,
-      status: string | null,
-      color: string | null,
-      category: string | null,
+      userId?: string | null,
+      cardTemplateId?: string | null,
+      status?: string | null,
+      color?: string | null,
+      category?: string | null,
     } | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -204,7 +599,7 @@ export type ShareCardMutationVariables = {
 };
 
 export type ShareCardMutation = {
-  shareCard: string | null,
+  shareCard?: string | null,
 };
 
 export type CreateBusinessProfileMutationVariables = {
@@ -212,19 +607,19 @@ export type CreateBusinessProfileMutationVariables = {
 };
 
 export type CreateBusinessProfileMutation = {
-  createBusinessProfile:  {
+  createBusinessProfile?:  {
     __typename: "BusinessProfileResponse",
-    businessProfile:  {
+    businessProfile?:  {
       __typename: "BusinessProfile",
-      id: string | null,
-      companyName: string | null,
-      role: string | null,
-      category: string | null,
-      startDate: string | null,
-      endDate: string | null,
-      userId: string | null,
+      id?: string | null,
+      companyName?: string | null,
+      role?: string | null,
+      category?: string | null,
+      startDate?: string | null,
+      endDate?: string | null,
+      userId?: string | null,
     } | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -233,7 +628,7 @@ export type DeleteBusinessProfileMutationVariables = {
 };
 
 export type DeleteBusinessProfileMutation = {
-  deleteBusinessProfile: string | null,
+  deleteBusinessProfile?: string | null,
 };
 
 export type UpdateBusinessProfileMutationVariables = {
@@ -241,19 +636,19 @@ export type UpdateBusinessProfileMutationVariables = {
 };
 
 export type UpdateBusinessProfileMutation = {
-  updateBusinessProfile:  {
+  updateBusinessProfile?:  {
     __typename: "BusinessProfileResponse",
-    businessProfile:  {
+    businessProfile?:  {
       __typename: "BusinessProfile",
-      id: string | null,
-      companyName: string | null,
-      role: string | null,
-      category: string | null,
-      startDate: string | null,
-      endDate: string | null,
-      userId: string | null,
+      id?: string | null,
+      companyName?: string | null,
+      role?: string | null,
+      category?: string | null,
+      startDate?: string | null,
+      endDate?: string | null,
+      userId?: string | null,
     } | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -262,7 +657,7 @@ export type ActivateUserMutationVariables = {
 };
 
 export type ActivateUserMutation = {
-  activateUser: string | null,
+  activateUser?: string | null,
 };
 
 export type RemoveUserMutationVariables = {
@@ -270,7 +665,7 @@ export type RemoveUserMutationVariables = {
 };
 
 export type RemoveUserMutation = {
-  removeUser: string | null,
+  removeUser?: string | null,
 };
 
 export type SuspendUserMutationVariables = {
@@ -278,7 +673,7 @@ export type SuspendUserMutationVariables = {
 };
 
 export type SuspendUserMutation = {
-  suspendUser: string | null,
+  suspendUser?: string | null,
 };
 
 export type SubscriptionSessionMutationVariables = {
@@ -286,10 +681,10 @@ export type SubscriptionSessionMutationVariables = {
 };
 
 export type SubscriptionSessionMutation = {
-  subscriptionSession:  {
+  subscriptionSession?:  {
     __typename: "SubscriptionSessionPayload",
-    url: string | null,
-    error: string | null,
+    url?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -298,20 +693,20 @@ export type UpdateUserSubscriptionMutationVariables = {
 };
 
 export type UpdateUserSubscriptionMutation = {
-  updateUserSubscription:  {
+  updateUserSubscription?:  {
     __typename: "UpdateUserSubscriptionResponse",
-    userSubscriptionData:  {
+    userSubscriptionData?:  {
       __typename: "SubscriptionResponse",
-      id: string | null,
-      subscriptionData:  {
+      id?: string | null,
+      subscriptionData?:  {
         __typename: "SubscriptionDetails",
-        customerPlan: string | null,
-        subscriptionPrice: string | null,
+        customerPlan?: string | null,
+        subscriptionPrice?: string | null,
       } | null,
-      createdAt: string | null,
-      updatedAt: string | null,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -320,10 +715,10 @@ export type CancelUserSubscriptionMutationVariables = {
 };
 
 export type CancelUserSubscriptionMutation = {
-  cancelUserSubscription:  {
+  cancelUserSubscription?:  {
     __typename: "CancelUserSubscriptionResponse",
-    data: string | null,
-    error: string | null,
+    data?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -332,10 +727,10 @@ export type UserBillingPortalMutationVariables = {
 };
 
 export type UserBillingPortalMutation = {
-  userBillingPortal:  {
+  userBillingPortal?:  {
     __typename: "UserBillingPortalPayload",
-    url: string | null,
-    error: string | null,
+    url?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -344,7 +739,7 @@ export type DisableUserCardMutationVariables = {
 };
 
 export type DisableUserCardMutation = {
-  disableUserCard: string | null,
+  disableUserCard?: string | null,
 };
 
 export type SignUpMutationVariables = {
@@ -352,7 +747,7 @@ export type SignUpMutationVariables = {
 };
 
 export type SignUpMutation = {
-  signUp: string | null,
+  signUp?: string | null,
 };
 
 export type ConfirmSignUpMutationVariables = {
@@ -360,7 +755,7 @@ export type ConfirmSignUpMutationVariables = {
 };
 
 export type ConfirmSignUpMutation = {
-  confirmSignUp: string | null,
+  confirmSignUp?: string | null,
 };
 
 export type CreateCardTemplateMutationVariables = {
@@ -368,15 +763,15 @@ export type CreateCardTemplateMutationVariables = {
 };
 
 export type CreateCardTemplateMutation = {
-  createCardTemplate:  {
+  createCardTemplate?:  {
     __typename: "CardTemplateResponse",
-    cardTemplate:  {
+    cardTemplate?:  {
       __typename: "CardTemplate",
-      id: string | null,
-      backgroundColor: string | null,
-      borderBottomColor: string | null,
+      id?: string | null,
+      backgroundColor?: string | null,
+      borderBottomColor?: string | null,
     } | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -385,7 +780,7 @@ export type RemoveReceivedCardMutationVariables = {
 };
 
 export type RemoveReceivedCardMutation = {
-  removeReceivedCard: string | null,
+  removeReceivedCard?: string | null,
 };
 
 export type ActivateUserCardMutationVariables = {
@@ -393,7 +788,7 @@ export type ActivateUserCardMutationVariables = {
 };
 
 export type ActivateUserCardMutation = {
-  activateUserCard: string | null,
+  activateUserCard?: string | null,
 };
 
 export type UpdateAboutPageMutationVariables = {
@@ -401,12 +796,12 @@ export type UpdateAboutPageMutationVariables = {
 };
 
 export type UpdateAboutPageMutation = {
-  updateAboutPage:  {
+  updateAboutPage?:  {
     __typename: "PageData",
-    id: string | null,
-    data: string | null,
-    updatedAt: string | null,
-    error: string | null,
+    id?: string | null,
+    data?: string | null,
+    updatedAt?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -415,12 +810,12 @@ export type UpdatePrivacyPolicyPageMutationVariables = {
 };
 
 export type UpdatePrivacyPolicyPageMutation = {
-  updatePrivacyPolicyPage:  {
+  updatePrivacyPolicyPage?:  {
     __typename: "PageData",
-    id: string | null,
-    data: string | null,
-    updatedAt: string | null,
-    error: string | null,
+    id?: string | null,
+    data?: string | null,
+    updatedAt?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -429,12 +824,12 @@ export type UpdateTermsAndConditionsPageMutationVariables = {
 };
 
 export type UpdateTermsAndConditionsPageMutation = {
-  updateTermsAndConditionsPage:  {
+  updateTermsAndConditionsPage?:  {
     __typename: "PageData",
-    id: string | null,
-    data: string | null,
-    updatedAt: string | null,
-    error: string | null,
+    id?: string | null,
+    data?: string | null,
+    updatedAt?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -443,16 +838,16 @@ export type UpdateSubscriptionFeaturesMutationVariables = {
 };
 
 export type UpdateSubscriptionFeaturesMutation = {
-  updateSubscriptionFeatures:  {
+  updateSubscriptionFeatures?:  {
     __typename: "UpdateSubscriptionFeaturesPayload",
-    id: string | null,
-    features:  {
+    id?: string | null,
+    features?:  {
       __typename: "SubscriptionFeatures",
-      premiumFeatures: string | null,
-      standardFeatures: string | null,
+      premiumFeatures?: string | null,
+      standardFeatures?: string | null,
     } | null,
-    updatedAt: string | null,
-    error: string | null,
+    updatedAt?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -461,10 +856,10 @@ export type SendPushNotificationMutationVariables = {
 };
 
 export type SendPushNotificationMutation = {
-  sendPushNotification:  {
+  sendPushNotification?:  {
     __typename: "NotificationResponse",
-    data: string | null,
-    error: string | null,
+    data?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -473,10 +868,10 @@ export type UpdateEndpointMutationVariables = {
 };
 
 export type UpdateEndpointMutation = {
-  updateEndpoint:  {
+  updateEndpoint?:  {
     __typename: "NotificationResponse",
-    data: string | null,
-    error: string | null,
+    data?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -485,23 +880,23 @@ export type UpdateUserProfileMutationVariables = {
 };
 
 export type UpdateUserProfileMutation = {
-  updateUserProfile:  {
+  updateUserProfile?:  {
     __typename: "UpdateUserProfilePayload",
-    userProfile:  {
+    userProfile?:  {
       __typename: "User",
       id: string,
-      backgroundImage: string | null,
-      avatar: string | null,
-      firstName: string | null,
-      lastName: string | null,
-      location: string | null,
-      twitter: string | null,
-      facebook: string | null,
-      biography: string | null,
-      email: string | null,
-      userName: string | null,
+      backgroundImage?: string | null,
+      avatar?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
+      location?: string | null,
+      twitter?: string | null,
+      facebook?: string | null,
+      biography?: string | null,
+      email?: string | null,
+      userName?: string | null,
     } | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -510,12 +905,12 @@ export type CreateConversationMutationVariables = {
 };
 
 export type CreateConversationMutation = {
-  createConversation:  {
+  createConversation?:  {
     __typename: "Conversation",
-    id: string | null,
-    recipients: Array< string | null > | null,
-    createdAt: string | null,
-    error: string | null,
+    id?: string | null,
+    recipients?: Array< string | null > | null,
+    createdAt?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -524,14 +919,14 @@ export type CreateMessageMutationVariables = {
 };
 
 export type CreateMessageMutation = {
-  createMessage:  {
+  createMessage?:  {
     __typename: "Message",
-    id: string | null,
-    message: string | null,
-    sender: string | null,
-    conversationId: string | null,
-    createdAt: string | null,
-    error: string | null,
+    id?: string | null,
+    message?: string | null,
+    sender?: string | null,
+    conversationId?: string | null,
+    createdAt?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -540,10 +935,10 @@ export type CreateScheduleMessageMutationVariables = {
 };
 
 export type CreateScheduleMessageMutation = {
-  createScheduleMessage:  {
+  createScheduleMessage?:  {
     __typename: "ScheduleMessagePayload",
-    data: string | null,
-    error: string | null,
+    data?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -552,29 +947,29 @@ export type CreateDraftMutationVariables = {
 };
 
 export type CreateDraftMutation = {
-  createDraft:  {
+  createDraft?:  {
     __typename: "DraftPayload",
-    draft:  {
+    draft?:  {
       __typename: "Draft",
-      id: string | null,
-      createdAt: string | null,
-      name: string | null,
-      role: string | null,
-      email: string | null,
-      phone: string | null,
-      address: string | null,
-      website: string | null,
-      facebook: string | null,
-      twitter: string | null,
-      linkedIn: string | null,
+      id?: string | null,
+      createdAt?: string | null,
+      name?: string | null,
+      role?: string | null,
+      email?: string | null,
+      phone?: string | null,
+      address?: string | null,
+      website?: string | null,
+      facebook?: string | null,
+      twitter?: string | null,
+      linkedIn?: string | null,
       businessProfileId: string,
-      userId: string | null,
-      cardTemplateId: string | null,
-      status: string | null,
-      color: string | null,
-      category: string | null,
+      userId?: string | null,
+      cardTemplateId?: string | null,
+      status?: string | null,
+      color?: string | null,
+      category?: string | null,
     } | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -583,18 +978,18 @@ export type AddContactMutationVariables = {
 };
 
 export type AddContactMutation = {
-  addContact:  {
+  addContact?:  {
     __typename: "ContactPayload",
-    contact:  {
+    contact?:  {
       __typename: "Contact",
-      id: string | null,
-      createdAt: string | null,
-      userId: string | null,
-      contactId: string | null,
-      name: string | null,
-      phone: string | null,
+      id?: string | null,
+      createdAt?: string | null,
+      userId?: string | null,
+      contactId?: string | null,
+      name?: string | null,
+      phone?: string | null,
     } | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -603,10 +998,10 @@ export type SetReminderMutationVariables = {
 };
 
 export type SetReminderMutation = {
-  setReminder:  {
+  setReminder?:  {
     __typename: "ReminderPayload",
-    data: string | null,
-    error: string | null,
+    data?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -615,9 +1010,137 @@ export type ListReceivedCardsQueryVariables = {
 };
 
 export type ListReceivedCardsQuery = {
-  listReceivedCards:  {
+  listReceivedCards?:  {
     __typename: "ReceivedCardsPayload",
-    error: string | null,
+    AHdata?:  Array< {
+      __typename: "ReceivedCardsData",
+      cards?:  Array< {
+        __typename: "CardResponse",
+        cardDetails?:  {
+          __typename: "Card",
+          id: string,
+          name?: string | null,
+          role?: string | null,
+          email?: string | null,
+          phone?: string | null,
+          address?: string | null,
+          website?: string | null,
+          facebook?: string | null,
+          twitter?: string | null,
+          linkedIn?: string | null,
+          createdAt?: string | null,
+          businessProfileId: string,
+          userId?: string | null,
+          cardTemplateId?: string | null,
+          status?: string | null,
+          color?: string | null,
+          category?: string | null,
+        } | null,
+        cardTemplate?:  {
+          __typename: "CardTemplate",
+          id?: string | null,
+          backgroundColor?: string | null,
+          borderBottomColor?: string | null,
+        } | null,
+      } | null > | null,
+    } | null > | null,
+    IOdata?:  Array< {
+      __typename: "ReceivedCardsData",
+      cards?:  Array< {
+        __typename: "CardResponse",
+        cardDetails?:  {
+          __typename: "Card",
+          id: string,
+          name?: string | null,
+          role?: string | null,
+          email?: string | null,
+          phone?: string | null,
+          address?: string | null,
+          website?: string | null,
+          facebook?: string | null,
+          twitter?: string | null,
+          linkedIn?: string | null,
+          createdAt?: string | null,
+          businessProfileId: string,
+          userId?: string | null,
+          cardTemplateId?: string | null,
+          status?: string | null,
+          color?: string | null,
+          category?: string | null,
+        } | null,
+        cardTemplate?:  {
+          __typename: "CardTemplate",
+          id?: string | null,
+          backgroundColor?: string | null,
+          borderBottomColor?: string | null,
+        } | null,
+      } | null > | null,
+    } | null > | null,
+    PUdata?:  Array< {
+      __typename: "ReceivedCardsData",
+      cards?:  Array< {
+        __typename: "CardResponse",
+        cardDetails?:  {
+          __typename: "Card",
+          id: string,
+          name?: string | null,
+          role?: string | null,
+          email?: string | null,
+          phone?: string | null,
+          address?: string | null,
+          website?: string | null,
+          facebook?: string | null,
+          twitter?: string | null,
+          linkedIn?: string | null,
+          createdAt?: string | null,
+          businessProfileId: string,
+          userId?: string | null,
+          cardTemplateId?: string | null,
+          status?: string | null,
+          color?: string | null,
+          category?: string | null,
+        } | null,
+        cardTemplate?:  {
+          __typename: "CardTemplate",
+          id?: string | null,
+          backgroundColor?: string | null,
+          borderBottomColor?: string | null,
+        } | null,
+      } | null > | null,
+    } | null > | null,
+    VZdata?:  Array< {
+      __typename: "ReceivedCardsData",
+      cards?:  Array< {
+        __typename: "CardResponse",
+        cardDetails?:  {
+          __typename: "Card",
+          id: string,
+          name?: string | null,
+          role?: string | null,
+          email?: string | null,
+          phone?: string | null,
+          address?: string | null,
+          website?: string | null,
+          facebook?: string | null,
+          twitter?: string | null,
+          linkedIn?: string | null,
+          createdAt?: string | null,
+          businessProfileId: string,
+          userId?: string | null,
+          cardTemplateId?: string | null,
+          status?: string | null,
+          color?: string | null,
+          category?: string | null,
+        } | null,
+        cardTemplate?:  {
+          __typename: "CardTemplate",
+          id?: string | null,
+          backgroundColor?: string | null,
+          borderBottomColor?: string | null,
+        } | null,
+      } | null > | null,
+    } | null > | null,
+    error?: string | null,
   } | null,
 };
 
@@ -626,38 +1149,38 @@ export type ListUserCardsQueryVariables = {
 };
 
 export type ListUserCardsQuery = {
-  listUserCards:  {
+  listUserCards?:  {
     __typename: "CardsPayload",
-    cards:  Array< {
+    cards?:  Array< {
       __typename: "CardResponse",
-      cardDetails:  {
+      cardDetails?:  {
         __typename: "Card",
         id: string,
-        name: string | null,
-        role: string | null,
-        email: string | null,
-        phone: string | null,
-        address: string | null,
-        website: string | null,
-        facebook: string | null,
-        twitter: string | null,
-        linkedIn: string | null,
-        createdAt: string | null,
+        name?: string | null,
+        role?: string | null,
+        email?: string | null,
+        phone?: string | null,
+        address?: string | null,
+        website?: string | null,
+        facebook?: string | null,
+        twitter?: string | null,
+        linkedIn?: string | null,
+        createdAt?: string | null,
         businessProfileId: string,
-        userId: string | null,
-        cardTemplateId: string | null,
-        status: string | null,
-        color: string | null,
-        category: string | null,
+        userId?: string | null,
+        cardTemplateId?: string | null,
+        status?: string | null,
+        color?: string | null,
+        category?: string | null,
       } | null,
-      cardTemplate:  {
+      cardTemplate?:  {
         __typename: "CardTemplate",
-        id: string | null,
-        backgroundColor: string | null,
-        borderBottomColor: string | null,
+        id?: string | null,
+        backgroundColor?: string | null,
+        borderBottomColor?: string | null,
       } | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -666,38 +1189,38 @@ export type ListSharedCardsQueryVariables = {
 };
 
 export type ListSharedCardsQuery = {
-  listSharedCards:  {
+  listSharedCards?:  {
     __typename: "CardsPayload",
-    cards:  Array< {
+    cards?:  Array< {
       __typename: "CardResponse",
-      cardDetails:  {
+      cardDetails?:  {
         __typename: "Card",
         id: string,
-        name: string | null,
-        role: string | null,
-        email: string | null,
-        phone: string | null,
-        address: string | null,
-        website: string | null,
-        facebook: string | null,
-        twitter: string | null,
-        linkedIn: string | null,
-        createdAt: string | null,
+        name?: string | null,
+        role?: string | null,
+        email?: string | null,
+        phone?: string | null,
+        address?: string | null,
+        website?: string | null,
+        facebook?: string | null,
+        twitter?: string | null,
+        linkedIn?: string | null,
+        createdAt?: string | null,
         businessProfileId: string,
-        userId: string | null,
-        cardTemplateId: string | null,
-        status: string | null,
-        color: string | null,
-        category: string | null,
+        userId?: string | null,
+        cardTemplateId?: string | null,
+        status?: string | null,
+        color?: string | null,
+        category?: string | null,
       } | null,
-      cardTemplate:  {
+      cardTemplate?:  {
         __typename: "CardTemplate",
-        id: string | null,
-        backgroundColor: string | null,
-        borderBottomColor: string | null,
+        id?: string | null,
+        backgroundColor?: string | null,
+        borderBottomColor?: string | null,
       } | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -706,23 +1229,23 @@ export type ListUsersWhoSharedACardQueryVariables = {
 };
 
 export type ListUsersWhoSharedACardQuery = {
-  listUsersWhoSharedACard:  {
+  listUsersWhoSharedACard?:  {
     __typename: "UsersPayload",
-    users:  Array< {
+    users?:  Array< {
       __typename: "User",
       id: string,
-      backgroundImage: string | null,
-      avatar: string | null,
-      firstName: string | null,
-      lastName: string | null,
-      location: string | null,
-      twitter: string | null,
-      facebook: string | null,
-      biography: string | null,
-      email: string | null,
-      userName: string | null,
+      backgroundImage?: string | null,
+      avatar?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
+      location?: string | null,
+      twitter?: string | null,
+      facebook?: string | null,
+      biography?: string | null,
+      email?: string | null,
+      userName?: string | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -731,23 +1254,23 @@ export type ListReceiversFromUserQueryVariables = {
 };
 
 export type ListReceiversFromUserQuery = {
-  listReceiversFromUser:  {
+  listReceiversFromUser?:  {
     __typename: "UsersPayload",
-    users:  Array< {
+    users?:  Array< {
       __typename: "User",
       id: string,
-      backgroundImage: string | null,
-      avatar: string | null,
-      firstName: string | null,
-      lastName: string | null,
-      location: string | null,
-      twitter: string | null,
-      facebook: string | null,
-      biography: string | null,
-      email: string | null,
-      userName: string | null,
+      backgroundImage?: string | null,
+      avatar?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
+      location?: string | null,
+      twitter?: string | null,
+      facebook?: string | null,
+      biography?: string | null,
+      email?: string | null,
+      userName?: string | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -756,23 +1279,23 @@ export type ListSendersToUserQueryVariables = {
 };
 
 export type ListSendersToUserQuery = {
-  listSendersToUser:  {
+  listSendersToUser?:  {
     __typename: "UsersPayload",
-    users:  Array< {
+    users?:  Array< {
       __typename: "User",
       id: string,
-      backgroundImage: string | null,
-      avatar: string | null,
-      firstName: string | null,
-      lastName: string | null,
-      location: string | null,
-      twitter: string | null,
-      facebook: string | null,
-      biography: string | null,
-      email: string | null,
-      userName: string | null,
+      backgroundImage?: string | null,
+      avatar?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
+      location?: string | null,
+      twitter?: string | null,
+      facebook?: string | null,
+      biography?: string | null,
+      email?: string | null,
+      userName?: string | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -781,19 +1304,19 @@ export type ListUserBusinessProfilesQueryVariables = {
 };
 
 export type ListUserBusinessProfilesQuery = {
-  listUserBusinessProfiles:  {
+  listUserBusinessProfiles?:  {
     __typename: "BusinessProfilesPayload",
-    businessProfiles:  Array< {
+    businessProfiles?:  Array< {
       __typename: "BusinessProfile",
-      id: string | null,
-      companyName: string | null,
-      role: string | null,
-      category: string | null,
-      startDate: string | null,
-      endDate: string | null,
-      userId: string | null,
+      id?: string | null,
+      companyName?: string | null,
+      role?: string | null,
+      category?: string | null,
+      startDate?: string | null,
+      endDate?: string | null,
+      userId?: string | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -802,19 +1325,19 @@ export type GetBusinessProfileByIdQueryVariables = {
 };
 
 export type GetBusinessProfileByIdQuery = {
-  getBusinessProfileById:  {
+  getBusinessProfileById?:  {
     __typename: "BusinessProfileResponse",
-    businessProfile:  {
+    businessProfile?:  {
       __typename: "BusinessProfile",
-      id: string | null,
-      companyName: string | null,
-      role: string | null,
-      category: string | null,
-      startDate: string | null,
-      endDate: string | null,
-      userId: string | null,
+      id?: string | null,
+      companyName?: string | null,
+      role?: string | null,
+      category?: string | null,
+      startDate?: string | null,
+      endDate?: string | null,
+      userId?: string | null,
     } | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -823,50 +1346,50 @@ export type ListCardsByBusinessProfileIdQueryVariables = {
 };
 
 export type ListCardsByBusinessProfileIdQuery = {
-  listCardsByBusinessProfileId:  {
+  listCardsByBusinessProfileId?:  {
     __typename: "CardsPayload",
-    cards:  Array< {
+    cards?:  Array< {
       __typename: "CardResponse",
-      cardDetails:  {
+      cardDetails?:  {
         __typename: "Card",
         id: string,
-        name: string | null,
-        role: string | null,
-        email: string | null,
-        phone: string | null,
-        address: string | null,
-        website: string | null,
-        facebook: string | null,
-        twitter: string | null,
-        linkedIn: string | null,
-        createdAt: string | null,
+        name?: string | null,
+        role?: string | null,
+        email?: string | null,
+        phone?: string | null,
+        address?: string | null,
+        website?: string | null,
+        facebook?: string | null,
+        twitter?: string | null,
+        linkedIn?: string | null,
+        createdAt?: string | null,
         businessProfileId: string,
-        userId: string | null,
-        cardTemplateId: string | null,
-        status: string | null,
-        color: string | null,
-        category: string | null,
+        userId?: string | null,
+        cardTemplateId?: string | null,
+        status?: string | null,
+        color?: string | null,
+        category?: string | null,
       } | null,
-      cardTemplate:  {
+      cardTemplate?:  {
         __typename: "CardTemplate",
-        id: string | null,
-        backgroundColor: string | null,
-        borderBottomColor: string | null,
+        id?: string | null,
+        backgroundColor?: string | null,
+        borderBottomColor?: string | null,
       } | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
 export type AdminDashboardQuery = {
-  adminDashboard:  {
+  adminDashboard?:  {
     __typename: "AdminDashboardPayload",
-    totalUsers: number | null,
-    totalInactiveUsers: number | null,
-    totalCardsCreated: number | null,
-    totalCardsShared: number | null,
-    totalEarnings: string | null,
-    error: string | null,
+    totalUsers?: number | null,
+    totalInactiveUsers?: number | null,
+    totalCardsCreated?: number | null,
+    totalCardsShared?: number | null,
+    totalEarnings?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -875,29 +1398,29 @@ export type ListAllUsersQueryVariables = {
 };
 
 export type ListAllUsersQuery = {
-  listAllUsers:  {
+  listAllUsers?:  {
     __typename: "ListUsersPayload",
-    users:  Array< {
+    users?:  Array< {
       __typename: "ListUser",
       id: string,
-      positionId: number | null,
-      firstName: string | null,
-      lastName: string | null,
-      email: string | null,
-      avatar: string | null,
-      userName: string | null,
-      totalCards: number | null,
-      subscriptionPlan: string | null,
-      group: string | null,
+      positionId?: number | null,
+      firstName?: string | null,
+      lastName?: string | null,
+      email?: string | null,
+      avatar?: string | null,
+      userName?: string | null,
+      totalCards?: number | null,
+      subscriptionPlan?: string | null,
+      group?: string | null,
     } | null > | null,
-    total: number | null,
-    lastEvaluatedKey:  {
+    total?: number | null,
+    lastEvaluatedKey?:  {
       __typename: "NextKey",
-      partitionType: string | null,
-      id: string | null,
-      item: string | null,
+      partitionType?: string | null,
+      id?: string | null,
+      item?: string | null,
     } | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -906,38 +1429,38 @@ export type MostSharedCardsQueryVariables = {
 };
 
 export type MostSharedCardsQuery = {
-  mostSharedCards:  {
+  mostSharedCards?:  {
     __typename: "CardsPayload",
-    cards:  Array< {
+    cards?:  Array< {
       __typename: "CardResponse",
-      cardDetails:  {
+      cardDetails?:  {
         __typename: "Card",
         id: string,
-        name: string | null,
-        role: string | null,
-        email: string | null,
-        phone: string | null,
-        address: string | null,
-        website: string | null,
-        facebook: string | null,
-        twitter: string | null,
-        linkedIn: string | null,
-        createdAt: string | null,
+        name?: string | null,
+        role?: string | null,
+        email?: string | null,
+        phone?: string | null,
+        address?: string | null,
+        website?: string | null,
+        facebook?: string | null,
+        twitter?: string | null,
+        linkedIn?: string | null,
+        createdAt?: string | null,
         businessProfileId: string,
-        userId: string | null,
-        cardTemplateId: string | null,
-        status: string | null,
-        color: string | null,
-        category: string | null,
+        userId?: string | null,
+        cardTemplateId?: string | null,
+        status?: string | null,
+        color?: string | null,
+        category?: string | null,
       } | null,
-      cardTemplate:  {
+      cardTemplate?:  {
         __typename: "CardTemplate",
-        id: string | null,
-        backgroundColor: string | null,
-        borderBottomColor: string | null,
+        id?: string | null,
+        backgroundColor?: string | null,
+        borderBottomColor?: string | null,
       } | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -946,20 +1469,20 @@ export type CountUserCardsQueryVariables = {
 };
 
 export type CountUserCardsQuery = {
-  countUserCards: number | null,
+  countUserCards?: number | null,
 };
 
 export type ListSubscriptionPlansQuery = {
-  listSubscriptionPlans:  {
+  listSubscriptionPlans?:  {
     __typename: "SubscriptionPlansPayload",
-    subscriptionPlans:  Array< {
+    subscriptionPlans?:  Array< {
       __typename: "SubscriptionPlanResponse",
-      plan: string | null,
-      currency: string | null,
-      price: string | null,
-      features: string | null,
+      plan?: string | null,
+      currency?: string | null,
+      price?: string | null,
+      features?: string | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -968,24 +1491,24 @@ export type GetUserSubscriptionStatusQueryVariables = {
 };
 
 export type GetUserSubscriptionStatusQuery = {
-  getUserSubscriptionStatus:  {
+  getUserSubscriptionStatus?:  {
     __typename: "UserSubscriptionStatusPayload",
-    userSubscriptionData:  {
+    userSubscriptionData?:  {
       __typename: "SubscriptionResponse",
-      id: string | null,
-      subscriptionData:  {
+      id?: string | null,
+      subscriptionData?:  {
         __typename: "SubscriptionDetails",
-        customerPlan: string | null,
-        subscriptionPrice: string | null,
+        customerPlan?: string | null,
+        subscriptionPrice?: string | null,
       } | null,
-      createdAt: string | null,
-      updatedAt: string | null,
+      createdAt?: string | null,
+      updatedAt?: string | null,
     } | null,
-    renewalDate: string | null,
-    cardLastDigits: string | null,
-    cardBrand: string | null,
-    currency: string | null,
-    error: string | null,
+    renewalDate?: string | null,
+    cardLastDigits?: string | null,
+    cardBrand?: string | null,
+    currency?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -994,29 +1517,29 @@ export type GetUsersBySubscriptionPlanQueryVariables = {
 };
 
 export type GetUsersBySubscriptionPlanQuery = {
-  getUsersBySubscriptionPlan:  {
+  getUsersBySubscriptionPlan?:  {
     __typename: "ListUsersPayload",
-    users:  Array< {
+    users?:  Array< {
       __typename: "ListUser",
       id: string,
-      positionId: number | null,
-      firstName: string | null,
-      lastName: string | null,
-      email: string | null,
-      avatar: string | null,
-      userName: string | null,
-      totalCards: number | null,
-      subscriptionPlan: string | null,
-      group: string | null,
+      positionId?: number | null,
+      firstName?: string | null,
+      lastName?: string | null,
+      email?: string | null,
+      avatar?: string | null,
+      userName?: string | null,
+      totalCards?: number | null,
+      subscriptionPlan?: string | null,
+      group?: string | null,
     } | null > | null,
-    total: number | null,
-    lastEvaluatedKey:  {
+    total?: number | null,
+    lastEvaluatedKey?:  {
       __typename: "NextKey",
-      partitionType: string | null,
-      id: string | null,
-      item: string | null,
+      partitionType?: string | null,
+      id?: string | null,
+      item?: string | null,
     } | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -1025,59 +1548,59 @@ export type ListDisabledUserCardsQueryVariables = {
 };
 
 export type ListDisabledUserCardsQuery = {
-  listDisabledUserCards:  {
+  listDisabledUserCards?:  {
     __typename: "CardsPayload",
-    cards:  Array< {
+    cards?:  Array< {
       __typename: "CardResponse",
-      cardDetails:  {
+      cardDetails?:  {
         __typename: "Card",
         id: string,
-        name: string | null,
-        role: string | null,
-        email: string | null,
-        phone: string | null,
-        address: string | null,
-        website: string | null,
-        facebook: string | null,
-        twitter: string | null,
-        linkedIn: string | null,
-        createdAt: string | null,
+        name?: string | null,
+        role?: string | null,
+        email?: string | null,
+        phone?: string | null,
+        address?: string | null,
+        website?: string | null,
+        facebook?: string | null,
+        twitter?: string | null,
+        linkedIn?: string | null,
+        createdAt?: string | null,
         businessProfileId: string,
-        userId: string | null,
-        cardTemplateId: string | null,
-        status: string | null,
-        color: string | null,
-        category: string | null,
+        userId?: string | null,
+        cardTemplateId?: string | null,
+        status?: string | null,
+        color?: string | null,
+        category?: string | null,
       } | null,
-      cardTemplate:  {
+      cardTemplate?:  {
         __typename: "CardTemplate",
-        id: string | null,
-        backgroundColor: string | null,
-        borderBottomColor: string | null,
+        id?: string | null,
+        backgroundColor?: string | null,
+        borderBottomColor?: string | null,
       } | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
 export type ListBusinessCategoriesQuery = {
-  listBusinessCategories:  {
+  listBusinessCategories?:  {
     __typename: "ListCategoriesPayload",
-    categories: Array< string | null > | null,
-    error: string | null,
+    categories?: Array< string | null > | null,
+    error?: string | null,
   } | null,
 };
 
 export type ListCardTemplatesQuery = {
-  listCardTemplates:  {
+  listCardTemplates?:  {
     __typename: "ListCardTemplatesPayload",
-    cardTemplates:  Array< {
+    cardTemplates?:  Array< {
       __typename: "CardTemplate",
-      id: string | null,
-      backgroundColor: string | null,
-      borderBottomColor: string | null,
+      id?: string | null,
+      backgroundColor?: string | null,
+      borderBottomColor?: string | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -1086,45 +1609,45 @@ export type GetCardTemplateByIdQueryVariables = {
 };
 
 export type GetCardTemplateByIdQuery = {
-  getCardTemplateById:  {
+  getCardTemplateById?:  {
     __typename: "CardTemplateResponse",
-    cardTemplate:  {
+    cardTemplate?:  {
       __typename: "CardTemplate",
-      id: string | null,
-      backgroundColor: string | null,
-      borderBottomColor: string | null,
+      id?: string | null,
+      backgroundColor?: string | null,
+      borderBottomColor?: string | null,
     } | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
 export type GetAboutPageQuery = {
-  getAboutPage:  {
+  getAboutPage?:  {
     __typename: "PageData",
-    id: string | null,
-    data: string | null,
-    updatedAt: string | null,
-    error: string | null,
+    id?: string | null,
+    data?: string | null,
+    updatedAt?: string | null,
+    error?: string | null,
   } | null,
 };
 
 export type GetPrivacyPolicyPageQuery = {
-  getPrivacyPolicyPage:  {
+  getPrivacyPolicyPage?:  {
     __typename: "PageData",
-    id: string | null,
-    data: string | null,
-    updatedAt: string | null,
-    error: string | null,
+    id?: string | null,
+    data?: string | null,
+    updatedAt?: string | null,
+    error?: string | null,
   } | null,
 };
 
 export type GetTermsAndConditionsPageQuery = {
-  getTermsAndConditionsPage:  {
+  getTermsAndConditionsPage?:  {
     __typename: "PageData",
-    id: string | null,
-    data: string | null,
-    updatedAt: string | null,
-    error: string | null,
+    id?: string | null,
+    data?: string | null,
+    updatedAt?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -1133,33 +1656,33 @@ export type GetUserProfileQueryVariables = {
 };
 
 export type GetUserProfileQuery = {
-  getUserProfile:  {
+  getUserProfile?:  {
     __typename: "UserProfilePayload",
-    userDetails:  {
+    userDetails?:  {
       __typename: "User",
       id: string,
-      backgroundImage: string | null,
-      avatar: string | null,
-      firstName: string | null,
-      lastName: string | null,
-      location: string | null,
-      twitter: string | null,
-      facebook: string | null,
-      biography: string | null,
-      email: string | null,
-      userName: string | null,
+      backgroundImage?: string | null,
+      avatar?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
+      location?: string | null,
+      twitter?: string | null,
+      facebook?: string | null,
+      biography?: string | null,
+      email?: string | null,
+      userName?: string | null,
     } | null,
-    userBusinessProfiles:  Array< {
+    userBusinessProfiles?:  Array< {
       __typename: "BusinessProfile",
-      id: string | null,
-      companyName: string | null,
-      role: string | null,
-      category: string | null,
-      startDate: string | null,
-      endDate: string | null,
-      userId: string | null,
+      id?: string | null,
+      companyName?: string | null,
+      role?: string | null,
+      category?: string | null,
+      startDate?: string | null,
+      endDate?: string | null,
+      userId?: string | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -1168,7 +1691,7 @@ export type GetPresignedUploadUrlQueryVariables = {
 };
 
 export type GetPresignedUploadUrlQuery = {
-  getPresignedUploadUrl: string | null,
+  getPresignedUploadUrl?: string | null,
 };
 
 export type ListUserConversationsQueryVariables = {
@@ -1176,15 +1699,15 @@ export type ListUserConversationsQueryVariables = {
 };
 
 export type ListUserConversationsQuery = {
-  listUserConversations:  Array< {
+  listUserConversations?:  Array< {
     __typename: "UserConversation",
-    id: string | null,
-    recipientUserId: string | null,
-    recipientUsername: string | null,
-    recipientAvatar: string | null,
-    lastMessage: string | null,
-    createdAt: string | null,
-    error: string | null,
+    id?: string | null,
+    recipientUserId?: string | null,
+    recipientUsername?: string | null,
+    recipientAvatar?: string | null,
+    lastMessage?: string | null,
+    createdAt?: string | null,
+    error?: string | null,
   } | null > | null,
 };
 
@@ -1193,12 +1716,12 @@ export type GetConversationQueryVariables = {
 };
 
 export type GetConversationQuery = {
-  getConversation:  {
+  getConversation?:  {
     __typename: "Conversation",
-    id: string | null,
-    recipients: Array< string | null > | null,
-    createdAt: string | null,
-    error: string | null,
+    id?: string | null,
+    recipients?: Array< string | null > | null,
+    createdAt?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -1207,14 +1730,14 @@ export type ListMessagesForConversationQueryVariables = {
 };
 
 export type ListMessagesForConversationQuery = {
-  listMessagesForConversation:  Array< {
+  listMessagesForConversation?:  Array< {
     __typename: "Message",
-    id: string | null,
-    message: string | null,
-    sender: string | null,
-    conversationId: string | null,
-    createdAt: string | null,
-    error: string | null,
+    id?: string | null,
+    message?: string | null,
+    sender?: string | null,
+    conversationId?: string | null,
+    createdAt?: string | null,
+    error?: string | null,
   } | null > | null,
 };
 
@@ -1223,20 +1746,20 @@ export type ListScheduledMessagesQueryVariables = {
 };
 
 export type ListScheduledMessagesQuery = {
-  listScheduledMessages:  {
+  listScheduledMessages?:  {
     __typename: "ListScheduledMessagesPayload",
-    scheduledMessages:  Array< {
+    scheduledMessages?:  Array< {
       __typename: "ScheduleMessage",
-      message: string | null,
-      sender: string | null,
-      conversationId: string | null,
-      minute: string | null,
-      hour: string | null,
-      day: string | null,
-      month: string | null,
-      year: string | null,
+      message?: string | null,
+      sender?: string | null,
+      conversationId?: string | null,
+      minute?: string | null,
+      hour?: string | null,
+      day?: string | null,
+      month?: string | null,
+      year?: string | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -1245,29 +1768,29 @@ export type ListDraftsQueryVariables = {
 };
 
 export type ListDraftsQuery = {
-  listDrafts:  {
+  listDrafts?:  {
     __typename: "ListDraftsPayload",
-    drafts:  Array< {
+    drafts?:  Array< {
       __typename: "Draft",
-      id: string | null,
-      createdAt: string | null,
-      name: string | null,
-      role: string | null,
-      email: string | null,
-      phone: string | null,
-      address: string | null,
-      website: string | null,
-      facebook: string | null,
-      twitter: string | null,
-      linkedIn: string | null,
+      id?: string | null,
+      createdAt?: string | null,
+      name?: string | null,
+      role?: string | null,
+      email?: string | null,
+      phone?: string | null,
+      address?: string | null,
+      website?: string | null,
+      facebook?: string | null,
+      twitter?: string | null,
+      linkedIn?: string | null,
       businessProfileId: string,
-      userId: string | null,
-      cardTemplateId: string | null,
-      status: string | null,
-      color: string | null,
-      category: string | null,
+      userId?: string | null,
+      cardTemplateId?: string | null,
+      status?: string | null,
+      color?: string | null,
+      category?: string | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -1276,18 +1799,18 @@ export type ListContactsQueryVariables = {
 };
 
 export type ListContactsQuery = {
-  listContacts:  {
+  listContacts?:  {
     __typename: "ListContactsPayload",
-    contacts:  Array< {
+    contacts?:  Array< {
       __typename: "Contact",
-      id: string | null,
-      createdAt: string | null,
-      userId: string | null,
-      contactId: string | null,
-      name: string | null,
-      phone: string | null,
+      id?: string | null,
+      createdAt?: string | null,
+      userId?: string | null,
+      contactId?: string | null,
+      name?: string | null,
+      phone?: string | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -1296,29 +1819,29 @@ export type ListUserRemindersQueryVariables = {
 };
 
 export type ListUserRemindersQuery = {
-  listUserReminders:  {
+  listUserReminders?:  {
     __typename: "ListRemindersPayload",
-    reminders:  Array< {
+    reminders?:  Array< {
       __typename: "Reminder",
-      userId: string | null,
-      message: string | null,
-      minute: string | null,
-      hour: string | null,
-      day: string | null,
-      month: string | null,
-      year: string | null,
+      userId?: string | null,
+      message?: string | null,
+      minute?: string | null,
+      hour?: string | null,
+      day?: string | null,
+      month?: string | null,
+      year?: string | null,
     } | null > | null,
-    error: string | null,
+    error?: string | null,
   } | null,
 };
 
 export type OnCreateConversationSubscription = {
-  onCreateConversation:  {
+  onCreateConversation?:  {
     __typename: "Conversation",
-    id: string | null,
-    recipients: Array< string | null > | null,
-    createdAt: string | null,
-    error: string | null,
+    id?: string | null,
+    recipients?: Array< string | null > | null,
+    createdAt?: string | null,
+    error?: string | null,
   } | null,
 };
 
@@ -1327,13 +1850,13 @@ export type OnCreateMessageByConversationIdSubscriptionVariables = {
 };
 
 export type OnCreateMessageByConversationIdSubscription = {
-  onCreateMessageByConversationId:  {
+  onCreateMessageByConversationId?:  {
     __typename: "Message",
-    id: string | null,
-    message: string | null,
-    sender: string | null,
-    conversationId: string | null,
-    createdAt: string | null,
-    error: string | null,
+    id?: string | null,
+    message?: string | null,
+    sender?: string | null,
+    conversationId?: string | null,
+    createdAt?: string | null,
+    error?: string | null,
   } | null,
 };

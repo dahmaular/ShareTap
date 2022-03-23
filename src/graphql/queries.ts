@@ -5,6 +5,118 @@
 export const listReceivedCards = /* GraphQL */ `
   query ListReceivedCards($userId: String) {
     listReceivedCards(userId: $userId) {
+      AHdata {
+        cards {
+          cardDetails {
+            id
+            name
+            role
+            email
+            phone
+            address
+            website
+            facebook
+            twitter
+            linkedIn
+            createdAt
+            businessProfileId
+            userId
+            cardTemplateId
+            status
+            color
+            category
+          }
+          cardTemplate {
+            id
+            backgroundColor
+            borderBottomColor
+          }
+        }
+      }
+      IOdata {
+        cards {
+          cardDetails {
+            id
+            name
+            role
+            email
+            phone
+            address
+            website
+            facebook
+            twitter
+            linkedIn
+            createdAt
+            businessProfileId
+            userId
+            cardTemplateId
+            status
+            color
+            category
+          }
+          cardTemplate {
+            id
+            backgroundColor
+            borderBottomColor
+          }
+        }
+      }
+      PUdata {
+        cards {
+          cardDetails {
+            id
+            name
+            role
+            email
+            phone
+            address
+            website
+            facebook
+            twitter
+            linkedIn
+            createdAt
+            businessProfileId
+            userId
+            cardTemplateId
+            status
+            color
+            category
+          }
+          cardTemplate {
+            id
+            backgroundColor
+            borderBottomColor
+          }
+        }
+      }
+      VZdata {
+        cards {
+          cardDetails {
+            id
+            name
+            role
+            email
+            phone
+            address
+            website
+            facebook
+            twitter
+            linkedIn
+            createdAt
+            businessProfileId
+            userId
+            cardTemplateId
+            status
+            color
+            category
+          }
+          cardTemplate {
+            id
+            backgroundColor
+            borderBottomColor
+          }
+        }
+      }
       error
     }
   }
