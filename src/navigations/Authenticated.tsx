@@ -12,6 +12,7 @@ import SetMessage from '../screens/private/SetMessage';
 import CreateCard from '../screens/private/Create_Card';
 import Dashboard from '../screens/private/Dashboard';
 import ChatMessage from '../screens/private/ChatMessage';
+import ScheduledMessages from '../screens/private/ScheduledMessages';
 
 const Drawer = createDrawerNavigator<AuthenticatedRoutesParamsList>();
 
@@ -66,6 +67,12 @@ export default function AuthenticatedRoutes() {
       <Drawer.Screen
         name="ChatMessage"
         component={ChatMessage}
+        options={{headerShown: false}}
+      />
+
+      <Drawer.Screen
+        name="ScheduledMessages"
+        component={ScheduledMessages}
         options={{headerShown: false}}
       />
     </Drawer.Navigator>

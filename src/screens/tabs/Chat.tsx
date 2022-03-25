@@ -155,11 +155,13 @@ const Chat = ({navigation}: Props) => {
 
           <View style={styles.paddingH}>
             <View style={{...styles.flexRow, marginTop: 24}}>
-              <View style={styles.rowCenter}>
+              <TouchableOpacity
+                style={styles.rowCenter}
+                onPress={() => navigation.navigate('ScheduledMessages')}>
                 <Calendar />
 
                 <Text style={styles.schedule}>View Scheduled Messages</Text>
-              </View>
+              </TouchableOpacity>
 
               <View>
                 <Chevron />

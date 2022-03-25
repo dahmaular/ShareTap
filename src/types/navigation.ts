@@ -69,9 +69,10 @@ export type AuthenticatedRoutesParamsList = {
   Search: Record<'cardd', SearchRoute>;
   Rolodex: undefined;
   SetReminder: undefined;
-  SetMessage: undefined;
+  SetMessage: Record<'item', ScheduleMessagesRoute>;
   CreateCard: undefined;
-  ChatMessage:Record<'item', ListChatMessagesRoute>;
+  ScheduledMessages: undefined;
+  ChatMessage: Record<'item', ListChatMessagesRoute>;
   ReminderCalendar: Record<'item', ReminderCalenderRoute>;
 };
 
@@ -124,4 +125,15 @@ export interface ListChatMessagesRoute {
   lastMessage: string | null;
   createdAt: string | null;
   error: string | null;
+}
+
+export interface ScheduleMessagesRoute {
+  message?: string | null;
+  sender?: string | null;
+  conversationId?: string | null;
+  minute?: string | null;
+  hour?: string | null;
+  day?: string | null;
+  month?: string | null;
+  year?: string | null;
 }

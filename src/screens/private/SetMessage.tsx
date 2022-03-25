@@ -20,6 +20,9 @@ import Button from '../../components/Button';
 import Modal from 'react-native-modal';
 import Close from '../../assets/svg/phone-verif-close-icon.svg';
 import Hurray from '../../assets/svg/hurray.svg';
+import {ScheduleMessageInput} from '../../types/apiTypes';
+import {scheduleMessageService} from '../../services/rolodexService';
+import Toast from '../../core/toast';
 
 type SetMessageProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -38,15 +41,48 @@ type Props = {
 
 const {width} = Dimensions.get('screen');
 
-const SetMessage = ({navigation}: Props) => {
+const SetMessage = ({navigation, route}: Props) => {
   const [message, setMessage] = useState({value: '', error: ''});
   const [messageFocus, setMessageFocus] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [modal, setModal] = useState(false);
   const [modalData, setModalData] = useState('');
+  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('');
+  const [day, setDay] = useState('');
+  const [hour, setHour] = useState('');
+  const [minute, setMinute] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const {item} = route.params;
 
   const handleMessageBlur = () => {
     setMessageFocus(true);
+  };
+
+  const scheduleMessage = async () => {
+    setLoading(true);
+    const body: ScheduleMessageInput = {
+      message: message.value,
+      sender: item.sender,
+      conversationId: item.conversationId,
+      year: year,
+      month: month,
+      day: day,
+      hour: hour,
+      minute: minute,
+    };
+
+    const res = await scheduleMessageService(body);
+    console.log('Response', res);
+    if (res.data?.data) {
+      setLoading(false);
+      setModalData(res.data?.data);
+      setModal(true);
+    } else {
+      setLoading(false);
+      Toast(res.data?.error);
+    }
   };
 
   const successModal = (data: any) => {
@@ -70,9 +106,7 @@ const SetMessage = ({navigation}: Props) => {
             </View>
 
             <View style={{marginTop: 36}}>
-              <Text style={styles.modalContentText}>
-                You have successfully scheduled {'\n'} a message
-              </Text>
+              <Text style={styles.modalContentText}>{data}</Text>
             </View>
           </View>
           <TouchableOpacity
@@ -143,17 +177,26 @@ const SetMessage = ({navigation}: Props) => {
             placeholder="Set Date"
             dateValue={Moment(startDate).format('LL')}
             onValueChange={(itemValue: any) => {
-              console.log({itemValue});
               setStartDate(itemValue);
+              const year = new Date(itemValue).getFullYear().toString();
+              const month = new Date(itemValue).getMonth().toString();
+              const day = new Date(itemValue).getDay().toString();
+              const hour = new Date(itemValue).getHours().toString();
+              const minute = new Date(itemValue).getMinutes().toString();
+              setYear(year);
+              setMonth(month);
+              setDay(day);
+              setHour(hour);
+              setMinute(minute);
             }}
           />
 
           <View style={styles.buttonView}>
             <Button
-              disabled={!message.value}
-              loading={false}
+              disabled={!message.value && !startDate}
+              loading={loading}
               label="CONTINUE"
-              onPress={() => setModal(true)}
+              onPress={() => scheduleMessage()}
             />
           </View>
         </ScrollView>

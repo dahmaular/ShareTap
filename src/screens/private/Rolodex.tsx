@@ -310,7 +310,7 @@ const Rolodex = ({navigation}: Props) => {
             <Close />
           </TouchableOpacity>
           <View style={styles.modal}>
-            <TouchableOpacity style={styles.modalActionButton}>
+            {/* <TouchableOpacity style={styles.modalActionButton}>
               <Calendar height={24} width={24} />
               <Text
                 style={styles.modalActionButtonText}
@@ -320,7 +320,7 @@ const Rolodex = ({navigation}: Props) => {
                 }}>
                 Schedule a Message
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.modalActionButton}
               onPress={() => {
@@ -757,7 +757,8 @@ const styles = StyleSheet.create({
 
   modal: {
     width: '100%',
-    height: 121,
+    // height: 121,
+    height: 80,
     backgroundColor: '#FFFFFF',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
