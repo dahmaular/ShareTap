@@ -125,7 +125,6 @@
 
 //   function connectToHotspot() {
 //     HotspotWizard.turnOnHotspot(HotspotSSID, HotspotPassword).then(data => {
-//       console.log(data);
 //       if (data.status == 'success' || data.status == 'auth') {
 //         setHotspotConnected(data.status);
 //         if (data.status == 'auth') {

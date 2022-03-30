@@ -93,42 +93,33 @@ const Search = ({route}: any) => {
     if (route.params) {
       const {cardd} = route.params;
       card.push(cardd);
-      // console.log('This is the card details', card);
     }
   }, []);
 
   const createServer = (card: any, setCard: any) => {
     const server = TcpSocket.createServer(socket => {
-      console.log('server connected on ' + socket.address().address);
 
       socket.on('data', data => {
         let response = JSON.parse(data);
         setCard(response);
-        console.log('Server Received: ' + response);
         setCardSuccessModal(true);
         if (exchange === true) {
-          console.log('Exchanged clicked');
           socket.write(JSON.stringify(card));
         }
       });
 
       socket.on('error', error => {
-        console.log('error ' + error);
       });
 
       socket.on('close', error => {
-        console.log('server client closed ' + (error ? error : ''));
       });
     }).listen({port: 6666, host: '0.0.0.0'}, () => {
-      console.log('opened server on ' + JSON.stringify(server.address()));
     });
 
     server.on('error', error => {
-      console.log('error ' + error);
     });
 
     server.on('close', () => {
-      console.log('server close');
     });
 
     return server;
@@ -136,7 +127,6 @@ const Search = ({route}: any) => {
 
   const createClient = (ip: any) => {
     const client = TcpSocket.createConnection({port: 6666, host: ip}, () => {
-      console.log('opened client on ' + JSON.stringify(client.address()));
       // client.write('Hello, server! Love, Client.');
     });
 
@@ -144,7 +134,6 @@ const Search = ({route}: any) => {
       let response = JSON.parse(data);
       // setCard([...card, {id: card.length + 1, msg: data}]);
       setCard(response);
-      console.log('Client Received: ' + response);
       setSuccessModal(false);
       exchange = true;
       setCardSuccessModal(true);
@@ -153,11 +142,9 @@ const Search = ({route}: any) => {
     });
 
     client.on('error', error => {
-      console.log('client error ' + error);
     });
 
     client.on('close', () => {
-      console.log('client close');
     });
     return client;
   };
@@ -204,10 +191,8 @@ const Search = ({route}: any) => {
     try {
       const ssid = await WifiManager.getCurrentWifiSSID();
       setSsid(ssid);
-      console.log('Your current connected wifi SSID is ' + ssid);
     } catch (error) {
       setSsid('Cannot get current SSID!' + error.message);
-      console.log('Cannot get current SSID!', {error});
     }
   };
 
@@ -229,7 +214,6 @@ const Search = ({route}: any) => {
         // enableWifi();
         listAvailableWifi();
       } else {
-        console.log('Location permission denied');
       }
     } catch (err) {
       console.warn(err);
@@ -238,21 +222,18 @@ const Search = ({route}: any) => {
 
   const connectWithWifi = async (hotspot: string) => {
     // WifiManager.disconnect();
-    console.log('This is the password: ', password.value, hotspot);
     try {
       const data = await WifiManager.connectToProtectedSSID(
         hotspot,
         password.value,
         false,
       );
-      console.log('Connected successfully!', {data});
       setConnected({connected: true, ssid: hotspot});
       setResultsModal(false);
       setTransferring(true);
       // startServer();
     } catch (error) {
       setConnected({connected: false, error: error.message});
-      console.log('Connection failed!', {error});
     }
   };
 
@@ -264,17 +245,14 @@ const Search = ({route}: any) => {
       let temp_ip = await NetworkInfo.getIPV4Address();
       setIp(temp_ip);
     } catch (e) {
-      console.log(e.message);
     }
   };
 
   const listAvailableWifi = async () => {
     try {
       const data = await WifiManager.loadWifiList();
-      console.log('Available Wifi!', data);
       if (data.length > 0) {
         setAvailable(data);
-        console.log(data);
         setResultsModal(true);
       } else {
         // setResultsModal(false);
@@ -282,26 +260,21 @@ const Search = ({route}: any) => {
       }
     } catch (error) {
       // setConnected({connected: false, error: error.message});
-      console.log('Connection failed!', {error});
     }
   };
 
   const enableWifi = async () => {
     // const enabled = await WifiManager.isEnabled();
-    // console.log(enabled);
     WifiManager.setEnabled(true);
     const ip = await WifiManager.getIP();
-    console.log(ip);
     // return WifiManager.setEnabled(false);
   };
 
   const scanExample = async () => {
     try {
       const data = await WifiManager.reScanAndLoadWifiList();
-      console.log(data);
       setAvailable(data);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -461,10 +434,9 @@ const Search = ({route}: any) => {
                     useNativeDriver: false,
                   },
                 )}
-                onScrollEndDrag={() => console.log('Animation ended')}
+                onScrollEndDrag={() => {}}
                 keyExtractor={item => item.id}
                 renderItem={({item, index}) => {
-                  console.log('This is the card sent', item);
                   return (
                     <Card
                       item={item}
@@ -525,7 +497,6 @@ const Search = ({route}: any) => {
                   setIp(temp_ip);
                   setAcceptModal(false);
                 } catch (e) {
-                  console.log(e.message);
                 }
                 // setAcceptModal(false);
               }}>
@@ -543,7 +514,6 @@ const Search = ({route}: any) => {
                   exchange = true;
                   setAcceptModal(false);
                 } catch (e) {
-                  console.log(e.message);
                 }
               }}>
               <Text style={styles.modalBtnText}>EXCHANGE</Text>
@@ -724,7 +694,6 @@ const Search = ({route}: any) => {
                         sent = true;
                       }
                       if (sent === true) {
-                        console.log(sent, exchange);
                         setSuccessModal(true);
                         setCard([]);
                       }

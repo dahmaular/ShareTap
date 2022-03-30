@@ -40,7 +40,9 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       .then(id => {
         setUserId(id);
       })
-      .catch(e => console.log(e));
+      .catch(e =>{
+        throw e
+      });
   }, []);
 
   const getProfile = (id: any) => {

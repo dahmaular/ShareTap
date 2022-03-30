@@ -75,10 +75,8 @@ const SwitchNavigator = () => {
   }, []);
 
   const handleDynamicLink = (link: any) => {
-    console.log('link url ++++', link);
     if (!!link?.url) {
       let getId = link.url?.split('=').pop();
-      console.log('ID in the link', getId);
       // navigation.navigate('Rolodex')
       // setTimeout(()=>{
       //   // add ID to the navigation params later

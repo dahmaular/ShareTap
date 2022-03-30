@@ -56,10 +56,8 @@ const EmailModal = ({
     setWait(true);
     resendSignUpService(userName)
       .then(data => {
-        console.log('Response Data', data);
       })
       .catch(e => {
-        console.log('Errrrorrr', e)
       })
       .finally(() => {});
   };

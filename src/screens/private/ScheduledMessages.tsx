@@ -63,17 +63,15 @@ const ScheduledMessages = ({navigation}: Props) => {
         .then(id => {
           ListScheduledMessagesService(id)
             .then(res => {
-              console.log('List Scheduled Messsages Response', res);
               if (res.data) {
                 setList(res.data.scheduledMessages as []);
                 setFilteredDataSource(res.data.scheduledMessages as []);
               }
             })
             .catch(e => {
-              console.log('List Error', e);
             });
         })
-        .catch(e => console.log(e));
+        .catch(e => {throw e});
     }, []),
   );
 

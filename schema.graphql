@@ -373,15 +373,18 @@ type Query {
 }
 
 type ReceivedCardsData {
-	cards: [CardResponse]
+	id: Int
+	category: String
+	data: [ReceivedCardsResponse]
 }
 
 type ReceivedCardsPayload {
-	AHdata: [ReceivedCardsData]
-	IOdata: [ReceivedCardsData]
-	PUdata: [ReceivedCardsData]
-	VZdata: [ReceivedCardsData]
+	receivedCards: [ReceivedCardsData]
 	error: String
+}
+
+type ReceivedCardsResponse {
+	cards: [CardResponse]
 }
 
 type Reminder {

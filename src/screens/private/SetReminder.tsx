@@ -120,7 +120,6 @@ const SetReminder = ({navigation}: Props) => {
             placeholder="Start Date"
             dateValue={Moment(startDate).format('LL')}
             onValueChange={(itemValue: any) => {
-              console.log({itemValue});
               setStartDate(itemValue);
             }}
           />
@@ -129,7 +128,6 @@ const SetReminder = ({navigation}: Props) => {
             placeholder="End Date"
             dateValue={endDate}
             onValueChange={(itemValue: any) => {
-              console.log({itemValue});
               setEndDate(itemValue);
             }}
           />

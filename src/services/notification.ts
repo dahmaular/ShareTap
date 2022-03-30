@@ -14,11 +14,9 @@ export async function requestUserPermission() {
 
 const getFcmToken = async () => {
   let checkToken = await GET_FCM_TOKEN();
-  console.log('Device FCM Token', checkToken);
   if (!checkToken) {
     try {
       const fcmToken = await messaging().getToken();
-      console.log('FCM Token', fcmToken);
       if (!!fcmToken) {
         await SAVE_FCM_TOKEN(fcmToken);
       }

@@ -74,7 +74,6 @@ const SetMessage = ({navigation, route}: Props) => {
     };
 
     const res = await scheduleMessageService(body);
-    console.log('Response', res);
     if (res.data?.data) {
       setLoading(false);
       setModalData(res.data?.data);

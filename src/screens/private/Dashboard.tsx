@@ -39,21 +39,19 @@ const Dashboard = ({navigation}) => {
   useEffect(() => {
     getUserIdService()
       .then(id => {
-        // console.log('Id is here', id);
         setUserId(id);
       })
-      .catch(e => console.log(e));
+      .catch(e => {throw e});
   }, []);
 
   const getUserCards = (id: any) => {
     setIsLoading(true);
     listUserCardsService(id)
       .then(card => {
-        // console.log('card is here @dashboard', card.data.listUserCards?.cards);
         setUserCards(card.data.listUserCards?.cards);
         setIsLoading(false);
       })
-      .catch(e => console.log(e));
+      .catch(e => {throw e});
   };
 
   useEffect(() => {
@@ -112,7 +110,7 @@ const Dashboard = ({navigation}) => {
               useNativeDriver: false,
             },
           )}
-          onScrollEndDrag={() => console.log('Animation ended')}
+          onScrollEndDrag={() => {}}
           keyExtractor={(item, index) => `${index}-${item}`}
           renderItem={({item, index}) => (
             <DashboardCard
@@ -184,7 +182,6 @@ const Dashboard = ({navigation}) => {
                 placeholder="Start date"
                 dateValue={moment(selectStartDate).format('l')}
                 onValueChange={(itemValue: any) => {
-                  console.log('start year', {itemValue});
                   setSelectedStartDate(itemValue);
                 }}
               />
@@ -195,7 +192,6 @@ const Dashboard = ({navigation}) => {
                 placeholder="Present"
                 dateValue={moment(selectEndDate).format('l')}
                 onValueChange={(itemValue: any) => {
-                  console.log('present', {itemValue});
                   setSelectedEndDate(itemValue);
                 }}
               />

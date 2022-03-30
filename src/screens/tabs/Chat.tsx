@@ -60,17 +60,15 @@ const Chat = ({navigation}: Props) => {
         .then(id => {
           listUserConversationsService(id)
             .then(res => {
-              console.log('List User Conversations Response', res);
               if (res.data) {
                 setChats(res.data as []);
                 setFilteredDataSource(res.data as []);
               }
             })
             .catch(e => {
-              console.log('List Error', e);
             });
         })
-        .catch(e => console.log(e));
+        .catch(e => {throw e});
     }, []),
   );
 

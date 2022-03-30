@@ -63,7 +63,6 @@ const Home = ({navigation}: Props) => {
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
-  console.log('User data @home', user);
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -71,20 +70,16 @@ const Home = ({navigation}: Props) => {
   useEffect(() => {
     getUserIdService()
       .then(id => {
-        // console.log('Id is here', id);
         setUserId(id);
-        // console.log('app sync ', APPSYNC_APIKEY.toString());
       })
-      .catch(e => console.log(e));
+      .catch(e => {throw e});
   }, []);
 
   useEffect(() => {
     listUserCardsService(userId)
       .then(card => {
-        // console.log('card is here @home', card.data.listUserCards?.cards[0]);
-        // setUserId(id);
       })
-      .catch(e => console.log(e));
+      .catch(e =>{throw e});
   }, []);
 
   const confirmToVerify = () => {
@@ -145,7 +140,7 @@ const Home = ({navigation}: Props) => {
               useNativeDriver: false,
             },
           )}
-          onScrollEndDrag={() => console.log('Animation ended')}
+          onScrollEndDrag={() => {}}
           keyExtractor={(item, index) => `${index}-${item}`}
           renderItem={({item, index}) => (
             <Card
@@ -296,7 +291,6 @@ const Home = ({navigation}: Props) => {
                 style={styles.viewButton}
                 onPress={() => {
                   // setMessage('Upgrade to premium to unlock full access.')
-                  console.log('Pressed');
                   navigation.navigate('Rolodex');
                 }}>
                 <Text style={styles.viewButtonText}>View Rodolex</Text>

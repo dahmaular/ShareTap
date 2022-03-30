@@ -86,7 +86,6 @@ const ReminderModal = ({
             placeholder="Select Date"
             dateValue={Moment(selectDate).format('lll')}
             onValueChange={(itemValue: any) => {
-              console.log({itemValue});
               setSelectedDate(itemValue);
             }}
           />

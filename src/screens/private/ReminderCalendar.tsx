@@ -70,11 +70,9 @@ const ReminderCalendar = ({navigation, route}: Props) => {
   const getCalendars = () => {
     RNCalendarEvents.findCalendars()
       .then(calendars => {
-        console.log('Calendars', calendars);
         setCalendars(calendars);
       })
       .catch(error => {
-        console.log('Error', error);
       });
   };
 

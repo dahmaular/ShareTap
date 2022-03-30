@@ -61,8 +61,6 @@ const ChatMessage = ({navigation, route}: Props) => {
 
   const id = item.id;
 
-  console.log('Item on Chat Message', item);
-
   useEffect(() => {
     const getConversationMessages = async () => {
       await listUserConversationsByIdService(item.id as string)
@@ -98,7 +96,6 @@ const ChatMessage = ({navigation, route}: Props) => {
         authMode: GRAPHQL_AUTH_MODE.API_KEY,
       }) as any
     ).subscribe((res: any) => {
-      console.log('Res', res);
       const newObj = {
         _id: uuidv4(),
         text: res?.message,
@@ -147,8 +144,6 @@ const ChatMessage = ({navigation, route}: Props) => {
       conversationId: item.id,
     };
     const res = await createMessageService(body);
-
-    console.log('Server Response', res);
   };
 
   const pickFile = async () => {

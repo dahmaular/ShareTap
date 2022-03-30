@@ -14,7 +14,7 @@ projects:
         apiId: null
         frontend: javascript
         framework: react-native
-        maxDepth: 4
+        maxDepth: 6
 extensions:
   amplify:
     version: 3

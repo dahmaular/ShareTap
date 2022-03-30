@@ -123,10 +123,11 @@ const CreateCard = ({navigation}: any) => {
   useEffect(() => {
     getUserIdService()
       .then(id => {
-        // console.log('Id is here', id);
         setUserId(id);
       })
-      .catch(e => console.log(e));
+      .catch(e => {
+        throw e;
+      });
   }, []);
 
   useEffect(() => {
@@ -134,9 +135,10 @@ const CreateCard = ({navigation}: any) => {
       .then(temp => {
         template = temp.data.listCardTemplates.cardTemplates;
         setTemplat(temp?.data?.listCardTemplates?.cardTemplates);
-        // console.log('Template here', template);
       })
-      .catch(e => console.log(e));
+      .catch(e => {
+        throw e;
+      });
   }, []);
 
   useEffect(() => {
@@ -150,7 +152,6 @@ const CreateCard = ({navigation}: any) => {
       });
       setBusinessProfile(warefa);
     });
-    console.log('Bis profile', businessProfile);
     // cardTemplateService;
   }, [userId]);
 
@@ -159,7 +160,7 @@ const CreateCard = ({navigation}: any) => {
       backgroundColor: 'white',
       borderBottomColor: '#219653',
     };
-    await createCardTemplateService(data).then(res => console.log(res.data));
+    await createCardTemplateService(data).then(res => {});
   };
 
   const submitSocial = () => {
@@ -186,17 +187,15 @@ const CreateCard = ({navigation}: any) => {
   const onPlay = async () => {
     setLoading(true);
     const businessProfileId = 'BSP-ba114e9f-049f-4676-848b-09d333118fe7';
-    console.log(cardDetails[0]);
+
     const data = {...cardDetails[0], userId, businessProfileId};
-    console.log('This is input', data);
+
     await createUserCard(data)
       .then(userCard => {
-        console.log(userCard.data?.card);
         setCardSuccess(true);
         setLoading(false);
       })
       .catch(e => {
-        console.log(e);
         setLoading(false);
       });
   };
@@ -230,7 +229,6 @@ const CreateCard = ({navigation}: any) => {
             <View style={{backgroundColor: '#EFEFEF', marginTop: 20}}>
               <RNPickerSelect
                 onValueChange={value => {
-                  console.log(value);
                   setPosition(value);
                   cardDetails[0].role = value;
                 }}
@@ -381,7 +379,7 @@ const CreateCard = ({navigation}: any) => {
               useNativeDriver: false,
             },
           )}
-          onScrollEndDrag={() => console.log('Animation ended')}
+          onScrollEndDrag={() => {}}
           keyExtractor={(item, index) => `${index}-${item}`}
           renderItem={({item, index}) => (
             <CardTemplate

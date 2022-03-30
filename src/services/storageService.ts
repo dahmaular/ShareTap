@@ -23,7 +23,6 @@ export const uploadImageNew = async (
   data: any,
   type: any,
 ) => {
-  console.log({uploadUrl, data, type});
   const imageBody = await getBlob(data);
 
   return fetch(uploadUrl, {
@@ -59,10 +58,6 @@ export const getS3presignedURL = async (
     })) as {
       data: GetPresignedUrlResponse;
     };
-    // console.log(
-    //   'This is the presigned response data',
-    //   data.getPresignedUploadUrl,
-    // );
     return data.getPresignedUploadUrl;
   } catch (error) {
     throw error;
