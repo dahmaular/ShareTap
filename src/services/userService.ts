@@ -4,9 +4,13 @@ import {GRAPHQL_AUTH_MODE} from '@aws-amplify/api';
 
 import {
   getPresignedUploadUrl,
+  getPrivacyPolicyPage,
+  getTermsAndConditionsPage,
   getUserProfile,
   listCardTemplates,
+  listContacts,
   listDrafts,
+  listSubscriptionPlans,
   listUserBusinessProfiles,
   listUserCards,
 } from '../graphql/queries';
@@ -19,14 +23,21 @@ import {
   GetUserProfileQuery,
   ListDraftsQuery,
   ListUserBusinessProfilesQuery,
+  ListSubscriptionPlansQuery,
   ListUserCardsQuery,
   PresignedUploadInput,
   UpdateUserProfileInput,
   UpdateUserProfileMutation,
   UpdateUserProfilePayload,
+  ListContactsQuery,
+  AddContactMutation,
+  AddContactInput,
+  GetTermsAndConditionsPageQuery,
+  GetPrivacyPolicyPageQuery,
 } from '../types/apiTypes';
 import {ExtractType} from '../types/extractApiTypes';
 import {
+  addContact,
   createBusinessProfile,
   createDraft,
   updateUserProfile,
@@ -53,6 +64,18 @@ export type GetPresignedUrlResponse = ExtractType<GetPresignedUploadUrlQuery>;
 export type ListDraftResponse = ExtractType<ListDraftsQuery>;
 
 export type CreateDraftResponse = ExtractType<CreateDraftMutation>;
+
+export type ListSubscriptionsPlanResponse =
+  ExtractType<ListSubscriptionPlansQuery>;
+
+export type ListContactsResponse = ExtractType<ListContactsQuery>;
+
+export type AddContactResponse = ExtractType<AddContactMutation>;
+
+export type GetTermsAndConditionsPageResponse =
+  ExtractType<GetTermsAndConditionsPageQuery>;
+
+export type GetPrivacyPolicyResponse = ExtractType<GetPrivacyPolicyPageQuery>;
 
 export const getUserIdService = async () => {
   try {
@@ -97,6 +120,48 @@ export const listUserCardTemplateService = async () => {
   }
 };
 
+export const listSubscriptionsService = async () => {
+  try {
+    const {data} = (await API.graphql({
+      query: listSubscriptionPlans,
+      authMode: GRAPHQL_AUTH_MODE.API_KEY,
+    })) as {
+      data: ListSubscriptionsPlanResponse;
+    };
+    return {data: data.listSubscriptionPlans};
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getTermsAndConditionsService = async () => {
+  try {
+    const {data} = (await API.graphql({
+      query: getTermsAndConditionsPage,
+      authMode: GRAPHQL_AUTH_MODE.API_KEY,
+    })) as {
+      data: GetTermsAndConditionsPageResponse;
+    };
+    return {data: data.getTermsAndConditionsPage};
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getPrivacyPolicyService = async () => {
+  try {
+    const {data} = (await API.graphql({
+      query: getPrivacyPolicyPage,
+      authMode: GRAPHQL_AUTH_MODE.API_KEY,
+    })) as {
+      data: GetPrivacyPolicyResponse;
+    };
+    return {data: data.getPrivacyPolicyPage};
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const listDraftService = async (userId: string) => {
   try {
     const {data} = (await API.graphql({
@@ -107,6 +172,21 @@ export const listDraftService = async (userId: string) => {
       data: ListDraftResponse;
     };
     return {data: data.listDrafts?.drafts};
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const listContactService = async (userId: string) => {
+  try {
+    const {data} = (await API.graphql({
+      query: listContacts,
+      variables: {userId},
+      authMode: GRAPHQL_AUTH_MODE.API_KEY,
+    })) as {
+      data: ListContactsResponse;
+    };
+    return {data: data.listContacts};
   } catch (error) {
     throw error;
   }
@@ -206,6 +286,21 @@ export const createDraftService = async (draft: CreateDraftInput) => {
       authMode: GRAPHQL_AUTH_MODE.API_KEY,
     })) as {
       data: CreateDraftResponse;
+    };
+    return {data: data};
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const addContactService = async (contact: AddContactInput) => {
+  try {
+    const {data} = (await API.graphql({
+      query: addContact,
+      variables: {contact},
+      authMode: GRAPHQL_AUTH_MODE.API_KEY,
+    })) as {
+      data: AddContactResponse;
     };
     return {data: data};
   } catch (error) {

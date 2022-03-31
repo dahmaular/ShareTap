@@ -37,6 +37,11 @@ export type AuthenticatedRoutesParamsList = {
   Root: undefined;
   Search: undefined;
   Rolodex: undefined;
+  SearchContact: undefined | Record<'item', SearchContactRoute>;
+  AddContact: undefined;
+  Dashboard: undefined;
+  PrivacyPolicy: undefined;
+  CreateCard: undefined;
 };
 
 export interface AccountCreationRoute {
@@ -56,6 +61,10 @@ export interface PhoneNumberRoute {
   password: string;
   userName: string;
   lastName: string;
+}
+
+export interface SearchContactRoute {
+  contacts: any;
 }
 
 export interface VerificationRoute {

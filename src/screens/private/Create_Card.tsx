@@ -277,10 +277,12 @@ const CreateCard = ({navigation}: any) => {
               <RNPickerSelect
                 onValueChange={value => {
                   console.log(value);
-                  const pID = bizProfi?.filter(
-                    (bId: {role: any}) => bId?.role === value,
-                  );
-                  setBussinesProfileId({id: pID[0]?.id});
+                  if (bizProfi) {
+                    const pID = bizProfi?.filter(
+                      (bId: {role: any}) => bId?.role === value,
+                    );
+                    setBussinesProfileId({id: pID[0]?.id});
+                  }
                   setPosition(value);
                   cardDetails[0].role = value;
                 }}
