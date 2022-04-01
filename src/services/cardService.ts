@@ -28,6 +28,7 @@ export type CreateCardTemplateResponse =
   ExtractType<CreateCardTemplateMutation>;
 
 export type ShareCardResponse = ExtractType<ShareCardMutation>;
+export type UpdateEndpointResponse = ExtractType<UpdateEndpointMutation>;
 
 export type UpdateEndpointResponse = ExtractType<UpdateEndpointMutation>;
 

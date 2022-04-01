@@ -25,7 +25,7 @@ import {
 
 const {width, height} = Dimensions.get('screen');
 
-const Dashboard = ({navigation}) => {
+const Dashboard = ({navigation}: any) => {
   const [scrollViewWidth, setScrollViewWidth] = useState(0);
   const [userId, setUserId] = useState('');
   const [userCards, setUserCards] = useState<any>([]);
@@ -56,7 +56,7 @@ const Dashboard = ({navigation}) => {
 
   useEffect(() => {
     getUserCards(userId);
-  }, [userId]);
+  }, [userId, navigation]);
 
   const NoActivity = () => {
     return (

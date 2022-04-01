@@ -14,7 +14,11 @@ import {
   Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
+import {
+  DrawerActions,
+  CompositeNavigationProp,
+  useFocusEffect,
+} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 // import {TextInput} from 'react-native-paper';
@@ -140,9 +144,23 @@ const Profile = ({navigation}: Props) => {
     });
   };
 
-  useEffect(() => {
-    getProfile(userId);
-  }, [userId]);
+  // useEffect(() => {
+  //   getProfile(userId);
+  // }, [userId, navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsLoading(true);
+      getUserIdService()
+        .then(id => {
+          // console.log('Id is here', id);
+          setUserId(id);
+          getProfile(id);
+          getUserCards(id);
+        })
+        .catch(e => console.log(e));
+    }, []),
+  );
 
   const getUserCards = (id: any) => {
     listUserCardsService(id)
@@ -152,9 +170,9 @@ const Profile = ({navigation}: Props) => {
       .catch(e => {throw e});
   };
 
-  useEffect(() => {
-    getUserCards(userId);
-  }, [userId]);
+  // useEffect(() => {
+  //   getUserCards(userId);
+  // }, [userId, navigation]);
 
   const dispatch = useDispatch();
 
@@ -708,18 +726,6 @@ const Profile = ({navigation}: Props) => {
                       }}
                     />
                   ) : (
-                    // <Image
-                    //   style={{
-                    //     borderRadius: 0,
-                    //     width,
-                    //     height: 120,
-                    //     backgroundColor: '#D1D1D1',
-                    //   }}
-                    //   // size={120}
-                    //   source={{
-                    //     uri: imageDefault,
-                    //   }}
-                    // />
                     <Bggroup />
                   )}
                 </>
@@ -780,10 +786,17 @@ const Profile = ({navigation}: Props) => {
               </TouchableOpacity>
             </View>
             <View style={styles.name}>
-              <Text style={styles.username}>Charles Hudson</Text>
+              <Text style={styles.username}>
+                {userProfile?.firstName ? userProfile?.firstName : 'Charles'}{' '}
+                {userProfile?.lastName ? userProfile?.lastName : 'Hudson'}
+              </Text>
               <View style={styles.locationView}>
                 <Location />
-                <Text style={styles.location}>Lagos, Nigeria</Text>
+                <Text style={styles.location}>
+                  {userProfile?.location
+                    ? userProfile?.location
+                    : 'Lagos, Nigeria'}
+                </Text>
               </View>
             </View>
             <View style={styles.locationView}>
@@ -815,7 +828,9 @@ const Profile = ({navigation}: Props) => {
             {/* <Bio /> */}
             <View style={styles.about}>
               <View style={{flexDirection: 'row'}}>
-                <Text style={styles.aboutHeading}>About Peter</Text>
+                <Text style={styles.aboutHeading}>
+                  About {userProfile?.firstName ? userProfile?.firstName : ''}
+                </Text>
                 <TouchableOpacity
                   onPress={() => setEditBio(true)}
                   style={{

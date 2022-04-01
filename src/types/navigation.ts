@@ -74,6 +74,10 @@ export type AuthenticatedRoutesParamsList = {
   ScheduledMessages: undefined;
   ChatMessage: Record<'item', ListChatMessagesRoute>;
   ReminderCalendar: Record<'item', ReminderCalenderRoute>;
+  SearchContact: undefined | Record<'item', SearchContactRoute>;
+  AddContact: undefined;
+  Dashboard: undefined;
+  PrivacyPolicy: undefined;
 };
 
 export interface AccountCreationRoute {
@@ -93,6 +97,10 @@ export interface PhoneNumberRoute {
   password: string;
   userName: string;
   lastName: string;
+}
+
+export interface SearchContactRoute {
+  contacts: any;
 }
 
 export interface VerificationRoute {

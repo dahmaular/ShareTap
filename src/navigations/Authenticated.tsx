@@ -13,6 +13,13 @@ import CreateCard from '../screens/private/Create_Card';
 import Dashboard from '../screens/private/Dashboard';
 import ChatMessage from '../screens/private/ChatMessage';
 import ScheduledMessages from '../screens/private/ScheduledMessages';
+import EditProfile from '../screens/private/Edit_Profile';
+import Subscriptions from '../screens/private/Subscriptions';
+import About from '../screens/private/About';
+import TermsAndConditions from '../screens/private/Terms_Conditions';
+import AddContacts from '../screens/private/Add_Contact';
+import SearchContact from '../screens/private/Search_Contact';
+import PrivacyPolicy from '../screens/private/Privacy_Policy';
 
 const Drawer = createDrawerNavigator<AuthenticatedRoutesParamsList>();
 
@@ -70,9 +77,52 @@ export default function AuthenticatedRoutes() {
         options={{headerShown: false}}
       />
 
+    <Drawer.Screen
+        name="EditProfile"
+        component={EditProfile}
+        options={{headerShown: false}}
+      />
+
       <Drawer.Screen
+
         name="ScheduledMessages"
         component={ScheduledMessages}
+        options={{headerShown: false}}
+      />
+
+    <Drawer.Screen
+
+name="Subscriptions"
+component={Subscriptions}
+options={{headerShown: false}}
+/>
+
+      <Drawer.Screen
+        name="About"
+        component={About}
+        options={{headerShown: false}}
+      />
+      <Drawer.Screen
+        name="Terms"
+        component={TermsAndConditions}
+        options={{headerShown: false}}
+      />
+
+      <Drawer.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicy}
+        options={{headerShown: false}}
+      />
+
+      <Drawer.Screen
+        name="AddContact"
+        component={AddContacts}
+        options={{headerShown: false}}
+      />
+
+      <Drawer.Screen
+        name="SearchContact"
+        component={SearchContact}
         options={{headerShown: false}}
       />
     </Drawer.Navigator>

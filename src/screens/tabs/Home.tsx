@@ -30,6 +30,7 @@ import Card from '../../components/Card';
 import NotificationModal from '../../components/NotificationModal';
 import Modal from 'react-native-modal';
 import Close from '../../assets/svg/phone-verif-close-icon.svg';
+import Noctivity from '../../assets/svg/noFile.svg';
 import {
   getUserIdService,
   listUserCardsService,
@@ -37,7 +38,6 @@ import {
 import {fetchUserCards} from '../../slices/user';
 import {hubDispatch} from '../../core/awsExports';
 import {userSlice} from '../../selectors';
-import {APPSYNC_APIKEY} from 'react-native-dotenv';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -63,6 +63,7 @@ const Home = ({navigation}: Props) => {
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
+  // console.log('User data @home', user?.cards?.listUserCards?.cards);
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -152,6 +153,29 @@ const Home = ({navigation}: Props) => {
             />
           )}
         />
+      </View>
+    );
+  };
+
+  const NoActivity = () => {
+    return (
+      <View style={styles.noActivity}>
+        <Noctivity />
+        <View style={styles.noActyTextView}>
+          <Text style={styles.noActivityText}>NO CARDS YET</Text>
+        </View>
+        <View style={styles.createView}>
+          <Text style={styles.createText}>
+            Create your first card to start sharing with friends and networking!
+          </Text>
+        </View>
+        <View style={styles.btnView}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => navigation.navigate('CreateCard')}>
+            <Text style={styles.btnText}>CREATE CARD</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -279,40 +303,49 @@ const Home = ({navigation}: Props) => {
                 />
               </View>
             )}
-            <View style={styles.organize}>
-              <View>
-                <Text style={styles.organizeText}>Organize cards shared</Text>
-                <Text style={styles.organizeText}>
-                  with you in your Rolodex
-                </Text>
-              </View>
+            {user?.cards?.listUserCards?.cards?.length > 0 ? (
+              <>
+                <View style={styles.organize}>
+                  <View>
+                    <Text style={styles.organizeText}>
+                      Organize cards shared
+                    </Text>
+                    <Text style={styles.organizeText}>
+                      with you in your Rolodex
+                    </Text>
+                  </View>
 
-              <TouchableOpacity
-                style={styles.viewButton}
-                onPress={() => {
-                  // setMessage('Upgrade to premium to unlock full access.')
-                  navigation.navigate('Rolodex');
-                }}>
-                <Text style={styles.viewButtonText}>View Rodolex</Text>
-              </TouchableOpacity>
-            </View>
+                  <TouchableOpacity
+                    style={styles.viewButton}
+                    onPress={() => {
+                      // setMessage('Upgrade to premium to unlock full access.')
+                      console.log('Pressed');
+                      navigation.navigate('Rolodex');
+                    }}>
+                    <Text style={styles.viewButtonText}>View Rodolex</Text>
+                  </TouchableOpacity>
+                </View>
 
-            <View style={styles.yourCards}>
-              <Text style={styles.yourCardsText}>
-                Your Cards ({user?.cards?.listUserCards?.cards?.length})
-              </Text>
-              <Text
-                style={styles.viewAll}
-                onPress={() => {
-                  // navigation.navigate('Search');
-                }}>
-                View all
-              </Text>
-            </View>
+                <View style={styles.yourCards}>
+                  <Text style={styles.yourCardsText}>
+                    Your Cards ({user?.cards?.listUserCards?.cards?.length})
+                  </Text>
+                  <Text
+                    style={styles.viewAll}
+                    onPress={() => {
+                      // navigation.navigate('Search');
+                    }}>
+                    View all
+                  </Text>
+                </View>
 
-            <UserCardSlider />
+                <UserCardSlider />
 
-            <TapToShareButton />
+                <TapToShareButton />
+              </>
+            ) : (
+              <NoActivity />
+            )}
           </View>
         </ScrollView>
       </View>
@@ -376,6 +409,48 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'normal',
     color: 'rgba(51, 51, 51, 0.55)',
+  },
+
+  noActivity: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  noActyTextView: {
+    margin: 10,
+  },
+  noActivityText: {
+    fontFamily: 'Poppins',
+    fontSize: 16,
+    color: '#316F8A',
+    fontWeight: 'bold',
+  },
+  createView: {
+    width: '60%',
+    alignItems: 'center',
+  },
+  createText: {
+    textAlign: 'center',
+    lineHeight: 20,
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    color: '#8C8C8C',
+  },
+  btnView: {
+    margin: 40,
+  },
+  btn: {
+    backgroundColor: '#316F8A',
+    width: 180,
+    height: 35,
+  },
+  btnText: {
+    alignSelf: 'center',
+    marginTop: 8,
+    color: 'white',
+    fontFamily: 'Poppins',
+    fontSize: 12,
   },
 
   toastView: {
