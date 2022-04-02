@@ -117,7 +117,9 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               onPress={() => props.navigation.navigate('Terms')}>
               <Text style={styles.drawerFooterLink}>Terms and Conditions</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+            // onPress={() => props.navigation.navigate('PrivacyPolicy')}
+            >
               <Text style={styles.drawerFooterLink}>Privacy Policy</Text>
             </TouchableOpacity>
             <Text style={styles.drawerFooterLogout} onPress={handleLogOut}>

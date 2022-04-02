@@ -18,6 +18,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {PRIMARY_COLOR} from '../../core/color';
 import {getTermsAndConditionsService} from '../../services/userService';
 import moment from 'moment';
+import AccordionListItem from '../../components/Accordion';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -53,7 +54,10 @@ const PrivacyPolicy = ({navigation}: any) => {
               Last updated: {moment(terms?.updatedAt).format('LL')}
             </Text>
           </View>
-          <Text style={styles.terms}>{terms?.data}</Text>
+          {/* <Text style={styles.terms}>{terms?.data}</Text> */}
+          <AccordionListItem title={'List Item'}>
+            <Text>Some text here</Text>
+          </AccordionListItem>
           <View style={styles.footer}>
             <TouchableOpacity
               style={{...styles.btn, backgroundColor: PRIMARY_COLOR}}>

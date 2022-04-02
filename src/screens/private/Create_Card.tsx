@@ -57,6 +57,7 @@ import {
   listUserBusinessProfilesService,
   listUserCardTemplateService,
 } from '../../services/userService';
+import {useFocusEffect} from '@react-navigation/native';
 
 const {width} = Dimensions.get('screen');
 
@@ -134,24 +135,48 @@ const CreateCard = ({navigation}: any) => {
   const [bottomColor, setBottomColor] = useState('');
   const [editDraft, setEditDraft] = useState(false);
 
-  useEffect(() => {
-    getUserIdService()
-      .then(id => {
-        // console.log('Id is here', id);
-        setUserId(id);
-      })
-      .catch(e => console.log(e));
-  }, []);
+  // useEffect(() => {
+  //   getUserIdService()
+  //     .then(id => {
+  //       // console.log('Id is here', id);
+  //       setUserId(id);
+  //     })
+  //     .catch(e => console.log(e));
+  // }, []);
 
-  useEffect(() => {
-    listUserCardTemplateService()
-      .then(temp => {
-        template = temp.data.listCardTemplates.cardTemplates;
-        setTemplat(temp?.data?.listCardTemplates?.cardTemplates);
-        // console.log('Template here', template);
-      })
-      .catch(e => console.log(e));
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      // setIsLoading(true);
+      getUserIdService()
+        .then(id => {
+          // console.log('Id is here', id);
+          setUserId(id);
+          fetchBussinessProfile(id);
+          listDraftService(id).then(draft => {
+            console.log('Card drafts here', draft);
+            setDrafts(draft.data);
+          });
+        })
+        .catch(e => console.log(e));
+      listUserCardTemplateService()
+        .then(temp => {
+          template = temp.data.listCardTemplates.cardTemplates;
+          setTemplat(temp?.data?.listCardTemplates?.cardTemplates);
+          // console.log('Template here', template);
+        })
+        .catch(e => console.log(e));
+    }, []),
+  );
+
+  // useEffect(() => {
+  //   listUserCardTemplateService()
+  //     .then(temp => {
+  //       template = temp.data.listCardTemplates.cardTemplates;
+  //       setTemplat(temp?.data?.listCardTemplates?.cardTemplates);
+  //       // console.log('Template here', template);
+  //     })
+  //     .catch(e => console.log(e));
+  // }, []);
 
   const fetchBussinessProfile = async (id: any) => {
     await listUserBusinessProfilesService(id).then(bizProf => {
@@ -169,17 +194,17 @@ const CreateCard = ({navigation}: any) => {
     // console.log('Bis profile', businessProfile);
   };
 
-  useEffect(() => {
-    fetchBussinessProfile(userId);
-    // cardTemplateService;
-  }, [userId]);
+  // useEffect(() => {
+  //   fetchBussinessProfile(userId);
+  //   // cardTemplateService;
+  // }, [userId]);
 
-  useEffect(() => {
-    listDraftService(userId).then(draft => {
-      console.log('Card drafts here', draft);
-      setDrafts(draft.data);
-    });
-  }, [userId, navigation]);
+  // useEffect(() => {
+  //   listDraftService(userId).then(draft => {
+  //     console.log('Card drafts here', draft);
+  //     setDrafts(draft.data);
+  //   });
+  // }, [userId, navigation]);
 
   const cardTemplateService = async () => {
     const data = {
