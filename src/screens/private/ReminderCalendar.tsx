@@ -20,6 +20,9 @@ import Modal from 'react-native-modal';
 import Close from '../../assets/svg/phone-verif-close-icon.svg';
 import Hurray from '../../assets/svg/hurray.svg';
 import Moment from 'moment';
+import {ReminderInput} from '../../types/apiTypes';
+import {setReminderService} from '../../services/rolodexService';
+import {getUserIdService} from '../../services/userService';
 
 type ReminderCalendarProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -51,6 +54,8 @@ const {width} = Dimensions.get('screen');
 
 const ReminderCalendar = ({navigation, route}: Props) => {
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState('');
   const [modalData, setModalData] = useState('');
   const [calendars, setCalendars] = useState<CalendarProps[]>([]);
   const [state, setState] = useState({
@@ -58,6 +63,12 @@ const ReminderCalendar = ({navigation, route}: Props) => {
   });
 
   const {item} = route.params;
+
+  const year = new Date(item.startDate).getFullYear().toString();
+  const month = new Date(item.startDate).getMonth().toString();
+  const day = new Date(item.startDate).getDay().toString();
+  const hour = new Date(item.startDate).getHours().toString();
+  const minute = new Date(item.startDate).getMinutes().toString();
 
   useEffect(() => {
     RNCalendarEvents.requestPermissions(false).then(fulfilled => {
@@ -67,13 +78,22 @@ const ReminderCalendar = ({navigation, route}: Props) => {
     });
   }, []);
 
+  useEffect(() => {
+    getUserIdService()
+      .then(id => {
+        setUserId(id);
+      })
+      .catch(e => {
+        throw e;
+      });
+  }, [item]);
+
   const getCalendars = () => {
     RNCalendarEvents.findCalendars()
       .then(calendars => {
         setCalendars(calendars);
       })
-      .catch(error => {
-      });
+      .catch(error => {});
   };
 
   const successModal = (data: any) => {
@@ -116,6 +136,13 @@ const ReminderCalendar = ({navigation, route}: Props) => {
     );
   };
 
+  const saveToServer = async (val: ReminderInput) => {
+    setLoading(true);
+    const res = await setReminderService(val);
+    setLoading(false);
+    return res;
+  };
+
   const saveReminder = (id: string) => {
     RNCalendarEvents.saveEvent(item.title, {
       notes: item.description,
@@ -125,10 +152,23 @@ const ReminderCalendar = ({navigation, route}: Props) => {
       calendarId: id,
       alarms: [{date: item.startDate}, {date: item.endDate}],
     })
-      .then(event => {
+      .then(async event => {
         if (event) {
-          setModalData(item.startDate);
-          setModal(true);
+          const body = {
+            userId: userId,
+            message: item.description,
+            hour: hour,
+            day: day,
+            minute: minute,
+            year: year,
+            month: month,
+          };
+
+          const res = await saveToServer(body);
+          if (res) {
+            setModalData(item.startDate);
+            setModal(true);
+          }
         }
       })
       .catch(error => {});
@@ -156,7 +196,7 @@ const ReminderCalendar = ({navigation, route}: Props) => {
           <View style={styles.calReminderView}>
             <Text style={styles.reminderText}>Add to calendar</Text>
             <Text style={styles.reminder}>
-              Select a suitable plan to explore more features
+              Select a suitable plan to explore more
             </Text>
             <Text style={styles.reminder}>features</Text>
           </View>
@@ -193,7 +233,7 @@ const ReminderCalendar = ({navigation, route}: Props) => {
           <View style={styles.buttonView}>
             <Button
               disabled={!state.selectedCalendar}
-              loading={false}
+              loading={loading}
               label="CONTINUE"
               onPress={() => saveReminder(state.selectedCalendar)}
             />

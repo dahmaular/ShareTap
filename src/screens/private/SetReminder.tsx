@@ -67,7 +67,7 @@ const SetReminder = ({navigation}: Props) => {
           <View style={styles.setReminderView}>
             <Text style={styles.reminderText}>Set Reminder</Text>
             <Text style={styles.reminder}>
-              Select a suitable plan to explore more features
+              Select a suitable plan to explore more
             </Text>
             <Text style={styles.reminder}>features</Text>
           </View>

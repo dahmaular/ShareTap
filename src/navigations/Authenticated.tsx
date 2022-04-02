@@ -57,7 +57,7 @@ export default function AuthenticatedRoutes() {
         options={{headerShown: false}}
       />
 
-      <Drawer.Screen name="ReminderCalendar" component={ReminderCalendar} />
+      <Drawer.Screen name="ReminderCalendar" component={ReminderCalendar}  options={{headerShown: false}}/>
 
       <Drawer.Screen
         name="CreateCard"
@@ -77,25 +77,23 @@ export default function AuthenticatedRoutes() {
         options={{headerShown: false}}
       />
 
-    <Drawer.Screen
+      <Drawer.Screen
         name="EditProfile"
         component={EditProfile}
         options={{headerShown: false}}
       />
 
       <Drawer.Screen
-
         name="ScheduledMessages"
         component={ScheduledMessages}
         options={{headerShown: false}}
       />
 
-    <Drawer.Screen
-
-name="Subscriptions"
-component={Subscriptions}
-options={{headerShown: false}}
-/>
+      <Drawer.Screen
+        name="Subscriptions"
+        component={Subscriptions}
+        options={{headerShown: false}}
+      />
 
       <Drawer.Screen
         name="About"

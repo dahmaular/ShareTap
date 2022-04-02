@@ -63,7 +63,6 @@ const Home = ({navigation}: Props) => {
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
-  // console.log('User data @home', user?.cards?.listUserCards?.cards);
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -319,7 +318,6 @@ const Home = ({navigation}: Props) => {
                     style={styles.viewButton}
                     onPress={() => {
                       // setMessage('Upgrade to premium to unlock full access.')
-                      console.log('Pressed');
                       navigation.navigate('Rolodex');
                     }}>
                     <Text style={styles.viewButtonText}>View Rodolex</Text>

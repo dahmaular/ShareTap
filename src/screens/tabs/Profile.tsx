@@ -134,7 +134,9 @@ const Profile = ({navigation}: Props) => {
       .then(id => {
         setUserId(id);
       })
-      .catch(e => {throw e});
+      .catch(e => {
+        throw e;
+      });
   }, []);
 
   const getProfile = (id: any) => {
@@ -153,12 +155,13 @@ const Profile = ({navigation}: Props) => {
       setIsLoading(true);
       getUserIdService()
         .then(id => {
-          // console.log('Id is here', id);
           setUserId(id);
           getProfile(id);
           getUserCards(id);
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+          throw e;
+        });
     }, []),
   );
 
@@ -167,7 +170,9 @@ const Profile = ({navigation}: Props) => {
       .then(card => {
         setUserCards(card.data.listUserCards?.cards);
       })
-      .catch(e => {throw e});
+      .catch(e => {
+        throw e;
+      });
   };
 
   // useEffect(() => {

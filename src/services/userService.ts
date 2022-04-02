@@ -113,7 +113,6 @@ export const listUserCardTemplateService = async () => {
     })) as {
       data: ListCardTemplateResponse;
     };
-    console.log(data.listUserCards?.cards);
     return {data: data};
   } catch (error) {
     throw error;

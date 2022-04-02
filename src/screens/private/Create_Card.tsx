@@ -18,7 +18,6 @@ import {
 import Modal from 'react-native-modal';
 import TextInputs from '../../components/TextInput';
 import {TextInput} from 'react-native-paper';
-import SelectDropdown from 'react-native-select-dropdown';
 
 import LottieView from 'lottie-react-native';
 import Header from '../../components/Header';
@@ -157,7 +156,6 @@ const CreateCard = ({navigation}: any) => {
 
   const fetchBussinessProfile = async (id: any) => {
     await listUserBusinessProfilesService(id).then(bizProf => {
-      // console.log('Bussiness profile', bizProf.data?.businessProfiles);
       // roles.push(bizProf.data?.businessProfiles);
       setBizProfi(bizProf.data?.businessProfiles);
       const warefa: any = bizProf.data?.businessProfiles?.map((item, i) => {
@@ -168,7 +166,6 @@ const CreateCard = ({navigation}: any) => {
       });
       setBusinessProfile(warefa);
     });
-    // console.log('Bis profile', businessProfile);
   };
 
   useEffect(() => {
@@ -178,7 +175,6 @@ const CreateCard = ({navigation}: any) => {
 
   useEffect(() => {
     listDraftService(userId).then(draft => {
-      console.log('Card drafts here', draft);
       setDrafts(draft.data);
     });
   }, [userId, navigation]);
@@ -215,9 +211,7 @@ const CreateCard = ({navigation}: any) => {
   const onPlay = async () => {
     setLoading(true);
     const businessProfileId = bussinessProfileId?.id;
-    // console.log(cardDetails[0]);
     const data = {...cardDetails[0], userId, businessProfileId};
-    // console.log('This is input', data);
     await createUserCard(data)
       .then(userCard => {
         setCardSuccess(true);
@@ -232,17 +226,13 @@ const CreateCard = ({navigation}: any) => {
     setIsLoading(true);
     const businessProfileId = bussinessProfileId?.id;
     const color = bottomColor;
-    // console.log(cardDetails[0]);
     const data = {...cardDetails[0], userId, businessProfileId, color};
-    console.log('This is input', data);
     await createDraftService(data)
       .then(draft => {
-        // console.log(userCard.data?.card);
         setCardSuccess(true);
         setIsLoading(false);
       })
       .catch(e => {
-        console.log(e);
         setIsLoading(false);
       });
   };
@@ -276,7 +266,6 @@ const CreateCard = ({navigation}: any) => {
             <View style={{backgroundColor: '#EFEFEF', marginTop: 20}}>
               <RNPickerSelect
                 onValueChange={value => {
-                  console.log(value);
                   if (bizProfi) {
                     const pID = bizProfi?.filter(
                       (bId: {role: any}) => bId?.role === value,
@@ -474,7 +463,7 @@ const CreateCard = ({navigation}: any) => {
               useNativeDriver: false,
             },
           )}
-          onScrollEndDrag={() => console.log('Animation ended')}
+          onScrollEndDrag={() =>{}}
           keyExtractor={(item, index) => `${index}-${item}`}
           renderItem={({item, index}) => (
             <CardTemplate

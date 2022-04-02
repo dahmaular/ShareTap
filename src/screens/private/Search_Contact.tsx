@@ -42,7 +42,6 @@ const SearchContact = ({navigation, route}: Props) => {
   //   useEffect(() => {
   //     if (route.params) {
   //       const {item} = route.params;
-  //       //   console.log('This is the contact details', item.contacts);
   //       setContList(item.contacts);
   //     }
   //   }, []);
@@ -68,7 +67,6 @@ const SearchContact = ({navigation, route}: Props) => {
       });
       setContList(sortedContacts);
       //   setPhoneContacts(sortedContacts);
-      // console.log('Phone contacts', contacts[30].recordID);
     });
   };
 
@@ -88,7 +86,6 @@ const SearchContact = ({navigation, route}: Props) => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         getPhoneContacts();
       } else {
-        console.log('Contact permission denied');
       }
     } catch (err) {
       console.warn(err);
@@ -119,7 +116,6 @@ const SearchContact = ({navigation, route}: Props) => {
   };
 
   const addCard = async (value: any) => {
-    console.log(value);
   };
 
   return (

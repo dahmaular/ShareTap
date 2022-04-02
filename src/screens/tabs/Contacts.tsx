@@ -53,15 +53,15 @@ const Contacts = ({navigation}: Props) => {
       setIsLoading(true);
       getUserIdService()
         .then(id => {
-          // console.log('Id is here', id);
           setUserId(id);
           listContactService(id).then(contact => {
             setContacts(contact.data?.contacts);
             setIsLoading(false);
-            // console.log(contact.data?.contacts);
           });
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+          throw e;
+        });
     }, []),
   );
 

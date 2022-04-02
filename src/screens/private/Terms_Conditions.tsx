@@ -28,7 +28,6 @@ const TermsAndConditions = ({navigation}: any) => {
 
   const getTerms = async () => {
     await getTermsAndConditionsService().then(data => {
-      console.log('data', data.data?.data);
       setTerms(data.data);
     });
   };

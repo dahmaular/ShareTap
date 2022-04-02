@@ -68,10 +68,11 @@ const ScheduledMessages = ({navigation}: Props) => {
                 setFilteredDataSource(res.data.scheduledMessages as []);
               }
             })
-            .catch(e => {
-            });
+            .catch(e => {});
         })
-        .catch(e => {throw e});
+        .catch(e => {
+          throw e;
+        });
     }, []),
   );
 
@@ -168,8 +169,8 @@ const ScheduledMessages = ({navigation}: Props) => {
                         <View>
                           <Text style={styles.name}>{item.message}</Text>
                           <Text numberOfLines={2} style={styles.chat}>
-                            In {item.day} day(s) {item.hour} hour(s){' '}
-                            {item.minute} min(s)
+                            In {item.day} days {item.hour} hours {item.minute}{' '}
+                            mins
                           </Text>
                         </View>
 
@@ -262,7 +263,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#CCCCCC',
     borderBottomWidth: 1,
     marginTop: 13,
-    marginBottom: 13
+    marginBottom: 13,
   },
 
   name: {

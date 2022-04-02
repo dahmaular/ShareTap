@@ -52,10 +52,9 @@ const AddContacts = ({navigation}: Props) => {
   useEffect(() => {
     getUserIdService()
       .then(id => {
-        // console.log('Id is here', id);
         setUserId(id);
       })
-      .catch(e => console.log(e));
+      .catch(e => {throw e});
   }, []);
 
   useEffect(() => {
@@ -65,7 +64,6 @@ const AddContacts = ({navigation}: Props) => {
   const getSavedContacts = async (id: string) => {
     await listContactService(id).then(contact => {
       setContacts(contact.data?.contacts);
-      console.log(contact);
     });
   };
 
@@ -85,7 +83,6 @@ const AddContacts = ({navigation}: Props) => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         getPhoneContacts();
       } else {
-        console.log('Contact permission denied');
       }
     } catch (err) {
       console.warn(err);
@@ -104,7 +101,6 @@ const AddContacts = ({navigation}: Props) => {
         return 0;
       });
       setPhoneContacts(sortedContacts);
-      // console.log('Phone contacts', contacts[30].recordID);
     });
   };
 
@@ -244,7 +240,6 @@ const AddContacts = ({navigation}: Props) => {
   };
 
   const addCard = async (value: any) => {
-    console.log(value);
   };
 
   return (
