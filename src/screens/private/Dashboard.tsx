@@ -22,10 +22,11 @@ import {
   getUserIdService,
   listUserCardsService,
 } from '../../services/userService';
+import {useFocusEffect} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('screen');
 
-const Dashboard = ({navigation}) => {
+const Dashboard = ({navigation}: any) => {
   const [scrollViewWidth, setScrollViewWidth] = useState(0);
   const [userId, setUserId] = useState('');
   const [userCards, setUserCards] = useState<any>([]);
@@ -36,14 +37,27 @@ const Dashboard = ({navigation}) => {
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
 
-  useEffect(() => {
-    getUserIdService()
-      .then(id => {
-        // console.log('Id is here', id);
-        setUserId(id);
-      })
-      .catch(e => console.log(e));
-  }, []);
+  // useEffect(() => {
+  //   getUserIdService()
+  //     .then(id => {
+  //       // console.log('Id is here', id);
+  //       setUserId(id);
+  //     })
+  //     .catch(e => console.log(e));
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // setIsLoading(true);
+      getUserIdService()
+        .then(id => {
+          // console.log('Id is here', id);
+          setUserId(id);
+          getUserCards(id);
+        })
+        .catch(e => console.log(e));
+    }, []),
+  );
 
   const getUserCards = (id: any) => {
     setIsLoading(true);
@@ -56,9 +70,9 @@ const Dashboard = ({navigation}) => {
       .catch(e => console.log(e));
   };
 
-  useEffect(() => {
-    getUserCards(userId);
-  }, [userId]);
+  // useEffect(() => {
+  //   getUserCards(userId);
+  // }, [userId, navigation]);
 
   const NoActivity = () => {
     return (

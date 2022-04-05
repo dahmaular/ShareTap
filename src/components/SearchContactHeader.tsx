@@ -4,23 +4,17 @@ import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 interface HeaderProps {
   leftSvg: any;
-  rightSvg1: any;
-  rightSvg2: any;
-  rightSvg3: any;
+  searchBar: any;
   bgColor: string;
   rightOnPress: () => void;
-  rightSvg2OnPress: () => void;
   leftOnPress: () => void;
 }
 
-const CreateCardHeader: FC<HeaderProps> = ({
+const SearchContactHeader: FC<HeaderProps> = ({
   leftSvg,
-  rightSvg1,
-  rightSvg2,
-  rightSvg3,
+  searchBar,
   bgColor,
   rightOnPress,
-  rightSvg2OnPress,
   leftOnPress,
 }) => {
   return (
@@ -33,28 +27,12 @@ const CreateCardHeader: FC<HeaderProps> = ({
         <Text style={{...styles.title, color: titleColor}}>{title}</Text>
       </View> */}
 
-      <View style={styles.right}>
-        <TouchableOpacity
-          style={{marginRight: 30}}
-          onPress={() => rightOnPress()}>
-          {rightSvg1}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{marginRight: 30}}
-          onPress={() => rightSvg2OnPress()}>
-          {rightSvg2}
-        </TouchableOpacity>
-        <TouchableOpacity
-        // onPress={() => rightOnPress()}
-        >
-          {rightSvg3}
-        </TouchableOpacity>
-      </View>
+      <View style={styles.right}>{searchBar}</View>
     </View>
   );
 };
 
-export default CreateCardHeader;
+export default SearchContactHeader;
 
 const styles = StyleSheet.create({
   header: {

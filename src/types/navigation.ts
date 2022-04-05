@@ -68,11 +68,11 @@ export type AuthenticatedRoutesParamsList = {
   Root: undefined;
   Search: Record<'cardd', SearchRoute>;
   Rolodex: undefined;
-  SetReminder: undefined;
-  SetMessage: undefined;
+  SearchContact: undefined | Record<'item', SearchContactRoute>;
+  AddContact: undefined;
+  Dashboard: undefined;
+  PrivacyPolicy: undefined;
   CreateCard: undefined;
-  ChatMessage:Record<'item', ListChatMessagesRoute>;
-  ReminderCalendar: Record<'item', ReminderCalenderRoute>;
 };
 
 export interface AccountCreationRoute {
@@ -92,6 +92,10 @@ export interface PhoneNumberRoute {
   password: string;
   userName: string;
   lastName: string;
+}
+
+export interface SearchContactRoute {
+  contacts: any;
 }
 
 export interface VerificationRoute {

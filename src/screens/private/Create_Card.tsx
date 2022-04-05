@@ -51,10 +51,13 @@ import {
   listCardsByBusinessProfileIdService,
 } from '../../services/cardService';
 import {
+  createDraftService,
   getUserIdService,
+  listDraftService,
   listUserBusinessProfilesService,
   listUserCardTemplateService,
 } from '../../services/userService';
+import {useFocusEffect} from '@react-navigation/native';
 
 const {width} = Dimensions.get('screen');
 
@@ -66,6 +69,10 @@ let template: any;
 interface profileProps {
   label: string;
   value: string;
+}
+
+interface bussinessPId {
+  id: string;
 }
 
 const social = {
@@ -117,31 +124,65 @@ const CreateCard = ({navigation}: any) => {
   const [linkedInFocus, setLinkedInFocus] = useState(false);
   const [userId, setUserId] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [businessProfile, setBusinessProfile] = useState<profileProps[]>([]);
+  const [bizProfi, setBizProfi] = useState<any>(null);
   const [templat, setTemplat] = useState<any>(null);
+  const [drafts, setDrafts] = useState<any>(null);
+  const [bussinessProfileId, setBussinesProfileId] = useState<bussinessPId>({
+    id: '',
+  });
+  const [bottomColor, setBottomColor] = useState('');
+  const [editDraft, setEditDraft] = useState(false);
 
-  useEffect(() => {
-    getUserIdService()
-      .then(id => {
-        // console.log('Id is here', id);
-        setUserId(id);
-      })
-      .catch(e => console.log(e));
-  }, []);
+  // useEffect(() => {
+  //   getUserIdService()
+  //     .then(id => {
+  //       // console.log('Id is here', id);
+  //       setUserId(id);
+  //     })
+  //     .catch(e => console.log(e));
+  // }, []);
 
-  useEffect(() => {
-    listUserCardTemplateService()
-      .then(temp => {
-        template = temp.data.listCardTemplates.cardTemplates;
-        setTemplat(temp?.data?.listCardTemplates?.cardTemplates);
-        // console.log('Template here', template);
-      })
-      .catch(e => console.log(e));
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      // setIsLoading(true);
+      getUserIdService()
+        .then(id => {
+          // console.log('Id is here', id);
+          setUserId(id);
+          fetchBussinessProfile(id);
+          listDraftService(id).then(draft => {
+            console.log('Card drafts here', draft);
+            setDrafts(draft.data);
+          });
+        })
+        .catch(e => console.log(e));
+      listUserCardTemplateService()
+        .then(temp => {
+          template = temp.data.listCardTemplates.cardTemplates;
+          setTemplat(temp?.data?.listCardTemplates?.cardTemplates);
+          // console.log('Template here', template);
+        })
+        .catch(e => console.log(e));
+    }, []),
+  );
 
-  useEffect(() => {
-    listUserBusinessProfilesService(userId).then(bizProf => {
+  // useEffect(() => {
+  //   listUserCardTemplateService()
+  //     .then(temp => {
+  //       template = temp.data.listCardTemplates.cardTemplates;
+  //       setTemplat(temp?.data?.listCardTemplates?.cardTemplates);
+  //       // console.log('Template here', template);
+  //     })
+  //     .catch(e => console.log(e));
+  // }, []);
+
+  const fetchBussinessProfile = async (id: any) => {
+    await listUserBusinessProfilesService(id).then(bizProf => {
+      // console.log('Bussiness profile', bizProf.data?.businessProfiles);
       // roles.push(bizProf.data?.businessProfiles);
+      setBizProfi(bizProf.data?.businessProfiles);
       const warefa: any = bizProf.data?.businessProfiles?.map((item, i) => {
         return {
           label: item?.role,
@@ -150,9 +191,20 @@ const CreateCard = ({navigation}: any) => {
       });
       setBusinessProfile(warefa);
     });
-    console.log('Bis profile', businessProfile);
-    // cardTemplateService;
-  }, [userId]);
+    // console.log('Bis profile', businessProfile);
+  };
+
+  // useEffect(() => {
+  //   fetchBussinessProfile(userId);
+  //   // cardTemplateService;
+  // }, [userId]);
+
+  // useEffect(() => {
+  //   listDraftService(userId).then(draft => {
+  //     console.log('Card drafts here', draft);
+  //     setDrafts(draft.data);
+  //   });
+  // }, [userId, navigation]);
 
   const cardTemplateService = async () => {
     const data = {
@@ -185,10 +237,10 @@ const CreateCard = ({navigation}: any) => {
 
   const onPlay = async () => {
     setLoading(true);
-    const businessProfileId = 'BSP-ba114e9f-049f-4676-848b-09d333118fe7';
-    console.log(cardDetails[0]);
+    const businessProfileId = bussinessProfileId?.id;
+    // console.log(cardDetails[0]);
     const data = {...cardDetails[0], userId, businessProfileId};
-    console.log('This is input', data);
+    // console.log('This is input', data);
     await createUserCard(data)
       .then(userCard => {
         console.log(userCard.data?.card);
@@ -198,6 +250,25 @@ const CreateCard = ({navigation}: any) => {
       .catch(e => {
         console.log(e);
         setLoading(false);
+      });
+  };
+
+  const onSaveDraft = async () => {
+    setIsLoading(true);
+    const businessProfileId = bussinessProfileId?.id;
+    const color = bottomColor;
+    // console.log(cardDetails[0]);
+    const data = {...cardDetails[0], userId, businessProfileId, color};
+    console.log('This is input', data);
+    await createDraftService(data)
+      .then(draft => {
+        // console.log(userCard.data?.card);
+        setCardSuccess(true);
+        setIsLoading(false);
+      })
+      .catch(e => {
+        console.log(e);
+        setIsLoading(false);
       });
   };
 
@@ -231,6 +302,12 @@ const CreateCard = ({navigation}: any) => {
               <RNPickerSelect
                 onValueChange={value => {
                   console.log(value);
+                  if (bizProfi) {
+                    const pID = bizProfi?.filter(
+                      (bId: {role: any}) => bId?.role === value,
+                    );
+                    setBussinesProfileId({id: pID[0]?.id});
+                  }
                   setPosition(value);
                   cardDetails[0].role = value;
                 }}
@@ -239,15 +316,7 @@ const CreateCard = ({navigation}: any) => {
                   value: null,
                   color: '#8C8C8C',
                 }}
-                // items={[
-                //   {
-                //     label: 'UX Designer',
-                //     value: 'UX Designer',
-                //   },
-                //   {label: 'Agric', value: 'Agric'},
-                // ]}
                 items={businessProfile ? businessProfile : []}
-                // value={position}
                 useNativeAndroidPickerStyle={false}
                 style={{
                   ...pickerSelectStyles,
@@ -339,7 +408,9 @@ const CreateCard = ({navigation}: any) => {
                     }}
                     onPress={() => {
                       setTemplateModal(false);
+                      setEditDraft(false);
                       setEditCard(true);
+                      setBottomColor(item.borderBottomColor);
                       idColor = item.borderBottomColor;
                       cardDetails[0].cardTemplateId = item.id;
                     }}></TouchableOpacity>
@@ -358,6 +429,53 @@ const CreateCard = ({navigation}: any) => {
         <FlatList
           horizontal
           data={cardDetails}
+          contentContainerStyle={{paddingVertical: 5}}
+          contentInsetAdjustmentBehavior="never"
+          snapToAlignment="center"
+          decelerationRate="fast"
+          automaticallyAdjustContentInsets={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={1}
+          snapToInterval={boxWidth}
+          contentInset={{
+            left: halfBoxDistance,
+            right: halfBoxDistance,
+          }}
+          contentOffset={{x: halfBoxDistance * -1, y: 0}}
+          onLayout={e => {
+            setScrollViewWidth(e.nativeEvent.layout.width);
+          }}
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {x: pan.x}}}],
+            {
+              useNativeDriver: false,
+            },
+          )}
+          onScrollEndDrag={() => console.log('Animation ended')}
+          keyExtractor={(item, index) => `${index}-${item}`}
+          renderItem={({item, index}) => (
+            <CardTemplate
+              item={item}
+              index={index}
+              boxWidth={boxWidth}
+              halfBoxDistance={halfBoxDistance}
+              pan={pan}
+              idColor={idColor}
+              social={social}
+            />
+          )}
+        />
+      </View>
+    );
+  };
+
+  const DraftCard = () => {
+    return (
+      <View style={styles.flatlistView}>
+        <FlatList
+          horizontal
+          data={drafts}
           contentContainerStyle={{paddingVertical: 5}}
           contentInsetAdjustmentBehavior="never"
           snapToAlignment="center"
@@ -577,7 +695,7 @@ const CreateCard = ({navigation}: any) => {
           <TouchableOpacity
             style={styles.successmodalButton}
             onPress={() => navigation.navigate('Home')}>
-            <Text style={styles.modalBtnText}>GO TO CHAT</Text>
+            <Text style={styles.modalBtnText}>GO BACK</Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -603,33 +721,33 @@ const CreateCard = ({navigation}: any) => {
             <View style={{marginTop: 23}}>
               <Text style={styles.modalTitle}>Drafts</Text>
             </View>
-            <View style={{flexDirection: 'row', marginTop: 20}}>
-              <TouchableOpacity
-                style={{
-                  ...styles.template1,
-                  borderBottomColor: template[4].borderBottomColor,
-                }}
-                onPress={() => {
-                  setTemplateModal(false);
-                  setEditCard(true);
-                  id = 1;
-                  cardDetails[0].cardTemplateId = template[4].id;
-                }}>
-                {/* <View style={styles.bottomLine} /> */}
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  ...styles.template1,
-                  borderBottomColor: template[1].borderBottomColor,
-                }}
-                onPress={() => {
-                  setTemplateModal(false);
-                  setEditCard(true);
-                  id = 2;
-                  cardDetails[0].cardTemplateId = template[1].id;
-                }}>
-                {/* <View style={styles.bottomLine2} /> */}
-              </TouchableOpacity>
+            <View style={{height: 270}}>
+              <FlatList
+                data={drafts}
+                contentContainerStyle={{paddingVertical: 5}}
+                contentInsetAdjustmentBehavior="never"
+                snapToAlignment="center"
+                decelerationRate="fast"
+                automaticallyAdjustContentInsets={false}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                numColumns={2}
+                keyExtractor={(item, index) => `${index}-${item}`}
+                renderItem={({item, index}) => (
+                  <TouchableOpacity
+                    style={{
+                      ...styles.template4,
+                      borderBottomColor: item.color,
+                    }}
+                    onPress={() => {
+                      setShowDraft(false);
+                      setEditCard(false);
+                      setEditDraft(true);
+                      idColor = item.color;
+                      cardDetails[0].cardTemplateId = item.id;
+                    }}></TouchableOpacity>
+                )}
+              />
             </View>
           </View>
         </View>
@@ -663,12 +781,15 @@ const CreateCard = ({navigation}: any) => {
         rightSvg2={<Download />}
         rightSvg3={<More />}
         rightOnPress={() => onPlay()}
+        rightSvg2OnPress={() => onSaveDraft()}
       />
       <View style={styles.container}>
         <View style={{flex: 1}}>
           <View style={styles.categoriesView}>
             {editCard && <UserCardSlider />}
+            {editDraft && <DraftCard />}
           </View>
+
           <View />
         </View>
         <ScrollView
@@ -825,7 +946,7 @@ const styles = StyleSheet.create({
 
   draftModal: {
     width: '100%',
-    height: 200,
+    height: 280,
     backgroundColor: '#FFFFFF',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,

@@ -22,6 +22,7 @@ import {useSelector} from 'react-redux';
 import {signOutService} from '../services/authService';
 import {hubDispatch} from '../core/awsExports';
 import {getUserIdService, getUserProfileService} from '../services/userService';
+import PImageBg from '../../assets/svg/profile-image-bg.svg';
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [userProfile, setUserProfile] = useState<any>(null);
@@ -43,8 +44,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       .catch(e => console.log(e));
   }, []);
 
-  const getProfile = (id: any) => {
-    getUserProfileService(id).then(profil => {
+  const getProfile = async (id: any) => {
+    await getUserProfileService(id).then(profil => {
       setUserProfile(profil.data.getUserProfile?.userDetails);
     });
   };
@@ -68,17 +69,21 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
                 source={
                   userProfile?.avatar
                     ? {uri: `${userProfile?.avatar}`}
-                    : require('../assets/img/avatar-demo-image.png')
+                    : require('../assets/img/user_avater.png')
                 }
               />
             </View>
 
             <View style={{marginLeft: 20}}>
               <Text style={styles.name}>
-                {userProfile?.userName ? userProfile?.userName : 'Ayo Moses'}
+                {userProfile
+                  ? userProfile?.firstName
+                    ? userProfile?.firstName
+                    : userProfile?.userName
+                  : 'Ayo Moses'}
               </Text>
               <TouchableOpacity
-                onPress={() => props.navigation.navigate('Profile')}>
+                onPress={() => props.navigation.navigate('EditProfile')}>
                 <Text style={styles.editProfile}>Edit Profile</Text>
               </TouchableOpacity>
             </View>
@@ -87,7 +92,9 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           <View style={styles.border}></View>
 
           <View style={styles.navs}>
-            <TouchableOpacity style={styles.navContainer}>
+            <TouchableOpacity
+              style={styles.navContainer}
+              onPress={() => props.navigation.navigate('Subscriptions')}>
               <SubscriptionIcon />
               <Text style={styles.drawerText}>Subscriptions</Text>
             </TouchableOpacity>
@@ -97,15 +104,24 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               <Text style={styles.drawerText}>Support</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.navContainer}>
+            <TouchableOpacity
+              style={styles.navContainer}
+              onPress={() => props.navigation.navigate('About')}>
               <AboutIcon />
               <Text style={styles.drawerText}>About</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.drawerFooterWrap}>
-            <Text style={styles.drawerFooterLink}>Terms and Conditions</Text>
-            <Text style={styles.drawerFooterLink}>Privacy Policy</Text>
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate('Terms')}>
+              <Text style={styles.drawerFooterLink}>Terms and Conditions</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+            // onPress={() => props.navigation.navigate('PrivacyPolicy')}
+            >
+              <Text style={styles.drawerFooterLink}>Privacy Policy</Text>
+            </TouchableOpacity>
             <Text style={styles.drawerFooterLogout} onPress={handleLogOut}>
               Logout
             </Text>
