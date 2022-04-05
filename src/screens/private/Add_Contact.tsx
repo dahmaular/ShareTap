@@ -70,25 +70,29 @@ const AddContacts = ({navigation}: Props) => {
   };
 
   const requestContactPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-        {
-          title: 'Tapiolla App Permission',
-          message:
-            'Contacts permission is required to access your phone contacts. ',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        getPhoneContacts();
-      } else {
-        console.log('Contact permission denied');
+    if (Platform.OS !== 'android') {
+      getPhoneContacts();
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+          {
+            title: 'Tapiolla App Permission',
+            message:
+              'Contacts permission is required to access your phone contacts. ',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          getPhoneContacts();
+        } else {
+          console.log('Contact permission denied');
+        }
+      } catch (err) {
+        console.warn(err);
       }
-    } catch (err) {
-      console.warn(err);
     }
   };
 
