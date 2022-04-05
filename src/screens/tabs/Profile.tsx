@@ -155,7 +155,7 @@ const Profile = ({navigation}: Props) => {
       setIsLoading(true);
       getUserIdService()
         .then(id => {
-          // console.log('Id is here', id);
+          console.log('Id is here', id);
           setUserId(id);
           getProfile(id);
           getUserCards(id);
@@ -842,7 +842,7 @@ const Profile = ({navigation}: Props) => {
                   About {userProfile?.firstName ? userProfile?.firstName : ''}
                 </Text>
                 <TouchableOpacity
-                  onPress={() => setEditBio(true)}
+                  onPress={() => setEditBio(!editBio)}
                   style={{
                     alignItems: 'center',
                     alignContent: 'center',

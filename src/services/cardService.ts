@@ -30,7 +30,7 @@ export type CreateCardTemplateResponse =
 export type ShareCardResponse = ExtractType<ShareCardMutation>;
 export type UpdateEndpointResponse = ExtractType<UpdateEndpointMutation>;
 
-export type UpdateEndpointResponse = ExtractType<UpdateEndpointMutation>;
+// export type UpdateEndpointResponse = ExtractType<UpdateEndpointMutation>;
 
 export const createUserCard = async (cardPayload: CreateCardInput) => {
   try {

@@ -71,10 +71,12 @@ export default function AuthenticatedRoutes() {
       />
 
       <Drawer.Screen
-<<<<<<< HEAD
         name="ChatMessage"
         component={ChatMessage}
-=======
+        options={{headerShown: false}}
+      />
+
+      <Drawer.Screen
         name="EditProfile"
         component={EditProfile}
         options={{headerShown: false}}
@@ -112,7 +114,6 @@ export default function AuthenticatedRoutes() {
       <Drawer.Screen
         name="SearchContact"
         component={SearchContact}
->>>>>>> damola
         options={{headerShown: false}}
       />
     </Drawer.Navigator>

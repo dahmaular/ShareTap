@@ -34,6 +34,7 @@ import {
   AddContactInput,
   GetTermsAndConditionsPageQuery,
   GetPrivacyPolicyPageQuery,
+  ListCardTemplatesQuery,
 } from '../types/apiTypes';
 import {ExtractType} from '../types/extractApiTypes';
 import {
@@ -47,7 +48,7 @@ export type ListUserCardsResponse = ExtractType<ListUserCardsQuery>;
 
 export type TodoType = ExtractType<ListUserCardsResponse>;
 
-export type ListCardTemplateResponse = ExtractType<ListUserCardsQuery>;
+export type ListCardTemplateResponse = ExtractType<ListCardTemplatesQuery>;
 
 export type ListUserBusinessProfileResponse =
   ExtractType<ListUserBusinessProfilesQuery>;
@@ -113,8 +114,8 @@ export const listUserCardTemplateService = async () => {
     })) as {
       data: ListCardTemplateResponse;
     };
-    console.log(data.listUserCards?.cards);
-    return {data: data};
+    // console.log('Templates is now here', data.listCardTemplates?.cardTemplates);
+    return {data: data.listCardTemplates};
   } catch (error) {
     throw error;
   }
