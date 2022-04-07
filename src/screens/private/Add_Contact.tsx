@@ -13,6 +13,7 @@ import {Menu} from 'react-native-paper';
 import {CompositeNavigationProp, DrawerActions} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Contacts from 'react-native-contacts';
+import {useFocusEffect} from '@react-navigation/native';
 
 import Back from '../../assets/svg/back.svg';
 import Search from '../../assets/svg/Search.svg';
@@ -41,32 +42,46 @@ const AddContacts = ({navigation}: Props) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [phoneContacts, setPhoneContacts] = useState<any>(null);
 
-  useEffect(() => {
-    // requestContactPermission();
-    const unsubscribe = navigation.addListener('focus', async () => {
+  // useEffect(() => {
+  //   // requestContactPermission();
+  //   const unsubscribe = navigation.addListener('focus', async () => {
+  //     requestContactPermission();
+  //   });
+  //   return unsubscribe;
+  // }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // setIsLoading(true);
+      getUserIdService()
+        .then(id => {
+          // console.log('Id is here', id);
+          setUserId(id);
+          getSavedContacts(id);
+        })
+        .catch(e => console.log(e));
       requestContactPermission();
-    });
-    return unsubscribe;
-  }, [navigation]);
+    }, []),
+  );
 
-  useEffect(() => {
-    getUserIdService()
-      .then(id => {
-        // console.log('Id is here', id);
-        setUserId(id);
-      })
-      .catch(e => console.log(e));
-  }, []);
+  // useEffect(() => {
+  //   getUserIdService()
+  //     .then(id => {
+  //       // console.log('Id is here', id);
+  //       setUserId(id);
+  //     })
+  //     .catch(e => console.log(e));
+  // }, []);
 
-  useEffect(() => {
-    getSavedContacts(userId);
-  }, [userId]);
+  // useEffect(() => {
+  //   getSavedContacts(userId);
+  // }, [userId]);
 
   const getSavedContacts = async (id: string) => {
-    await listContactService(id).then(contact => {
-      setContacts(contact.data?.contacts);
-      console.log(contact);
-    });
+    // await listContactService(id).then(contact => {
+    //   setContacts(contact.data?.contacts);
+    //   console.log(contact);
+    // });
   };
 
   const requestContactPermission = async () => {
@@ -108,7 +123,7 @@ const AddContacts = ({navigation}: Props) => {
         return 0;
       });
       setPhoneContacts(sortedContacts);
-      // console.log('Phone contacts', contacts[30].recordID);
+      console.log('Phone contacts', contacts);
     });
   };
 

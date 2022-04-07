@@ -2,12 +2,16 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {AuthenticatedRoutesParamsList, TabNavigatorParamsList} from '../types/navigation';
+import {
+  AuthenticatedRoutesParamsList,
+  TabNavigatorParamsList,
+} from '../types/navigation';
 import {Home, Chat, Contacts, Profile, Card} from '../screens/tabs';
 import Plus from '../assets/svg/add_black_24dp (6) 1.svg';
 import Svg, {Path} from 'react-native-svg';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import Contact from '../screens/tabs/Contacts';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -175,7 +179,7 @@ const TabNavigator = () => {
       />
       <Screen
         name="Contacts"
-        component={Contacts}
+        component={Contact}
         options={{headerShown: false}}
       />
       <Screen

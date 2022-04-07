@@ -8,6 +8,8 @@ import {
   View,
   TextInput,
   ActivityIndicator,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import {Menu} from 'react-native-paper';
 import {
@@ -16,6 +18,7 @@ import {
   useFocusEffect,
 } from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import Contacts from 'react-native-contacts';
 
 import Header from '../../components/Header';
 import NoContact from '../../assets/svg/No_Contact.svg';
@@ -38,11 +41,13 @@ type Props = {
     StackNavigationProp<AuthenticatedRoutesParamsList>
   >;
 };
-const Contacts = ({navigation}: Props) => {
+
+const Contact = ({navigation}: Props) => {
   const [contacts, setContacts] = useState<any>(null);
   const [userId, setUserId] = useState('');
   const [visible, setVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [contList, setContList] = useState<any>(null);
 
   const openMenu = () => setVisible(true);
 
@@ -55,15 +60,80 @@ const Contacts = ({navigation}: Props) => {
         .then(id => {
           // console.log('Id is here', id);
           setUserId(id);
-          listContactService(id).then(contact => {
-            setContacts(contact.data?.contacts);
-            setIsLoading(false);
-            // console.log(contact.data?.contacts);
-          });
+          // listContactService(id).then(contact => {
+          //   setContacts(contact.data?.contacts);
+          //   setIsLoading(false);
+          //   // console.log(contact.data?.contacts);
+          // });
+          setIsLoading(false);
+          requestContactPermission();
         })
         .catch(e => console.log(e));
     }, []),
   );
+
+  // useEffect(() => {
+  //   requestContactPermission();
+  // }, []);
+
+  const requestContactPermission = async () => {
+    if (Platform.OS !== 'android') {
+      getPhoneContacts();
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+          {
+            title: 'Tapiolla App Permission',
+            message:
+              'Contacts permission is required to access your phone contacts. ',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          getPhoneContacts();
+        } else {
+          console.log('Contact permission denied');
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+  };
+
+  const getPhoneContacts = () => {
+    Contacts.getAll().then(async (contacts: any[]) => {
+      const sortedContacts = contacts.sort(function (a, b) {
+        if (a.givenName < b.givenName) {
+          return -1;
+        }
+        if (a.givenName > b.givenName) {
+          return 1;
+        }
+        return 0;
+      });
+
+      const warefa: any = sortedContacts?.map((item, i) => {
+        return {
+          name: item?.displayName,
+          phoneNumber: item?.phoneNumbers[0]?.number,
+        };
+      });
+      const filteredContacts = warefa.filter((cont: {phoneNumber: any}) => {
+        return cont.phoneNumber !== undefined;
+      });
+      // console.log(filteredContacts);
+      // console.log('Phone list', warefa);
+      await listContactService(filteredContacts).then(res => {
+        // console.log('contact list response', res.data);
+        setContacts(res.data?.contacts);
+      });
+      //   setPhoneContacts(sortedContacts);
+      // console.log('Phone contacts', contacts[30].recordID);
+    });
+  };
 
   const NoContactYet = () => {
     return (
@@ -103,7 +173,14 @@ const Contacts = ({navigation}: Props) => {
                   height: 50,
                   borderRadius: 50,
                   backgroundColor: '#E1EEF4',
-                }}></View>
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text>
+                  {item?.name[0]}
+                  {/* {item?.familyName[0]} */}
+                </Text>
+              </View>
               <View style={{marginLeft: 10}}>
                 <Text>{item.name}</Text>
               </View>
@@ -115,7 +192,10 @@ const Contacts = ({navigation}: Props) => {
                   alignItems: 'center',
                   alignContent: 'center',
                 }}>
-                <MessageIcon />
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('ChatMessage', {item})}>
+                  <MessageIcon />
+                </TouchableOpacity>
                 <TouchableOpacity onLongPress={openMenu}>
                   <View style={{marginLeft: 20}}>
                     <VerticalEll />
@@ -185,7 +265,7 @@ const Contacts = ({navigation}: Props) => {
   );
 };
 
-export default Contacts;
+export default Contact;
 
 const styles = StyleSheet.create({
   container: {

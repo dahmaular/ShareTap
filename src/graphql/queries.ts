@@ -5,6 +5,10 @@
 export const listReceivedCards = /* GraphQL */ `
   query ListReceivedCards($userId: String) {
     listReceivedCards(userId: $userId) {
+      receivedCards {
+        id
+        category
+      }
       error
     }
   }
@@ -541,15 +545,12 @@ export const listDrafts = /* GraphQL */ `
   }
 `;
 export const listContacts = /* GraphQL */ `
-  query ListContacts($userId: String) {
-    listContacts(userId: $userId) {
+  query ListContacts($contactsPayload: [ListContactsInput]) {
+    listContacts(contactsPayload: $contactsPayload) {
       contacts {
-        id
-        createdAt
-        userId
-        contactId
         name
-        phone
+        phoneNumber
+        id
       }
       error
     }

@@ -106,7 +106,9 @@ const Chat = ({navigation}: Props) => {
             To start a conversation, send a message {'\n'} to your contact
           </Text>
 
-          <TouchableOpacity style={styles.emptyBtn}>
+          <TouchableOpacity
+            style={styles.emptyBtn}
+            onPress={() => navigation.navigate('Contacts')}>
             <Text style={styles.emptyBtnText}>GO TO CONTACTS</Text>
           </TouchableOpacity>
         </View>

@@ -30,15 +30,13 @@ import {
   UpdateUserProfileMutation,
   UpdateUserProfilePayload,
   ListContactsQuery,
-  AddContactMutation,
-  AddContactInput,
   GetTermsAndConditionsPageQuery,
   GetPrivacyPolicyPageQuery,
   ListCardTemplatesQuery,
+  ListContactsInput,
 } from '../types/apiTypes';
 import {ExtractType} from '../types/extractApiTypes';
 import {
-  addContact,
   createBusinessProfile,
   createDraft,
   updateUserProfile,
@@ -70,8 +68,6 @@ export type ListSubscriptionsPlanResponse =
   ExtractType<ListSubscriptionPlansQuery>;
 
 export type ListContactsResponse = ExtractType<ListContactsQuery>;
-
-export type AddContactResponse = ExtractType<AddContactMutation>;
 
 export type GetTermsAndConditionsPageResponse =
   ExtractType<GetTermsAndConditionsPageQuery>;
@@ -178,21 +174,6 @@ export const listDraftService = async (userId: string) => {
   }
 };
 
-export const listContactService = async (userId: string) => {
-  try {
-    const {data} = (await API.graphql({
-      query: listContacts,
-      variables: {userId},
-      authMode: GRAPHQL_AUTH_MODE.API_KEY,
-    })) as {
-      data: ListContactsResponse;
-    };
-    return {data: data.listContacts};
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const listUserBusinessProfilesService = async (userId: string) => {
   try {
     const {data} = (await API.graphql({
@@ -261,6 +242,23 @@ export const createUserBusinessProfile = async (
   }
 };
 
+export const listContactService = async (
+  contactsPayload: ListContactsInput,
+) => {
+  try {
+    const {data} = (await API.graphql({
+      query: listContacts,
+      variables: {contactsPayload},
+      authMode: GRAPHQL_AUTH_MODE.API_KEY,
+    })) as {
+      data: ListContactsResponse;
+    };
+    return {data: data.listContacts};
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const updateUserProfileService = async (
   userProfilePayload: UpdateUserProfileInput,
 ) => {
@@ -287,21 +285,6 @@ export const createDraftService = async (draft: CreateDraftInput) => {
       authMode: GRAPHQL_AUTH_MODE.API_KEY,
     })) as {
       data: CreateDraftResponse;
-    };
-    return {data: data};
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const addContactService = async (contact: AddContactInput) => {
-  try {
-    const {data} = (await API.graphql({
-      query: addContact,
-      variables: {contact},
-      authMode: GRAPHQL_AUTH_MODE.API_KEY,
-    })) as {
-      data: AddContactResponse;
     };
     return {data: data};
   } catch (error) {

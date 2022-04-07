@@ -8,6 +8,7 @@ import {
   View,
   TextInput,
   PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import {
   CompositeNavigationProp,
@@ -16,6 +17,7 @@ import {
 } from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Contacts from 'react-native-contacts';
+import {useFocusEffect} from '@react-navigation/native';
 
 import Back from '../../assets/svg/back.svg';
 import Plus from '../../assets/svg/Group+.svg';
@@ -33,6 +35,12 @@ type Props = {
   >;
   route: RouteProp<AuthenticatedRoutesParamsList, 'SearchContact'>;
 };
+
+interface ContactFromPhone {
+  name: string;
+  phone: string;
+}
+
 const {width, height} = Dimensions.get('screen');
 const SearchContact = ({navigation, route}: Props) => {
   const [contacts, setContacts] = useState<any>(null);
@@ -47,13 +55,20 @@ const SearchContact = ({navigation, route}: Props) => {
   //     }
   //   }, []);
 
-  useEffect(() => {
-    // requestContactPermission();
-    const unsubscribe = navigation.addListener('focus', async () => {
+  // useEffect(() => {
+  //   // requestContactPermission();
+  //   const unsubscribe = navigation.addListener('focus', async () => {
+  //     requestContactPermission();
+  //   });
+  //   return unsubscribe;
+  // }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // setIsLoading(true);
       requestContactPermission();
-    });
-    return unsubscribe;
-  }, [navigation]);
+    }, []),
+  );
 
   const getPhoneContacts = () => {
     Contacts.getAll().then(contacts => {
@@ -67,31 +82,44 @@ const SearchContact = ({navigation, route}: Props) => {
         return 0;
       });
       setContList(sortedContacts);
+      const warefa: any = sortedContacts?.map((item, i) => {
+        return {
+          name: item?.middleName
+            ? item?.givenName + ' ' + item?.middleName + ' ' + item?.familyName
+            : item?.givenName + ' ' + item?.familyName,
+          phone: item?.phoneNumbers,
+        };
+      });
+      console.log('Phone list', warefa);
       //   setPhoneContacts(sortedContacts);
       // console.log('Phone contacts', contacts[30].recordID);
     });
   };
 
   const requestContactPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-        {
-          title: 'Tapiolla App Permission',
-          message:
-            'Contacts permission is required to access your phone contacts. ',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        getPhoneContacts();
-      } else {
-        console.log('Contact permission denied');
+    if (Platform.OS !== 'android') {
+      getPhoneContacts();
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+          {
+            title: 'Tapiolla App Permission',
+            message:
+              'Contacts permission is required to access your phone contacts. ',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          getPhoneContacts();
+        } else {
+          console.log('Contact permission denied');
+        }
+      } catch (err) {
+        console.warn(err);
       }
-    } catch (err) {
-      console.warn(err);
     }
   };
 
