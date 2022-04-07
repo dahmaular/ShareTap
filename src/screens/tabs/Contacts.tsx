@@ -128,7 +128,7 @@ const Contact = ({navigation}: Props) => {
       // console.log('Phone list', warefa);
       await listContactService(filteredContacts).then(res => {
         // console.log('contact list response', res.data);
-        setContacts(res.data?.contacts);
+        setContacts(res.data?.tapiollaContacts);
       });
       //   setPhoneContacts(sortedContacts);
       // console.log('Phone contacts', contacts[30].recordID);

@@ -547,10 +547,14 @@ export const listDrafts = /* GraphQL */ `
 export const listContacts = /* GraphQL */ `
   query ListContacts($contactsPayload: [ListContactsInput]) {
     listContacts(contactsPayload: $contactsPayload) {
-      contacts {
+      tapiollaContacts {
         name
         phoneNumber
         id
+      }
+      phoneContacts {
+        name
+        phoneNumber
       }
       error
     }

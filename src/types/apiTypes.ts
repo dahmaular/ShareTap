@@ -528,15 +528,22 @@ export type ListContactsInput = {
 
 export type ListContactsPayload = {
   __typename: "ListContactsPayload",
-  contacts?:  Array<Contact | null > | null,
+  tapiollaContacts?:  Array<TapiollaContact | null > | null,
+  phoneContacts?:  Array<PhoneContact | null > | null,
   error?: string | null,
 };
 
-export type Contact = {
-  __typename: "Contact",
+export type TapiollaContact = {
+  __typename: "TapiollaContact",
   name?: string | null,
   phoneNumber?: string | null,
   id?: string | null,
+};
+
+export type PhoneContact = {
+  __typename: "PhoneContact",
+  name?: string | null,
+  phoneNumber?: string | null,
 };
 
 export type ListRemindersPayload = {
@@ -1651,11 +1658,16 @@ export type ListContactsQueryVariables = {
 export type ListContactsQuery = {
   listContacts?:  {
     __typename: "ListContactsPayload",
-    contacts?:  Array< {
-      __typename: "Contact",
+    tapiollaContacts?:  Array< {
+      __typename: "TapiollaContact",
       name?: string | null,
       phoneNumber?: string | null,
       id?: string | null,
+    } | null > | null,
+    phoneContacts?:  Array< {
+      __typename: "PhoneContact",
+      name?: string | null,
+      phoneNumber?: string | null,
     } | null > | null,
     error?: string | null,
   } | null,
