@@ -64,7 +64,7 @@ const Dashboard = ({navigation}: any) => {
     listUserCardsService(id)
       .then(card => {
         // console.log('card is here @dashboard', card.data.listUserCards?.cards);
-        setUserCards(card.data.listUserCards?.cards);
+        setUserCards(card.data?.cards);
         setIsLoading(false);
       })
       .catch(e => console.log(e));

@@ -96,7 +96,7 @@ export const listUserCardsService = async (userId: string) => {
       data: ListUserCardsResponse;
     };
 
-    return {data: data};
+    return {data: data.listUserCards};
   } catch (error) {
     throw error;
   }
@@ -235,7 +235,7 @@ export const createUserBusinessProfile = async (
     })) as {
       data: CreateBusinessProfileResponse;
     };
-    console.log('This is response data', data);
+    // console.log('This is response data', data);
     return {data: data};
   } catch (e) {
     throw e;

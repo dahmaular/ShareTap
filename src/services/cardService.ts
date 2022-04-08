@@ -41,7 +41,7 @@ export const createUserCard = async (cardPayload: CreateCardInput) => {
     })) as {
       data: CreateUserCardResponse;
     };
-    console.log('This is response data', data);
+    // console.log('This is response data', data);
     return {data: data.createCard};
   } catch (e) {
     throw e;
