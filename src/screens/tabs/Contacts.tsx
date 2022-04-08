@@ -34,6 +34,7 @@ import {
 } from '../../types/navigation';
 import {getUserIdService, listContactService} from '../../services/userService';
 import SearchContactHeader from '../../components/SearchContactHeader';
+import {listUserConversationsService} from '../../services/chatService';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -42,12 +43,25 @@ type Props = {
   >;
 };
 
+interface UserConversationsProps {
+  id: string | null;
+  recipientUserId: string | null;
+  recipientUsername: string | null;
+  recipientAvatar: string | null;
+  lastMessage: string | null;
+  createdAt: string | null;
+  error: string | null;
+}
+
 const Contact = ({navigation}: Props) => {
+  const [filteredDataSource, setFilteredDataSource] = useState<
+    UserConversationsProps[]
+  >([]);
   const [contacts, setContacts] = useState<any>(null);
   const [userId, setUserId] = useState('');
   const [visible, setVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [contList, setContList] = useState<any>(null);
+  const [phoneContact, setPhoneContact] = useState<any>(null);
 
   const openMenu = () => setVisible(true);
 
@@ -58,23 +72,23 @@ const Contact = ({navigation}: Props) => {
       setIsLoading(true);
       getUserIdService()
         .then(id => {
-          // console.log('Id is here', id);
           setUserId(id);
-          // listContactService(id).then(contact => {
-          //   setContacts(contact.data?.contacts);
-          //   setIsLoading(false);
-          //   // console.log(contact.data?.contacts);
-          // });
           setIsLoading(false);
           requestContactPermission();
+          listUserConversationsService(id)
+            .then(res => {
+              // console.log('List User Conversations Response', res);
+              if (res.data) {
+                setFilteredDataSource(res.data as []);
+              }
+            })
+            .catch(e => {
+              console.log('List Error', e);
+            });
         })
         .catch(e => console.log(e));
     }, []),
   );
-
-  // useEffect(() => {
-  //   requestContactPermission();
-  // }, []);
 
   const requestContactPermission = async () => {
     if (Platform.OS !== 'android') {
@@ -124,14 +138,11 @@ const Contact = ({navigation}: Props) => {
       const filteredContacts = warefa.filter((cont: {phoneNumber: any}) => {
         return cont.phoneNumber !== undefined;
       });
-      // console.log(filteredContacts);
-      // console.log('Phone list', warefa);
       await listContactService(filteredContacts).then(res => {
         // console.log('contact list response', res.data);
         setContacts(res.data?.tapiollaContacts);
+        setPhoneContact(res.data?.phoneContacts);
       });
-      //   setPhoneContacts(sortedContacts);
-      // console.log('Phone contacts', contacts[30].recordID);
     });
   };
 
@@ -152,7 +163,9 @@ const Contact = ({navigation}: Props) => {
         <View style={styles.btnView}>
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => navigation.navigate('AddContact')}>
+            onPress={() =>
+              navigation.navigate('AddContact', {item: phoneContact})
+            }>
             <Text style={styles.btnText}>INVITE FROM CONTACT</Text>
           </TouchableOpacity>
         </View>
@@ -164,44 +177,53 @@ const Contact = ({navigation}: Props) => {
     return (
       <FlatList
         data={contacts}
-        renderItem={({item}) => (
-          <View style={{margin: 20}}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 50,
-                  backgroundColor: '#E1EEF4',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text>
-                  {item?.name[0]}
-                  {/* {item?.familyName[0]} */}
-                </Text>
-              </View>
-              <View style={{marginLeft: 10}}>
-                <Text>{item.name}</Text>
-              </View>
-              <View
-                style={{
-                  position: 'absolute',
-                  right: 5,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignContent: 'center',
-                }}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('ChatMessage', {item})}>
-                  <MessageIcon />
-                </TouchableOpacity>
-                <TouchableOpacity onLongPress={openMenu}>
-                  <View style={{marginLeft: 20}}>
-                    <VerticalEll />
-                  </View>
-                </TouchableOpacity>
-                {/* <Menu
+        renderItem={({item}) => {
+          const id = item?.id;
+          const filteredConvo = filteredDataSource.filter(prevChats => {
+            return prevChats.recipientUserId === id;
+          });
+          const chatItem = filteredConvo[0];
+          return (
+            <View style={{margin: 15}}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 50,
+                    backgroundColor: '#E1EEF4',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text>{item?.name[0]}</Text>
+                </View>
+                <View style={{marginLeft: 10}}>
+                  <Text>{item.name}</Text>
+                </View>
+                <View
+                  style={{
+                    position: 'absolute',
+                    right: 5,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignContent: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      chatItem
+                        ? navigation.navigate('ChatMessage', {item: chatItem})
+                        : navigation.navigate('ChatMessage', {
+                            item: {...item, recipientUsername: item.name},
+                          });
+                    }}>
+                    <MessageIcon />
+                  </TouchableOpacity>
+                  <TouchableOpacity onLongPress={openMenu}>
+                    <View style={{marginLeft: 20}}>
+                      <VerticalEll />
+                    </View>
+                  </TouchableOpacity>
+                  {/* <Menu
                   visible={visible}
                   onDismiss={closeMenu}
                   anchor={
@@ -222,18 +244,19 @@ const Contact = ({navigation}: Props) => {
                     title="Delete"
                   />
                 </Menu> */}
+                </View>
               </View>
+              <View
+                style={{
+                  width: '100%',
+                  height: 1,
+                  backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                  alignSelf: 'center',
+                  marginTop: 16,
+                }}></View>
             </View>
-            <View
-              style={{
-                width: '100%',
-                height: 1,
-                backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                alignSelf: 'center',
-                marginTop: 16,
-              }}></View>
-          </View>
-        )}
+          );
+        }}
         keyExtractor={(item, index) => `${index}-${item}`}
       />
     );
@@ -248,7 +271,9 @@ const Contact = ({navigation}: Props) => {
         leftSvg={<Menus />}
         leftOnPress={() => navigation.dispatch(DrawerActions.openDrawer())}
         rightSvg={<Search />}
-        rightOnPress={() => navigation.navigate('SearchContact')}
+        rightOnPress={() =>
+          navigation.navigate('SearchContact', {item: phoneContact})
+        }
       />
       {isLoading ? (
         <View style={styles.activityIndicator}>

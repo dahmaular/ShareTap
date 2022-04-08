@@ -69,10 +69,11 @@ export type AuthenticatedRoutesParamsList = {
   Search: Record<'cardd', SearchRoute>;
   Rolodex: undefined;
   SearchContact: undefined | Record<'item', SearchContactRoute>;
-  AddContact: undefined;
+  AddContact: undefined | Record<'item', SearchContactRoute>;
   Dashboard: undefined;
   PrivacyPolicy: undefined;
   CreateCard: undefined;
+  ChatMessage: undefined | Record<'item', ListChatMessagesRoute>;
 };
 
 export interface AccountCreationRoute {

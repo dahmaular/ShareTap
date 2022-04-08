@@ -36,111 +36,25 @@ type Props = {
   route: RouteProp<AuthenticatedRoutesParamsList, 'SearchContact'>;
 };
 
-interface ContactFromPhone {
-  name: string;
-  phone: string;
-}
-
 const {width, height} = Dimensions.get('screen');
 const SearchContact = ({navigation, route}: Props) => {
   const [contacts, setContacts] = useState<any>(null);
   const [search, setSearch] = useState('');
   const [contList, setContList] = useState<any>(null);
+  const {item} = route.params;
 
-  //   useEffect(() => {
-  //     if (route.params) {
-  //       const {item} = route.params;
-  //       //   console.log('This is the contact details', item.contacts);
-  //       setContList(item.contacts);
-  //     }
-  //   }, []);
-
-  // useEffect(() => {
-  //   // requestContactPermission();
-  //   const unsubscribe = navigation.addListener('focus', async () => {
-  //     requestContactPermission();
-  //   });
-  //   return unsubscribe;
-  // }, [navigation]);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      // setIsLoading(true);
-      requestContactPermission();
-    }, []),
-  );
-
-  const getPhoneContacts = () => {
-    Contacts.getAll().then(contacts => {
-      const sortedContacts = contacts.sort(function (a, b) {
-        if (a.givenName < b.givenName) {
-          return -1;
-        }
-        if (a.givenName > b.givenName) {
-          return 1;
-        }
-        return 0;
-      });
-      setContList(sortedContacts);
-      const warefa: any = sortedContacts?.map((item, i) => {
-        return {
-          name: item?.middleName
-            ? item?.givenName + ' ' + item?.middleName + ' ' + item?.familyName
-            : item?.givenName + ' ' + item?.familyName,
-          phone: item?.phoneNumbers,
-        };
-      });
-      console.log('Phone list', warefa);
-      //   setPhoneContacts(sortedContacts);
-      // console.log('Phone contacts', contacts[30].recordID);
-    });
-  };
-
-  const requestContactPermission = async () => {
-    if (Platform.OS !== 'android') {
-      getPhoneContacts();
-    } else {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-          {
-            title: 'Tapiolla App Permission',
-            message:
-              'Contacts permission is required to access your phone contacts. ',
-            buttonNeutral: 'Ask Me Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
-          },
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          getPhoneContacts();
-        } else {
-          console.log('Contact permission denied');
-        }
-      } catch (err) {
-        console.warn(err);
-      }
-    }
-  };
+  // console.log('Item from contact', item);
 
   const searchFilterFunction = (text: string) => {
-    // Check if searched text is not blank
     if (text) {
-      // Inserted text is not blank
-      // Filter the chats lists
-      // Update FilteredDataSource
-      const newData = contList?.filter(function (item: any) {
-        const itemData = item.givenName
-          ? item.givenName.toUpperCase()
-          : ''.toUpperCase();
+      const newData = item?.filter(function (item: any) {
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
       setContacts(newData);
       setSearch(text);
     } else {
-      // Inserted text is blank
-      // Update FilteredDataSource with chats
       setContacts(null);
       setSearch(text);
     }
@@ -205,8 +119,8 @@ const SearchContact = ({navigation, route}: Props) => {
                     justifyContent: 'center',
                   }}>
                   <Text>
-                    {item?.givenName[0]}
-                    {item?.familyName[0]}
+                    {item?.name[0]}
+                    {/* {item?.familyName[0]} */}
                   </Text>
                 </View>
                 <View style={{marginLeft: 10}}>
@@ -217,14 +131,12 @@ const SearchContact = ({navigation, route}: Props) => {
                       lineHeight: 20,
                       color: '#000000',
                     }}>
-                    {item?.givenName}{' '}
-                    {item?.middleName && item.middleName + ' '}
-                    {item?.familyName}
+                    {item?.name}
                   </Text>
                   <View style={{marginTop: 5}}>
                     <Text
                       style={{color: 'rgba(51, 51, 51, 0.51)', fontSize: 12}}>
-                      {item?.phoneNumbers[0]?.number}
+                      {item?.phoneNumber}
                     </Text>
                   </View>
                 </View>
