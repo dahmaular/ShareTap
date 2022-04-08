@@ -16,21 +16,22 @@ import Copyright from '../../assets/svg/copyright.svg';
 import DashboardHeader from '../../components/DashboardHeader';
 import {ScrollView} from 'react-native-gesture-handler';
 import {PRIMARY_COLOR} from '../../core/color';
-import {getTermsAndConditionsService} from '../../services/userService';
+import {
+  getPrivacyPolicyService,
+  getTermsAndConditionsService,
+} from '../../services/userService';
 import moment from 'moment';
-import AccordionListItem from '../../components/Accordion';
 
 const {width, height} = Dimensions.get('screen');
 
 const PrivacyPolicy = ({navigation}: any) => {
-  const [terms, setTerms] = useState<any>(null);
-  const [chosenPlan, setChosenPlan] = useState('');
+  const [policy, setPolicy] = useState<any>(null);
   const [content, setContent] = useState<any>(null);
 
   const getTerms = async () => {
-    await getTermsAndConditionsService().then(data => {
-      console.log('data', data.data?.data);
-      setTerms(data.data);
+    await getPrivacyPolicyService().then(data => {
+      // console.log('data', data.data?.data);
+      setPolicy(data?.data);
     });
   };
 
@@ -45,19 +46,17 @@ const PrivacyPolicy = ({navigation}: any) => {
         titleColor="#FFFFFF"
         leftSvg={<Back />}
         leftOnPress={() => navigation.goBack()}
-        title="Terms & Conditions"
+        title="Privacy Policy"
       />
       <ScrollView>
         <View style={styles.body}>
           <View style={{marginBottom: 20}}>
             <Text style={{fontFamily: 'Poppins-Bold', fontSize: 16}}>
-              Last updated: {moment(terms?.updatedAt).format('LL')}
+              Last updated: {moment(policy?.updatedAt).format('LL')}
             </Text>
           </View>
-          {/* <Text style={styles.terms}>{terms?.data}</Text> */}
-          <AccordionListItem title={'List Item'}>
-            <Text>Some text here</Text>
-          </AccordionListItem>
+          <Text style={styles.terms}>{policy?.data}</Text>
+
           <View style={styles.footer}>
             <TouchableOpacity
               style={{...styles.btn, backgroundColor: PRIMARY_COLOR}}>
