@@ -77,7 +77,7 @@ const Subscriptions = ({navigation}: any) => {
                         <Text style={styles.planHeaderStan}>${item.price}</Text>
                         <View style={styles.planName}>
                           <Text style={{...styles.aboutText, marginTop: 4}}>
-                            {item.plan}
+                            {item.plan.split(' ')[0]}
                           </Text>
                         </View>
                       </View>
