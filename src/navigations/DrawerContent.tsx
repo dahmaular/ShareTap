@@ -18,11 +18,13 @@ import {Avatar} from 'react-native-paper';
 import AboutIcon from '../assets/svg/about-icon.svg';
 import SubscriptionIcon from '../assets/svg/subscription-icon.svg';
 import SupportIcon from '../assets/svg/support-icon.svg';
+import DashboardIcon from '../assets/svg/DashboardMenu.svg';
 import {useSelector} from 'react-redux';
 import {signOutService} from '../services/authService';
 import {hubDispatch} from '../core/awsExports';
 import {getUserIdService, getUserProfileService} from '../services/userService';
 import PImageBg from '../../assets/svg/profile-image-bg.svg';
+import {useFocusEffect} from '@react-navigation/native';
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [userProfile, setUserProfile] = useState<any>(null);
@@ -96,6 +98,12 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           <View style={styles.navs}>
             <TouchableOpacity
               style={styles.navContainer}
+              onPress={() => props.navigation.navigate('Dashboard')}>
+              <DashboardIcon />
+              <Text style={styles.drawerText}>Dashboard</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navContainer}
               onPress={() => props.navigation.navigate('Subscriptions')}>
               <SubscriptionIcon />
               <Text style={styles.drawerText}>Subscriptions</Text>
@@ -119,7 +127,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               onPress={() => props.navigation.navigate('Terms')}>
               <Text style={styles.drawerFooterLink}>Terms and Conditions</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate('PrivacyPolicy')}>
               <Text style={styles.drawerFooterLink}>Privacy Policy</Text>
             </TouchableOpacity>
             <Text style={styles.drawerFooterLogout} onPress={handleLogOut}>

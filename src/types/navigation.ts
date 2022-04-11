@@ -75,7 +75,7 @@ export type AuthenticatedRoutesParamsList = {
   ChatMessage: Record<'item', ListChatMessagesRoute>;
   ReminderCalendar: Record<'item', ReminderCalenderRoute>;
   SearchContact: undefined | Record<'item', SearchContactRoute>;
-  AddContact: undefined;
+  AddContact: undefined | Record<'item', SearchContactRoute>;
   Dashboard: undefined;
   PrivacyPolicy: undefined;
 };

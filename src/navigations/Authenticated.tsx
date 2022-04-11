@@ -57,7 +57,11 @@ export default function AuthenticatedRoutes() {
         options={{headerShown: false}}
       />
 
-      <Drawer.Screen name="ReminderCalendar" component={ReminderCalendar}  options={{headerShown: false}}/>
+      <Drawer.Screen
+        name="ReminderCalendar"
+        component={ReminderCalendar}
+        options={{headerShown: false}}
+      />
 
       <Drawer.Screen
         name="CreateCard"

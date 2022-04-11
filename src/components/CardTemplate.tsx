@@ -127,6 +127,7 @@ const CardTemplate = ({
               <TextInput
                 style={styles.namer}
                 placeholder="Add name"
+                placeholderTextColor="rgba(51, 51, 51, 0.4)"
                 value={item.name}
                 onChangeText={t => {
                   setName({value: t, error: ''});
@@ -145,6 +146,7 @@ const CardTemplate = ({
               <TextInput
                 style={styles.namer}
                 placeholder="Add role"
+                placeholderTextColor="rgba(51, 51, 51, 0.4)"
                 value={item.role}
                 onChangeText={t => {
                   setRole({value: t, error: ''});
@@ -165,6 +167,7 @@ const CardTemplate = ({
               <TextInput
                 style={styles.namer}
                 placeholder="Add mail"
+                placeholderTextColor="rgba(51, 51, 51, 0.4)"
                 autoCapitalize="none"
                 keyboardType="email-address"
                 value={item.email}
@@ -186,6 +189,7 @@ const CardTemplate = ({
               <TextInput
                 style={styles.namer}
                 placeholder="Add telephone no."
+                placeholderTextColor="rgba(51, 51, 51, 0.4)"
                 value={item.phone}
                 keyboardType="phone-pad"
                 onChangeText={t => {
@@ -205,6 +209,7 @@ const CardTemplate = ({
               <TextInput
                 style={styles.namer}
                 placeholder="Add Address"
+                placeholderTextColor="rgba(51, 51, 51, 0.4)"
                 value={item.address}
                 onChangeText={t => {
                   setAddress({value: t, error: ''});

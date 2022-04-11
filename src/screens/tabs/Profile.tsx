@@ -129,16 +129,6 @@ const Profile = ({navigation}: Props) => {
   const [biographyFocus, setBiographyFocus] = useState(false);
   const [bioModal, setBioModal] = useState(false);
 
-  useEffect(() => {
-    getUserIdService()
-      .then(id => {
-        setUserId(id);
-      })
-      .catch(e => {
-        throw e;
-      });
-  }, []);
-
   const getProfile = (id: any) => {
     getUserProfileService(id).then(profil => {
       setUserProfile(profil.data.getUserProfile?.userDetails);
@@ -146,13 +136,9 @@ const Profile = ({navigation}: Props) => {
     });
   };
 
-  // useEffect(() => {
-  //   getProfile(userId);
-  // }, [userId, navigation]);
-
   useFocusEffect(
     React.useCallback(() => {
-      setIsLoading(true);
+      // setIsLoading(true);
       getUserIdService()
         .then(id => {
           setUserId(id);
@@ -168,16 +154,12 @@ const Profile = ({navigation}: Props) => {
   const getUserCards = (id: any) => {
     listUserCardsService(id)
       .then(card => {
-        setUserCards(card.data.listUserCards?.cards);
+        setUserCards(card.data?.cards);
       })
       .catch(e => {
         throw e;
       });
   };
-
-  // useEffect(() => {
-  //   getUserCards(userId);
-  // }, [userId, navigation]);
 
   const dispatch = useDispatch();
 
@@ -354,6 +336,7 @@ const Profile = ({navigation}: Props) => {
       endDate: selectEndDate,
       userId: userId,
     };
+    // console.log('profile data', data);
     await createUserBusinessProfile(data).then(res => {
       getProfile(userId);
       setIsLoading(false);
@@ -377,6 +360,7 @@ const Profile = ({navigation}: Props) => {
       biography: !biography.value ? userProfile?.biography : biography.value,
     };
     await updateUserProfileService(data).then(res => {
+      // console.log(res.data);
       getProfile(userId);
       setIsLoading(false);
       setIsLoadingAv(false);
@@ -394,7 +378,7 @@ const Profile = ({navigation}: Props) => {
           const startYear = sep[2];
           const splt = item.endDate.split('/');
           const endYear = splt[2];
-          const result = userCards.filter(
+          const result = userCards?.filter(
             (uc: any) => uc.cardDetails.role === item?.role,
           );
           return (
@@ -489,6 +473,7 @@ const Profile = ({navigation}: Props) => {
                 placeholder="Start date"
                 dateValue={moment(selectStartDate).format('l')}
                 onValueChange={(itemValue: any) => {
+                  // console.log('start year', {itemValue});
                   setSelectedStartDate(itemValue);
                 }}
               />
@@ -500,6 +485,7 @@ const Profile = ({navigation}: Props) => {
                 placeholder="Present"
                 dateValue={moment(selectEndDate).format('l')}
                 onValueChange={(itemValue: any) => {
+                  // console.log('present', {itemValue});
                   setSelectedEndDate(itemValue);
                 }}
               />
@@ -583,7 +569,7 @@ const Profile = ({navigation}: Props) => {
                 animating={true}
               />
             ) : (
-              <Text style={styles.modalBtnText}>LINK FACEBOOK</Text>
+              <Text style={styles.modalBtnText}>LINK TWITTER</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -826,7 +812,7 @@ const Profile = ({navigation}: Props) => {
                   ellipsizeMode="tail">
                   {userProfile?.facebook
                     ? userProfile?.facebook
-                    : 'Add Twitter'}
+                    : 'Add Facebook'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -837,7 +823,7 @@ const Profile = ({navigation}: Props) => {
                   About {userProfile?.firstName ? userProfile?.firstName : ''}
                 </Text>
                 <TouchableOpacity
-                  onPress={() => setEditBio(true)}
+                  onPress={() => setEditBio(!editBio)}
                   style={{
                     alignItems: 'center',
                     alignContent: 'center',

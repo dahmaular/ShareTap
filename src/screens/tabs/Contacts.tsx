@@ -8,6 +8,8 @@ import {
   View,
   TextInput,
   ActivityIndicator,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import {Menu} from 'react-native-paper';
 import {
@@ -16,6 +18,7 @@ import {
   useFocusEffect,
 } from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import Contacts from 'react-native-contacts';
 
 import Header from '../../components/Header';
 import NoContact from '../../assets/svg/No_Contact.svg';
@@ -31,6 +34,7 @@ import {
 } from '../../types/navigation';
 import {getUserIdService, listContactService} from '../../services/userService';
 import SearchContactHeader from '../../components/SearchContactHeader';
+import {listUserConversationsService} from '../../services/chatService';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -38,11 +42,26 @@ type Props = {
     StackNavigationProp<AuthenticatedRoutesParamsList>
   >;
 };
-const Contacts = ({navigation}: Props) => {
+
+interface UserConversationsProps {
+  id: string | null;
+  recipientUserId: string | null;
+  recipientUsername: string | null;
+  recipientAvatar: string | null;
+  lastMessage: string | null;
+  createdAt: string | null;
+  error: string | null;
+}
+
+const Contact = ({navigation}: Props) => {
+  const [filteredDataSource, setFilteredDataSource] = useState<
+    UserConversationsProps[]
+  >([]);
   const [contacts, setContacts] = useState<any>(null);
   const [userId, setUserId] = useState('');
   const [visible, setVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [phoneContact, setPhoneContact] = useState<any>(null);
 
   const openMenu = () => setVisible(true);
 
@@ -54,16 +73,80 @@ const Contacts = ({navigation}: Props) => {
       getUserIdService()
         .then(id => {
           setUserId(id);
-          listContactService(id).then(contact => {
-            setContacts(contact.data?.contacts);
-            setIsLoading(false);
-          });
+          setIsLoading(false);
+          requestContactPermission();
+          listUserConversationsService(id)
+            .then(res => {
+              // console.log('List User Conversations Response', res);
+              if (res.data) {
+                setFilteredDataSource(res.data as []);
+              }
+            })
+            .catch(e => {
+              console.log('List Error', e);
+            });
         })
         .catch(e => {
           throw e;
         });
     }, []),
   );
+
+  const requestContactPermission = async () => {
+    if (Platform.OS !== 'android') {
+      getPhoneContacts();
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+          {
+            title: 'Tapiolla App Permission',
+            message:
+              'Contacts permission is required to access your phone contacts. ',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          getPhoneContacts();
+        } else {
+          console.log('Contact permission denied');
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+  };
+
+  const getPhoneContacts = () => {
+    Contacts.getAll().then(async (contacts: any[]) => {
+      const sortedContacts = contacts.sort(function (a, b) {
+        if (a.givenName < b.givenName) {
+          return -1;
+        }
+        if (a.givenName > b.givenName) {
+          return 1;
+        }
+        return 0;
+      });
+
+      const warefa: any = sortedContacts?.map((item, i) => {
+        return {
+          name: item?.displayName,
+          phoneNumber: item?.phoneNumbers[0]?.number,
+        };
+      });
+      const filteredContacts = warefa.filter((cont: {phoneNumber: any}) => {
+        return cont.phoneNumber !== undefined;
+      });
+      await listContactService(filteredContacts).then(res => {
+        // console.log('contact list response', res.data);
+        setContacts(res.data?.tapiollaContacts);
+        setPhoneContact(res.data?.phoneContacts);
+      });
+    });
+  };
 
   const NoContactYet = () => {
     return (
@@ -82,7 +165,9 @@ const Contacts = ({navigation}: Props) => {
         <View style={styles.btnView}>
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => navigation.navigate('AddContact')}>
+            onPress={() =>
+              navigation.navigate('AddContact', {item: phoneContact})
+            }>
             <Text style={styles.btnText}>INVITE FROM CONTACT</Text>
           </TouchableOpacity>
         </View>
@@ -94,34 +179,53 @@ const Contacts = ({navigation}: Props) => {
     return (
       <FlatList
         data={contacts}
-        renderItem={({item}) => (
-          <View style={{margin: 20}}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 50,
-                  backgroundColor: '#E1EEF4',
-                }}></View>
-              <View style={{marginLeft: 10}}>
-                <Text>{item.name}</Text>
-              </View>
-              <View
-                style={{
-                  position: 'absolute',
-                  right: 5,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignContent: 'center',
-                }}>
-                <MessageIcon />
-                <TouchableOpacity onLongPress={openMenu}>
-                  <View style={{marginLeft: 20}}>
-                    <VerticalEll />
-                  </View>
-                </TouchableOpacity>
-                {/* <Menu
+        renderItem={({item}) => {
+          const id = item?.id;
+          const filteredConvo = filteredDataSource.filter(prevChats => {
+            return prevChats.recipientUserId === id;
+          });
+          const chatItem = filteredConvo[0];
+          return (
+            <View style={{margin: 15}}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 50,
+                    backgroundColor: '#E1EEF4',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text>{item?.name[0]}</Text>
+                </View>
+                <View style={{marginLeft: 10}}>
+                  <Text>{item.name}</Text>
+                </View>
+                <View
+                  style={{
+                    position: 'absolute',
+                    right: 5,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignContent: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      chatItem
+                        ? navigation.navigate('ChatMessage', {item: chatItem})
+                        : navigation.navigate('ChatMessage', {
+                            item: {...item, recipientUsername: item.name},
+                          });
+                    }}>
+                    <MessageIcon />
+                  </TouchableOpacity>
+                  <TouchableOpacity onLongPress={openMenu}>
+                    <View style={{marginLeft: 20}}>
+                      <VerticalEll />
+                    </View>
+                  </TouchableOpacity>
+                  {/* <Menu
                   visible={visible}
                   onDismiss={closeMenu}
                   anchor={
@@ -142,18 +246,19 @@ const Contacts = ({navigation}: Props) => {
                     title="Delete"
                   />
                 </Menu> */}
+                </View>
               </View>
+              <View
+                style={{
+                  width: '100%',
+                  height: 1,
+                  backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                  alignSelf: 'center',
+                  marginTop: 16,
+                }}></View>
             </View>
-            <View
-              style={{
-                width: '100%',
-                height: 1,
-                backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                alignSelf: 'center',
-                marginTop: 16,
-              }}></View>
-          </View>
-        )}
+          );
+        }}
         keyExtractor={(item, index) => `${index}-${item}`}
       />
     );
@@ -168,7 +273,9 @@ const Contacts = ({navigation}: Props) => {
         leftSvg={<Menus />}
         leftOnPress={() => navigation.dispatch(DrawerActions.openDrawer())}
         rightSvg={<Search />}
-        rightOnPress={() => navigation.navigate('SearchContact')}
+        rightOnPress={() =>
+          navigation.navigate('SearchContact', {item: phoneContact})
+        }
       />
       {isLoading ? (
         <View style={styles.activityIndicator}>
@@ -185,7 +292,7 @@ const Contacts = ({navigation}: Props) => {
   );
 };
 
-export default Contacts;
+export default Contact;
 
 const styles = StyleSheet.create({
   container: {

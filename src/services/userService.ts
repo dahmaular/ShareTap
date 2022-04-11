@@ -30,14 +30,13 @@ import {
   UpdateUserProfileMutation,
   UpdateUserProfilePayload,
   ListContactsQuery,
-  AddContactMutation,
-  AddContactInput,
   GetTermsAndConditionsPageQuery,
   GetPrivacyPolicyPageQuery,
+  ListCardTemplatesQuery,
+  ListContactsInput,
 } from '../types/apiTypes';
 import {ExtractType} from '../types/extractApiTypes';
 import {
-  addContact,
   createBusinessProfile,
   createDraft,
   updateUserProfile,
@@ -47,7 +46,7 @@ export type ListUserCardsResponse = ExtractType<ListUserCardsQuery>;
 
 export type TodoType = ExtractType<ListUserCardsResponse>;
 
-export type ListCardTemplateResponse = ExtractType<ListUserCardsQuery>;
+export type ListCardTemplateResponse = ExtractType<ListCardTemplatesQuery>;
 
 export type ListUserBusinessProfileResponse =
   ExtractType<ListUserBusinessProfilesQuery>;
@@ -69,8 +68,6 @@ export type ListSubscriptionsPlanResponse =
   ExtractType<ListSubscriptionPlansQuery>;
 
 export type ListContactsResponse = ExtractType<ListContactsQuery>;
-
-export type AddContactResponse = ExtractType<AddContactMutation>;
 
 export type GetTermsAndConditionsPageResponse =
   ExtractType<GetTermsAndConditionsPageQuery>;
@@ -99,7 +96,7 @@ export const listUserCardsService = async (userId: string) => {
       data: ListUserCardsResponse;
     };
 
-    return {data: data};
+    return {data: data.listUserCards};
   } catch (error) {
     throw error;
   }
@@ -113,7 +110,8 @@ export const listUserCardTemplateService = async () => {
     })) as {
       data: ListCardTemplateResponse;
     };
-    return {data: data};
+    // console.log('Templates is now here', data.listCardTemplates?.cardTemplates);
+    return {data: data.listCardTemplates};
   } catch (error) {
     throw error;
   }
@@ -171,21 +169,6 @@ export const listDraftService = async (userId: string) => {
       data: ListDraftResponse;
     };
     return {data: data.listDrafts?.drafts};
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const listContactService = async (userId: string) => {
-  try {
-    const {data} = (await API.graphql({
-      query: listContacts,
-      variables: {userId},
-      authMode: GRAPHQL_AUTH_MODE.API_KEY,
-    })) as {
-      data: ListContactsResponse;
-    };
-    return {data: data.listContacts};
   } catch (error) {
     throw error;
   }
@@ -249,9 +232,30 @@ export const createUserBusinessProfile = async (
     })) as {
       data: CreateBusinessProfileResponse;
     };
+<<<<<<< HEAD
+=======
+    // console.log('This is response data', data);
+>>>>>>> unified
     return {data: data};
   } catch (e) {
     throw e;
+  }
+};
+
+export const listContactService = async (
+  contactsPayload: ListContactsInput,
+) => {
+  try {
+    const {data} = (await API.graphql({
+      query: listContacts,
+      variables: {contactsPayload},
+      authMode: GRAPHQL_AUTH_MODE.API_KEY,
+    })) as {
+      data: ListContactsResponse;
+    };
+    return {data: data.listContacts};
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -280,21 +284,6 @@ export const createDraftService = async (draft: CreateDraftInput) => {
       authMode: GRAPHQL_AUTH_MODE.API_KEY,
     })) as {
       data: CreateDraftResponse;
-    };
-    return {data: data};
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const addContactService = async (contact: AddContactInput) => {
-  try {
-    const {data} = (await API.graphql({
-      query: addContact,
-      variables: {contact},
-      authMode: GRAPHQL_AUTH_MODE.API_KEY,
-    })) as {
-      data: AddContactResponse;
     };
     return {data: data};
   } catch (error) {

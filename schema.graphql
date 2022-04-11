@@ -1,10 +1,3 @@
-input AddContactInput {
-	userId: String
-	contactId: String
-	name: String
-	phone: String
-}
-
 type AdminDashboardPayload {
 	totalUsers: Int
 	totalInactiveUsers: Int
@@ -105,20 +98,6 @@ input ConfirmSignUpPayload {
 	confirmationCode: String
 }
 
-type Contact {
-	id: String
-	createdAt: String
-	userId: String
-	contactId: String
-	name: String
-	phone: String
-}
-
-type ContactPayload {
-	contact: Contact
-	error: String
-}
-
 type Conversation {
 	id: String
 	recipients: [String]
@@ -214,8 +193,14 @@ type ListCategoriesPayload {
 	error: String
 }
 
+input ListContactsInput {
+	name: String
+	phoneNumber: String
+}
+
 type ListContactsPayload {
-	contacts: [Contact]
+	tapiollaContacts: [TapiollaContact]
+	phoneContacts: [PhoneContact]
 	error: String
 }
 
@@ -299,7 +284,6 @@ type Mutation {
 	createMessage(messagePayload: MessageInput): Message
 	createScheduleMessage(scheduleMessagePayload: ScheduleMessageInput): ScheduleMessagePayload
 	createDraft(draft: CreateDraftInput): DraftPayload
-	addContact(contact: AddContactInput): ContactPayload
 	setReminder(reminderPayload: ReminderInput): ReminderPayload
 }
 
@@ -325,6 +309,11 @@ type PageData {
 	data: String
 	updatedAt: String
 	error: String
+}
+
+type PhoneContact {
+	name: String
+	phoneNumber: String
 }
 
 input PresignedUploadInput {
@@ -368,14 +357,14 @@ type Query {
 	listMessagesForConversation(conversationId: String): [Message]
 	listScheduledMessages(userId: String): ListScheduledMessagesPayload
 	listDrafts(userId: String): ListDraftsPayload
-	listContacts(userId: String): ListContactsPayload
+	listContacts(contactsPayload: [ListContactsInput]): ListContactsPayload
 	listUserReminders(userId: String): ListRemindersPayload
 }
 
 type ReceivedCardsData {
 	id: Int
 	category: String
-	data: [ReceivedCardsResponse]
+	data: ReceivedCardsResponse
 }
 
 type ReceivedCardsPayload {
@@ -496,6 +485,12 @@ type SubscriptionResponse {
 type SubscriptionSessionPayload {
 	url: String
 	error: String
+}
+
+type TapiollaContact {
+	name: String
+	phoneNumber: String
+	id: String
 }
 
 input UpdateBusinessProfilePayload {

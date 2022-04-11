@@ -56,6 +56,7 @@ import {
   listUserBusinessProfilesService,
   listUserCardTemplateService,
 } from '../../services/userService';
+import {useFocusEffect} from '@react-navigation/native';
 
 const {width} = Dimensions.get('screen');
 
@@ -133,26 +134,29 @@ const CreateCard = ({navigation}: any) => {
   const [bottomColor, setBottomColor] = useState('');
   const [editDraft, setEditDraft] = useState(false);
 
-  useEffect(() => {
-    getUserIdService()
-      .then(id => {
-        setUserId(id);
-      })
-      .catch(e => {
-        throw e;
-      });
-  }, []);
-
-  useEffect(() => {
-    listUserCardTemplateService()
-      .then(temp => {
-        template = temp.data.listCardTemplates.cardTemplates;
-        setTemplat(temp?.data?.listCardTemplates?.cardTemplates);
-      })
-      .catch(e => {
-        throw e;
-      });
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      // setIsLoading(true);
+      getUserIdService()
+        .then(id => {
+          // console.log('Id is here', id);
+          setUserId(id);
+          fetchBussinessProfile(id);
+          listDraftService(id).then(draft => {
+            // console.log('Card drafts here', draft);
+            setDrafts(draft.data);
+          });
+        })
+        .catch(e => console.log(e));
+      listUserCardTemplateService()
+        .then(temp => {
+          template = temp?.data?.cardTemplates;
+          setTemplat(temp?.data?.cardTemplates);
+          // console.log('Template here', temp);
+        })
+        .catch(e => console.log(e));
+    }, []),
+  );
 
   const fetchBussinessProfile = async (id: any) => {
     await listUserBusinessProfilesService(id).then(bizProf => {
@@ -167,17 +171,6 @@ const CreateCard = ({navigation}: any) => {
       setBusinessProfile(warefa);
     });
   };
-
-  useEffect(() => {
-    fetchBussinessProfile(userId);
-    // cardTemplateService;
-  }, [userId]);
-
-  useEffect(() => {
-    listDraftService(userId).then(draft => {
-      setDrafts(draft.data);
-    });
-  }, [userId, navigation]);
 
   const cardTemplateService = async () => {
     const data = {
@@ -368,7 +361,7 @@ const CreateCard = ({navigation}: any) => {
                   <TouchableOpacity
                     style={{
                       ...styles.template4,
-                      borderBottomColor: item.borderBottomColor,
+                      borderBottomColor: item?.borderBottomColor,
                     }}
                     onPress={() => {
                       setTemplateModal(false);
@@ -463,7 +456,7 @@ const CreateCard = ({navigation}: any) => {
               useNativeDriver: false,
             },
           )}
-          onScrollEndDrag={() =>{}}
+          onScrollEndDrag={() => {}}
           keyExtractor={(item, index) => `${index}-${item}`}
           renderItem={({item, index}) => (
             <CardTemplate
@@ -763,8 +756,9 @@ const CreateCard = ({navigation}: any) => {
           <TouchableOpacity
             style={styles.plusView}
             onPress={() => {
-              // navigation.navigate('CreateCard');
-              // cardTemplateService();
+              setEditCard(false);
+              setEditDraft(false);
+              setPositionModal(true);
             }}>
             <View style={styles.plusContainer}>
               <Plus color="#FFFFFF" />

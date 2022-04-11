@@ -17,7 +17,11 @@ import {
   TabNavigatorParamsList,
 } from '../../types/navigation';
 import NetInfo from '@react-native-community/netinfo';
-import {DrawerActions, CompositeNavigationProp} from '@react-navigation/native';
+import {
+  DrawerActions,
+  CompositeNavigationProp,
+  useFocusEffect,
+} from '@react-navigation/native';
 import {Badge} from 'react-native-paper';
 import Menu from '../../assets/svg/menu.svg';
 import Tap from '../../assets/svg/tap_2.svg';
@@ -63,24 +67,47 @@ const Home = ({navigation}: Props) => {
   const halfBoxDistance = boxDistance / 2;
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
+  const [userCards, setUserCards] = useState<any>(null);
+  // console.log('User data @home', user?.cards?.listUserCards?.cards);
   const _onNotificationPressed = () => {
     setModal(true);
   };
 
-  useEffect(() => {
-    getUserIdService()
-      .then(id => {
-        setUserId(id);
-      })
-      .catch(e => {throw e});
-  }, []);
+  // useEffect(() => {
+  //   getUserIdService()
+  //     .then(id => {
+  //       // console.log('Id is here', id);
+  //       setUserId(id);
+  //     })
+  //     .catch(e => console.log(e));
+  // }, []);
 
-  useEffect(() => {
-    listUserCardsService(userId)
-      .then(card => {
-      })
-      .catch(e =>{throw e});
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      // setIsLoading(true);
+      getUserIdService()
+        .then(id => {
+          // console.log('Id is here', id);
+          setUserId(id);
+          listUserCardsService(id)
+            .then(card => {
+              // console.log('card is here @home', card.data?.cards);
+              setUserCards(card.data?.cards);
+            })
+            .catch(e => console.log(e));
+        })
+        .catch(e => console.log(e));
+    }, []),
+  );
+
+  // useEffect(() => {
+  //   listUserCardsService(userId)
+  //     .then(card => {
+  //       console.log('card is here @home', card.data?.cards);
+  //       setUserCards(card.data?.cards);
+  //     })
+  //     .catch(e => console.log(e));
+  // }, []);
 
   const confirmToVerify = () => {
     setCardModal(false);
@@ -98,9 +125,7 @@ const Home = ({navigation}: Props) => {
             () =>
               navigation.navigate(
                 'Search',
-                user.cards.listUserCards
-                  ? {cardd: user?.cards?.listUserCards?.cards[0]}
-                  : null,
+                userCards ? {cardd: userCards[0]} : null,
               )
           }>
           <Tap />
@@ -116,7 +141,7 @@ const Home = ({navigation}: Props) => {
       <View style={styles.flatlistView}>
         <FlatList
           horizontal
-          data={user?.cards?.listUserCards?.cards}
+          data={userCards}
           contentContainerStyle={{paddingVertical: 5}}
           contentInsetAdjustmentBehavior="never"
           snapToAlignment="center"
@@ -302,7 +327,7 @@ const Home = ({navigation}: Props) => {
                 />
               </View>
             )}
-            {user?.cards?.listUserCards?.cards?.length > 0 ? (
+            {userCards?.length > 0 ? (
               <>
                 <View style={styles.organize}>
                   <View>
@@ -326,7 +351,7 @@ const Home = ({navigation}: Props) => {
 
                 <View style={styles.yourCards}>
                   <Text style={styles.yourCardsText}>
-                    Your Cards ({user?.cards?.listUserCards?.cards?.length})
+                    Your Cards ({userCards?.length})
                   </Text>
                   <Text
                     style={styles.viewAll}

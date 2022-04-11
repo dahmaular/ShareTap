@@ -21,6 +21,7 @@ import DashboardHeader from '../../components/DashboardHeader';
 import {listSubscriptionsService} from '../../services/userService';
 import {ScrollView} from 'react-native-gesture-handler';
 import {PRIMARY_COLOR} from '../../core/color';
+import {useFocusEffect} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -29,192 +30,25 @@ const Subscriptions = ({navigation}: any) => {
   const [showPayment, setShowPayment] = useState<boolean>(false);
   const [subscriptions, setSubscriptions] = useState<any>(null);
   const [chosenPlan, setChosenPlan] = useState<any>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const getSubscriptions = async () => {
+    setIsLoading(true);
     const subs = (await listSubscriptionsService()).data?.subscriptionPlans;
     setSubscriptions(subs);
+    setIsLoading(false);
   };
 
-  useEffect(() => {
-    getSubscriptions();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      // setIsLoading(true);
+      getSubscriptions();
+    }, []),
+  );
 
-  const FreePlan = () => {
-    return (
-      <View style={{marginTop: 20}}>
-        <View style={styles.plan}>
-          <View
-            style={{
-              ...styles.planHeaderView,
-              backgroundColor: 'rgba(0, 0, 0, 0.1)',
-            }}>
-            <View style={styles.planHeaderTextView}>
-              <Text style={styles.planHeader}>FREE</Text>
-              <View style={styles.planName}>
-                <Text style={{...styles.aboutText, marginTop: 4}}>FREE</Text>
-              </View>
-            </View>
-          </View>
-          <View style={{margin: 15}}>
-            <View style={styles.featureView}>
-              <Mark style={styles.featureIcon} />
-              <Text style={styles.aboutText}>
-                Random features more features
-              </Text>
-            </View>
-            <View style={styles.featureView}>
-              <Mark style={styles.featureIcon} />
-              <Text style={styles.aboutText}>
-                Random features more features
-              </Text>
-            </View>
-            <View style={styles.featureView}>
-              <Mark style={styles.featureIcon} />
-              <Text style={styles.aboutText}>
-                Random features more features
-              </Text>
-            </View>
-            <View style={styles.featureView}>
-              <Mark style={styles.featureIcon} />
-              <Text style={styles.aboutText}>
-                Random features more features
-              </Text>
-            </View>
-          </View>
-          <View style={styles.btnView}>
-            <TouchableOpacity style={styles.btn}>
-              <Text
-                style={{
-                  ...styles.aboutText,
-                  textAlign: 'center',
-                  marginTop: 12,
-                }}
-                onPress={() => {
-                  setShowPlans(false);
-                  setShowPayment(true);
-                }}>
-                PAY $0.00
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    );
-  };
-
-  const StandardPlan = () => {
-    return (
-      <View style={{marginTop: 20}}>
-        <View style={styles.plan}>
-          <View style={styles.planHeaderViewStandard}>
-            <View style={styles.planHeaderTextView}>
-              <Text style={styles.planHeaderStan}>FREE</Text>
-              <View style={styles.planName}>
-                <Text style={{...styles.aboutText, marginTop: 4}}>
-                  STANDARD
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View style={{margin: 15}}>
-            <View style={styles.featureView}>
-              <Mark style={styles.featureIcon} />
-              <Text style={styles.aboutText}>
-                Random features more features
-              </Text>
-            </View>
-            <View style={styles.featureView}>
-              <Mark style={styles.featureIcon} />
-              <Text style={styles.aboutText}>
-                Random features more features
-              </Text>
-            </View>
-            <View style={styles.featureView}>
-              <Mark style={styles.featureIcon} />
-              <Text style={styles.aboutText}>
-                Random features more features
-              </Text>
-            </View>
-            <View style={styles.featureView}>
-              <Mark style={styles.featureIcon} />
-              <Text style={styles.aboutText}>
-                Random features more features
-              </Text>
-            </View>
-          </View>
-          <View style={styles.btnView}>
-            <TouchableOpacity style={styles.btnStan}>
-              <Text
-                style={{
-                  ...styles.aboutText,
-                  textAlign: 'center',
-                  marginTop: 12,
-                  color: 'white',
-                }}>
-                PAY $9.00
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    );
-  };
-
-  const PremiumPlan = () => {
-    return (
-      <View style={{marginTop: 20}}>
-        <View style={styles.plan}>
-          <View style={styles.planHeaderViewPremium}>
-            <View style={styles.planHeaderTextView}>
-              <Text style={styles.planHeaderStan}>FREE</Text>
-              <View style={styles.planName}>
-                <Text style={{...styles.aboutText, marginTop: 4}}>PREMIUM</Text>
-              </View>
-            </View>
-          </View>
-          <View style={{margin: 15}}>
-            <View style={styles.featureView}>
-              <Mark style={styles.featureIcon} />
-              <Text style={styles.aboutText}>
-                Random features more features
-              </Text>
-            </View>
-            <View style={styles.featureView}>
-              <Mark style={styles.featureIcon} />
-              <Text style={styles.aboutText}>
-                Random features more features
-              </Text>
-            </View>
-            <View style={styles.featureView}>
-              <Mark style={styles.featureIcon} />
-              <Text style={styles.aboutText}>
-                Random features more features
-              </Text>
-            </View>
-            <View style={styles.featureView}>
-              <Mark style={styles.featureIcon} />
-              <Text style={styles.aboutText}>
-                Random features more features
-              </Text>
-            </View>
-          </View>
-          <View style={styles.btnView}>
-            <TouchableOpacity style={styles.btnPre}>
-              <Text
-                style={{
-                  ...styles.aboutText,
-                  textAlign: 'center',
-                  marginTop: 12,
-                  color: 'white',
-                }}>
-                PAY $12.00
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    );
-  };
+  // useEffect(() => {
+  //   getSubscriptions();
+  // }, []);
 
   const PlanFlatList = () => {
     return (
@@ -242,7 +76,7 @@ const Subscriptions = ({navigation}: any) => {
                         <Text style={styles.planHeaderStan}>${item.price}</Text>
                         <View style={styles.planName}>
                           <Text style={{...styles.aboutText, marginTop: 4}}>
-                            {item.plan}
+                            {item.plan.split(' ')[0]}
                           </Text>
                         </View>
                       </View>
@@ -368,13 +202,24 @@ const Subscriptions = ({navigation}: any) => {
           <Text style={styles.subHeader}>
             Select a suitable plan to explore more features
           </Text>
-          {showPlans && (
+          {isLoading ? (
+            <ActivityIndicator
+              size={'large'}
+              style={{alignItems: 'center'}}
+              animating={true}
+              color={PRIMARY_COLOR}
+            />
+          ) : (
             <>
-              {/* <FreePlan /> */}
-              <PlanFlatList />
+              {showPlans && (
+                <>
+                  {/* <FreePlan /> */}
+                  <PlanFlatList />
+                </>
+              )}
+              {showPayment && <PaymentPlanView />}
             </>
           )}
-          {showPayment && <PaymentPlanView />}
         </View>
       </ScrollView>
     </View>

@@ -573,15 +573,16 @@ export const listDrafts = /* GraphQL */ `
   }
 `;
 export const listContacts = /* GraphQL */ `
-  query ListContacts($userId: String) {
-    listContacts(userId: $userId) {
-      contacts {
-        id
-        createdAt
-        userId
-        contactId
+  query ListContacts($contactsPayload: [ListContactsInput]) {
+    listContacts(contactsPayload: $contactsPayload) {
+      tapiollaContacts {
         name
-        phone
+        phoneNumber
+        id
+      }
+      phoneContacts {
+        name
+        phoneNumber
       }
       error
     }

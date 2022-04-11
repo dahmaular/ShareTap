@@ -17,3 +17,12 @@ export const GET_FCM_TOKEN_STATUS = async () => {
 export const SET_FCM_TOKEN_STATUS = async (value: any) => {
   AsyncStorage.setItem('isSavedFcm', value + '');
 };
+
+export const SAVE_PHONE_CONTACT = (data: any) => {
+  AsyncStorage.setItem('phone', data);
+};
+
+export const GET_PHONE_CONTACT = async () => {
+  const value = await AsyncStorage.getItem('phone');
+  return value || [];
+};

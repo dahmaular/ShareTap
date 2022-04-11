@@ -319,21 +319,6 @@ export const createDraft = /* GraphQL */ `
     }
   }
 `;
-export const addContact = /* GraphQL */ `
-  mutation AddContact($contact: AddContactInput) {
-    addContact(contact: $contact) {
-      contact {
-        id
-        createdAt
-        userId
-        contactId
-        name
-        phone
-      }
-      error
-    }
-  }
-`;
 export const setReminder = /* GraphQL */ `
   mutation SetReminder($reminderPayload: ReminderInput) {
     setReminder(reminderPayload: $reminderPayload) {

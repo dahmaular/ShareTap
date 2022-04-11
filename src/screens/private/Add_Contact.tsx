@@ -10,9 +10,14 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import {Menu} from 'react-native-paper';
-import {CompositeNavigationProp, DrawerActions} from '@react-navigation/native';
+import {
+  CompositeNavigationProp,
+  DrawerActions,
+  RouteProp,
+} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Contacts from 'react-native-contacts';
+import {useFocusEffect} from '@react-navigation/native';
 
 import Back from '../../assets/svg/back.svg';
 import Search from '../../assets/svg/Search.svg';
@@ -32,93 +37,27 @@ type Props = {
     StackNavigationProp<AuthenticatedRoutesParamsList, 'AddContact'>,
     StackNavigationProp<AuthenticatedRoutesParamsList>
   >;
+  route: RouteProp<AuthenticatedRoutesParamsList, 'AddContact'>;
 };
 const {width, height} = Dimensions.get('screen');
 
-const AddContacts = ({navigation}: Props) => {
+const AddContacts = ({navigation, route}: Props) => {
   const [contacts, setContacts] = useState<any>(null);
   const [userId, setUserId] = useState('');
   const [visible, setVisible] = useState<boolean>(false);
   const [phoneContacts, setPhoneContacts] = useState<any>(null);
+  const {item} = route.params;
 
-  useEffect(() => {
-    // requestContactPermission();
-    const unsubscribe = navigation.addListener('focus', async () => {
-      requestContactPermission();
-    });
-    return unsubscribe;
-  }, [navigation]);
-
-  useEffect(() => {
-    getUserIdService()
-      .then(id => {
-        setUserId(id);
-      })
-      .catch(e => {throw e});
-  }, []);
-
-  useEffect(() => {
-    getSavedContacts(userId);
-  }, [userId]);
-
-  const getSavedContacts = async (id: string) => {
-    await listContactService(id).then(contact => {
-      setContacts(contact.data?.contacts);
-    });
-  };
-
-  const requestContactPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-        {
-          title: 'Tapiolla App Permission',
-          message:
-            'Contacts permission is required to access your phone contacts. ',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        getPhoneContacts();
-      } else {
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  };
-
-  const getPhoneContacts = () => {
-    Contacts.getAll().then(contacts => {
-      const sortedContacts = contacts.sort(function (a, b) {
-        if (a.givenName < b.givenName) {
-          return -1;
-        }
-        if (a.givenName > b.givenName) {
-          return 1;
-        }
-        return 0;
-      });
-      setPhoneContacts(sortedContacts);
-    });
-  };
-
-  const TapiollaContactList = () => {
+  const ContactList = () => {
     return (
       <>
-        {contacts && (
-          <View style={{marginHorizontal: 20, marginTop: 10}}>
-            <Text style={{color: '#8C8C8C'}}>
-              {contacts.length} contacts use Tapiolla
-            </Text>
-          </View>
-        )}
+        <View style={{marginHorizontal: 20, marginTop: 10}}>
+          <Text style={{color: '#8C8C8C'}}>Invite from your contacts</Text>
+        </View>
         <FlatList
-          data={contacts}
+          data={item}
           renderItem={({item}) => (
-            <View
-              style={{marginHorizontal: 20, marginTop: 10, marginBottom: 20}}>
+            <View style={{marginHorizontal: 20, marginTop: 10}}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View
                   style={{
@@ -129,10 +68,7 @@ const AddContacts = ({navigation}: Props) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  <Text>
-                    {item?.name[0]}
-                    {item?.name[0]}
-                  </Text>
+                  <Text>{item?.name[0]}</Text>
                 </View>
                 <View style={{marginLeft: 10}}>
                   <Text
@@ -147,72 +83,7 @@ const AddContacts = ({navigation}: Props) => {
                   <View style={{marginTop: 5}}>
                     <Text
                       style={{color: 'rgba(51, 51, 51, 0.51)', fontSize: 12}}>
-                      {item?.phone}
-                    </Text>
-                  </View>
-                </View>
-                <TouchableOpacity style={{position: 'absolute', right: 5}}>
-                  <Plus />
-                </TouchableOpacity>
-              </View>
-
-              <View
-                style={{
-                  width: '100%',
-                  height: 1,
-                  backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                  alignSelf: 'center',
-                  marginTop: 16,
-                }}></View>
-            </View>
-          )}
-          keyExtractor={(item, index) => `${index}-${item}`}
-        />
-      </>
-    );
-  };
-
-  const ContactList = () => {
-    return (
-      <>
-        <View style={{marginHorizontal: 20, marginTop: 10}}>
-          <Text style={{color: '#8C8C8C'}}>Invite from your contacts</Text>
-        </View>
-        <FlatList
-          data={phoneContacts}
-          renderItem={({item}) => (
-            <View style={{marginHorizontal: 20, marginTop: 10}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <View
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 50,
-                    backgroundColor: '#E1EEF4',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Text>
-                    {item?.givenName[0]}
-                    {item?.familyName[0]}
-                  </Text>
-                </View>
-                <View style={{marginLeft: 10}}>
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins',
-                      fontSize: 14,
-                      lineHeight: 20,
-                      color: '#000000',
-                    }}>
-                    {item?.givenName}{' '}
-                    {item?.middleName && item.middleName + ' '}
-                    {item?.familyName}
-                  </Text>
-                  <View style={{marginTop: 5}}>
-                    <Text
-                      style={{color: 'rgba(51, 51, 51, 0.51)', fontSize: 12}}>
-                      {item?.phoneNumbers[0]?.number}
+                      {item?.phoneNumber}
                     </Text>
                   </View>
                 </View>
@@ -239,8 +110,7 @@ const AddContacts = ({navigation}: Props) => {
     );
   };
 
-  const addCard = async (value: any) => {
-  };
+  const addCard = async (value: any) => {};
 
   return (
     <View style={styles.container}>
@@ -251,10 +121,9 @@ const AddContacts = ({navigation}: Props) => {
         leftSvg={<Back />}
         leftOnPress={() => navigation.goBack()}
         rightSvg={<Search />}
-        rightOnPress={() => navigation.navigate('SearchContact')}
+        rightOnPress={() => navigation.navigate('SearchContact', {item})}
       />
       <ScrollView>
-        <TapiollaContactList />
         <ContactList />
       </ScrollView>
     </View>
