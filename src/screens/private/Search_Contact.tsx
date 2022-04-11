@@ -24,6 +24,7 @@ import Plus from '../../assets/svg/Group+.svg';
 import Cancel from '../../assets/svg/cancelX.svg';
 import {
   AuthenticatedRoutesParamsList,
+  Contacts__,
   TabNavigatorParamsList,
 } from '../../types/navigation';
 import SearchContactHeader from '../../components/SearchContactHeader';
@@ -40,14 +41,16 @@ const {width, height} = Dimensions.get('screen');
 const SearchContact = ({navigation, route}: Props) => {
   const [contacts, setContacts] = useState<any>(null);
   const [search, setSearch] = useState('');
-  const [contList, setContList] = useState<any>(null);
-  const {item} = route.params;
+  const [contList, setContList] = useState<Contacts__[]>([]);
+  const item = route.params?.item;
 
-  // console.log('Item from contact', item);
+  useEffect(() => {
+    setContList(item as unknown as []);
+  }, [item]);
 
   const searchFilterFunction = (text: string) => {
     if (text) {
-      const newData = item?.filter(function (item: any) {
+      const newData = contList.filter(function (item: any) {
         const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
@@ -60,8 +63,7 @@ const SearchContact = ({navigation, route}: Props) => {
     }
   };
 
-  const addCard = async (value: any) => {
-  };
+  const addCard = async (value: any) => {};
 
   return (
     <View style={styles.container}>
@@ -78,6 +80,7 @@ const SearchContact = ({navigation, route}: Props) => {
               backgroundColor: '#EBEBEB',
               borderRadius: 10,
               flexDirection: 'row',
+              paddingHorizontal: 10
             }}>
             <TextInput
               style={styles.textInput}

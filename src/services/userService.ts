@@ -110,7 +110,6 @@ export const listUserCardTemplateService = async () => {
     })) as {
       data: ListCardTemplateResponse;
     };
-    // console.log('Templates is now here', data.listCardTemplates?.cardTemplates);
     return {data: data.listCardTemplates};
   } catch (error) {
     throw error;
@@ -232,10 +231,6 @@ export const createUserBusinessProfile = async (
     })) as {
       data: CreateBusinessProfileResponse;
     };
-<<<<<<< HEAD
-=======
-    // console.log('This is response data', data);
->>>>>>> unified
     return {data: data};
   } catch (e) {
     throw e;

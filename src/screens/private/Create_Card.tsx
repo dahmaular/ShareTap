@@ -139,22 +139,19 @@ const CreateCard = ({navigation}: any) => {
       // setIsLoading(true);
       getUserIdService()
         .then(id => {
-          // console.log('Id is here', id);
           setUserId(id);
           fetchBussinessProfile(id);
           listDraftService(id).then(draft => {
-            // console.log('Card drafts here', draft);
             setDrafts(draft.data);
           });
         })
-        .catch(e => console.log(e));
+        .catch(e => {throw e});
       listUserCardTemplateService()
         .then(temp => {
           template = temp?.data?.cardTemplates;
           setTemplat(temp?.data?.cardTemplates);
-          // console.log('Template here', temp);
         })
-        .catch(e => console.log(e));
+        .catch(e => {throw e});
     }, []),
   );
 
@@ -207,7 +204,7 @@ const CreateCard = ({navigation}: any) => {
     const data = {...cardDetails[0], userId, businessProfileId};
     await createUserCard(data)
       .then(userCard => {
-        setCardSuccess(true);
+        setCardSuccess(false);
         setLoading(false);
       })
       .catch(e => {

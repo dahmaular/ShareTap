@@ -25,6 +25,8 @@ import MessageIcon from '../../assets/svg/MessageIcon.svg';
 import Plus from '../../assets/svg/Group+.svg';
 import {
   AuthenticatedRoutesParamsList,
+  Contacts_,
+  Contacts__,
   TabNavigatorParamsList,
 } from '../../types/navigation';
 import {getUserIdService, listContactService} from '../../services/userService';
@@ -45,8 +47,13 @@ const AddContacts = ({navigation, route}: Props) => {
   const [contacts, setContacts] = useState<any>(null);
   const [userId, setUserId] = useState('');
   const [visible, setVisible] = useState<boolean>(false);
-  const [phoneContacts, setPhoneContacts] = useState<any>(null);
-  const {item} = route.params;
+  const [phoneContacts, setPhoneContacts] = useState<Contacts__[]>([]);
+
+  const item = route.params?.item;
+
+  useEffect(() => {
+    setPhoneContacts(item as unknown as []);
+  }, [item]);
 
   const ContactList = () => {
     return (
@@ -55,7 +62,7 @@ const AddContacts = ({navigation, route}: Props) => {
           <Text style={{color: '#8C8C8C'}}>Invite from your contacts</Text>
         </View>
         <FlatList
-          data={item}
+          data={phoneContacts}
           renderItem={({item}) => (
             <View style={{marginHorizontal: 20, marginTop: 10}}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -68,7 +75,7 @@ const AddContacts = ({navigation, route}: Props) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  <Text>{item?.name[0]}</Text>
+                  <Text>{item?.name?.[0]}</Text>
                 </View>
                 <View style={{marginLeft: 10}}>
                   <Text
@@ -121,14 +128,20 @@ const AddContacts = ({navigation, route}: Props) => {
         leftSvg={<Back />}
         leftOnPress={() => navigation.goBack()}
         rightSvg={<Search />}
-        rightOnPress={() => navigation.navigate('SearchContact', {item})}
+        rightOnPress={() =>
+          navigation.navigate('SearchContact', {
+            item: phoneContacts as unknown as Contacts_,
+          })
+        }
       />
-      <ScrollView>
-        <ContactList />
-      </ScrollView>
+      {/* <ScrollView> */}
+      <ContactList />
+      {/* </ScrollView> */}
     </View>
   );
 };
+
+// navigation.navigate('SearchContact', {item})
 
 export default AddContacts;
 

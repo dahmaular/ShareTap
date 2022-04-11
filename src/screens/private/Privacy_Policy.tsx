@@ -30,7 +30,6 @@ const PrivacyPolicy = ({navigation}: any) => {
 
   const getTerms = async () => {
     await getPrivacyPolicyService().then(data => {
-      // console.log('data', data.data?.data);
       setPolicy(data?.data);
     });
   };

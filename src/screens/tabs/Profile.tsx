@@ -336,7 +336,6 @@ const Profile = ({navigation}: Props) => {
       endDate: selectEndDate,
       userId: userId,
     };
-    // console.log('profile data', data);
     await createUserBusinessProfile(data).then(res => {
       getProfile(userId);
       setIsLoading(false);
@@ -360,7 +359,6 @@ const Profile = ({navigation}: Props) => {
       biography: !biography.value ? userProfile?.biography : biography.value,
     };
     await updateUserProfileService(data).then(res => {
-      // console.log(res.data);
       getProfile(userId);
       setIsLoading(false);
       setIsLoadingAv(false);
@@ -382,8 +380,8 @@ const Profile = ({navigation}: Props) => {
             (uc: any) => uc.cardDetails.role === item?.role,
           );
           return (
-            <>
-              <View style={styles.userProfile} key={index}>
+            <View key={index}>
+              <View style={styles.userProfile}>
                 <View style={styles.profileRole}>
                   <TapLogo style={styles.logo} />
                   <View>
@@ -409,7 +407,7 @@ const Profile = ({navigation}: Props) => {
                 </View>
               </View>
               <View style={styles.line}></View>
-            </>
+            </View>
           );
         })}
       </>
@@ -473,7 +471,6 @@ const Profile = ({navigation}: Props) => {
                 placeholder="Start date"
                 dateValue={moment(selectStartDate).format('l')}
                 onValueChange={(itemValue: any) => {
-                  // console.log('start year', {itemValue});
                   setSelectedStartDate(itemValue);
                 }}
               />
@@ -485,7 +482,6 @@ const Profile = ({navigation}: Props) => {
                 placeholder="Present"
                 dateValue={moment(selectEndDate).format('l')}
                 onValueChange={(itemValue: any) => {
-                  // console.log('present', {itemValue});
                   setSelectedEndDate(itemValue);
                 }}
               />

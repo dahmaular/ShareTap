@@ -68,7 +68,6 @@ const Home = ({navigation}: Props) => {
   const pan = useRef(new Animated.ValueXY()).current;
   const [userId, setUserId] = useState('');
   const [userCards, setUserCards] = useState<any>(null);
-  // console.log('User data @home', user?.cards?.listUserCards?.cards);
   const _onNotificationPressed = () => {
     setModal(true);
   };
@@ -76,10 +75,9 @@ const Home = ({navigation}: Props) => {
   // useEffect(() => {
   //   getUserIdService()
   //     .then(id => {
-  //       // console.log('Id is here', id);
   //       setUserId(id);
   //     })
-  //     .catch(e => console.log(e));
+  //     .catch(e => {throw e});
   // }, []);
 
   useFocusEffect(
@@ -87,26 +85,23 @@ const Home = ({navigation}: Props) => {
       // setIsLoading(true);
       getUserIdService()
         .then(id => {
-          // console.log('Id is here', id);
           setUserId(id);
           listUserCardsService(id)
             .then(card => {
-              // console.log('card is here @home', card.data?.cards);
               setUserCards(card.data?.cards);
             })
-            .catch(e => console.log(e));
+            .catch(e => {throw e});
         })
-        .catch(e => console.log(e));
+        .catch(e => {throw e});
     }, []),
   );
 
   // useEffect(() => {
   //   listUserCardsService(userId)
   //     .then(card => {
-  //       console.log('card is here @home', card.data?.cards);
   //       setUserCards(card.data?.cards);
   //     })
-  //     .catch(e => console.log(e));
+  //     .catch(e => {throw e});
   // }, []);
 
   const confirmToVerify = () => {

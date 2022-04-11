@@ -74,8 +74,8 @@ export type AuthenticatedRoutesParamsList = {
   ScheduledMessages: undefined;
   ChatMessage: Record<'item', ListChatMessagesRoute>;
   ReminderCalendar: Record<'item', ReminderCalenderRoute>;
-  SearchContact: undefined | Record<'item', SearchContactRoute>;
-  AddContact: undefined | Record<'item', SearchContactRoute>;
+  SearchContact: undefined | Record<'item', Contacts_>;
+  AddContact: undefined | Record<'item', Contacts_>;
   Dashboard: undefined;
   PrivacyPolicy: undefined;
 };
@@ -101,6 +101,17 @@ export interface PhoneNumberRoute {
 
 export interface SearchContactRoute {
   contacts: any;
+}
+
+export interface Contacts_ {
+  name: string | null;
+  phoneNumber: string;
+}
+[];
+
+export interface Contacts__ {
+  name: string | null;
+  phoneNumber: string;
 }
 
 export interface VerificationRoute {

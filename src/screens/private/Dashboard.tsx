@@ -40,10 +40,9 @@ const Dashboard = ({navigation}: any) => {
   // useEffect(() => {
   //   getUserIdService()
   //     .then(id => {
-  //       // console.log('Id is here', id);
   //       setUserId(id);
   //     })
-  //     .catch(e => console.log(e));
+  //     .catch(e => {throw e});
   // }, []);
 
   useFocusEffect(
@@ -51,11 +50,10 @@ const Dashboard = ({navigation}: any) => {
       // setIsLoading(true);
       getUserIdService()
         .then(id => {
-          // console.log('Id is here', id);
           setUserId(id);
           getUserCards(id);
         })
-        .catch(e => console.log(e));
+        .catch(e => {throw e});
     }, []),
   );
 
@@ -63,7 +61,6 @@ const Dashboard = ({navigation}: any) => {
     setIsLoading(true);
     listUserCardsService(id)
       .then(card => {
-        // console.log('card is here @dashboard', card.data.listUserCards?.cards);
         setUserCards(card.data?.cards);
         setIsLoading(false);
       })
