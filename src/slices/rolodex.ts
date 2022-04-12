@@ -64,10 +64,8 @@ export const fetchReceivedCards =
       dispatch(fetchReceivedCardsStart());
 
       const {data} = await listReceivedCardsService(userId);
-        console.log('Received Cards Data', data)
       dispatch(fetchReceivedCardsSuccess(data));
     } catch (error) {
-      console.log(error);
       dispatch(fetchReceivedCardsFailure());
     }
   };

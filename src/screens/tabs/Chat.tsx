@@ -60,17 +60,15 @@ const Chat = ({navigation}: Props) => {
         .then(id => {
           listUserConversationsService(id)
             .then(res => {
-              console.log('List User Conversations Response', res);
               if (res.data) {
                 setChats(res.data as []);
                 setFilteredDataSource(res.data as []);
               }
             })
             .catch(e => {
-              console.log('List Error', e);
             });
         })
-        .catch(e => console.log(e));
+        .catch(e => {throw e});
     }, []),
   );
 
@@ -157,11 +155,13 @@ const Chat = ({navigation}: Props) => {
 
           <View style={styles.paddingH}>
             <View style={{...styles.flexRow, marginTop: 24}}>
-              <View style={styles.rowCenter}>
+              <TouchableOpacity
+                style={styles.rowCenter}
+                onPress={() => navigation.navigate('ScheduledMessages')}>
                 <Calendar />
 
                 <Text style={styles.schedule}>View Scheduled Messages</Text>
-              </View>
+              </TouchableOpacity>
 
               <View>
                 <Chevron />

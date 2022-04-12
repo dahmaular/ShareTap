@@ -110,7 +110,6 @@ export const listUserCardTemplateService = async () => {
     })) as {
       data: ListCardTemplateResponse;
     };
-    // console.log('Templates is now here', data.listCardTemplates?.cardTemplates);
     return {data: data.listCardTemplates};
   } catch (error) {
     throw error;
@@ -183,7 +182,6 @@ export const listUserBusinessProfilesService = async (userId: string) => {
     })) as {
       data: ListUserBusinessProfileResponse;
     };
-    // console.log('This is response data', data);
     return {data: data.listUserBusinessProfiles};
   } catch (error) {
     throw error;
@@ -199,7 +197,6 @@ export const getUserProfileService = async (userId: string) => {
     })) as {
       data: GetUserProfileResponse;
     };
-    // console.log('This is response data', data);
     return {data: data};
   } catch (error) {
     throw error;
@@ -217,7 +214,6 @@ export const getPresignedUrlUploadService = async (
     })) as {
       data: GetPresignedUrlResponse;
     };
-    // console.log('This is the presigned response data', data);
     return {data: data};
   } catch (error) {
     throw error;
@@ -235,7 +231,6 @@ export const createUserBusinessProfile = async (
     })) as {
       data: CreateBusinessProfileResponse;
     };
-    // console.log('This is response data', data);
     return {data: data};
   } catch (e) {
     throw e;
@@ -270,7 +265,6 @@ export const updateUserProfileService = async (
     })) as {
       data: UpdateUserProfileResponse;
     };
-    // console.log('This is response data', data);
     return {data: data};
   } catch (e) {
     throw e;

@@ -58,7 +58,8 @@ interface CategoryProps {
 
 interface TabsProps {
   id: number | null;
-  tab: string;
+  category: string;
+  data: CardProps;
 }
 
 interface CardDetailsProps {
@@ -92,6 +93,16 @@ interface ReceivedCardProps {
   cardTemplate: CardTemplateProps;
 }
 
+interface CardProps {
+  cards: ReceivedCardProps[];
+}
+
+interface ReceivedCardProps_ {
+  id: number;
+  category: string;
+  data: CardProps;
+}
+
 const {width} = Dimensions.get('screen');
 
 const deviceHeight = Dimensions.get('window').height;
@@ -108,8 +119,8 @@ const Rolodex = ({navigation}: Props) => {
 
   const [categories, setCategories] = useState<CategoryProps[]>([]);
 
-  const [tabsList] = useState<TabsProps[]>(tabs);
-  const [cardsList, setCardsList] = useState<ReceivedCardProps[]>([]);
+  // const [tabsList] = useState<TabsProps[]>(tabs);
+  const [cardsList, setCardsList] = useState<ReceivedCardProps_[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<CategoryProps>({
     id: null,
@@ -122,7 +133,8 @@ const Rolodex = ({navigation}: Props) => {
 
   const [selectedTab, setSelectedTab] = useState<TabsProps>({
     id: null,
-    tab: '',
+    category: '',
+    data: [] as any,
   });
   const [selectedTabHash, setSelectedTabHash] = useState<any>({
     id: '',
@@ -152,15 +164,18 @@ const Rolodex = ({navigation}: Props) => {
   useEffect(() => {
     getUserIdService()
       .then(id => {
-        console.log('Id is here', id);
         listReceivedCardsService(id).then(res => {
-          console.log('Daaata', res);
-          // setCardsList(res.data as Array<ReceivedCardProps>);
+          setCardsList(res.data?.receivedCards as any);
+          if (res.data?.receivedCards?.length) {
+            setSelectedTab((res.data?.receivedCards as any)[0]);
+          }
         });
         getCategories();
         dispatch(fetchReceivedCards(id));
       })
-      .catch(e => console.log('Errrrorororororororor', e))
+      .catch(e => {
+        throw e;
+      })
       .finally(() => setLoading(false));
   }, [dispatch]);
 
@@ -264,7 +279,7 @@ const Rolodex = ({navigation}: Props) => {
   const ListHeader = () => {
     return (
       <View style={styles.tabsView}>
-        {tabsList.map((k, i) => {
+        {cardsList.map((k, i) => {
           const active = selectedTabHash[k.id as number];
           return (
             <TouchableOpacity
@@ -277,7 +292,7 @@ const Rolodex = ({navigation}: Props) => {
                 setSelectedTabHash({
                   [k.id as number]: !(selectedTabHash[k.id as number] || false),
                 });
-                const picked = tabsList.find(x => x.id == k.id);
+                const picked = cardsList.find(x => x.id == k.id);
                 setSelectedTab(picked as TabsProps);
               }}>
               <Text
@@ -285,7 +300,7 @@ const Rolodex = ({navigation}: Props) => {
                   ...styles.tabText,
                   color: active ? '#FFFFFF' : '#333333',
                 }}>
-                {k.tab}
+                {k.category}
               </Text>
             </TouchableOpacity>
           );
@@ -310,7 +325,7 @@ const Rolodex = ({navigation}: Props) => {
             <Close />
           </TouchableOpacity>
           <View style={styles.modal}>
-            <TouchableOpacity style={styles.modalActionButton}>
+            {/* <TouchableOpacity style={styles.modalActionButton}>
               <Calendar height={24} width={24} />
               <Text
                 style={styles.modalActionButtonText}
@@ -320,7 +335,7 @@ const Rolodex = ({navigation}: Props) => {
                 }}>
                 Schedule a Message
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.modalActionButton}
               onPress={() => {
@@ -383,7 +398,6 @@ const Rolodex = ({navigation}: Props) => {
               placeholder="Select Date"
               dateValue={Moment(selectDate).format('lll')}
               onValueChange={(itemValue: any) => {
-                console.log({itemValue});
                 setSelectedDate(itemValue);
               }}
             />
@@ -418,7 +432,6 @@ const Rolodex = ({navigation}: Props) => {
         leftOnPress={() => navigation.goBack()}
         rightSvg={<More />}
         rightOnPress={() => {
-          console.log('I got Pressed');
           setReminderCalenderModal(true);
         }}
       />
@@ -461,7 +474,7 @@ const Rolodex = ({navigation}: Props) => {
 
             <>{ListHeader()}</>
             <View>
-              {cardsList.map((item, index) => {
+              {selectedTab?.data?.cards?.map((item, index) => {
                 return (
                   <Animated.View
                     key={index}
@@ -469,7 +482,7 @@ const Rolodex = ({navigation}: Props) => {
                       styles.animatedCard,
                       {
                         backgroundColor: item.cardTemplate
-                          .backgroundColor as string,
+                          ?.backgroundColor as string,
                       },
                       cardTransform(index),
                       {
@@ -478,7 +491,7 @@ const Rolodex = ({navigation}: Props) => {
                       },
                     ]}>
                     <TouchableOpacity
-                      onPress={() => console.log('I worked')}
+                      onPress={() => {}}
                       style={{...styles.touchable}}>
                       <Text style={styles.name}>{item.cardDetails.name}</Text>
                       <Text style={styles.profession}>
@@ -529,7 +542,7 @@ const Rolodex = ({navigation}: Props) => {
                       style={{
                         ...styles.bottomLine,
                         backgroundColor: item.cardTemplate
-                          .borderBottomColor as string,
+                          ?.borderBottomColor as string,
                       }}
                     />
                   </Animated.View>
@@ -757,7 +770,8 @@ const styles = StyleSheet.create({
 
   modal: {
     width: '100%',
-    height: 121,
+    // height: 121,
+    height: 80,
     backgroundColor: '#FFFFFF',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,

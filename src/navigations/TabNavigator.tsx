@@ -170,7 +170,7 @@ const TabNavigator = () => {
           headerShown: false,
           tabBarButton: props => (
             <CustomTabBarButton
-            // onPress={() => console.log('I was presssssed')}
+            // onPress={() => {}}
             // {...props}
             // onPress={() => navigation.navigation.navigate('Card')}
             />

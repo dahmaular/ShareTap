@@ -67,7 +67,7 @@ const SetReminder = ({navigation}: Props) => {
           <View style={styles.setReminderView}>
             <Text style={styles.reminderText}>Set Reminder</Text>
             <Text style={styles.reminder}>
-              Select a suitable plan to explore more features
+              Select a suitable plan to explore more
             </Text>
             <Text style={styles.reminder}>features</Text>
           </View>
@@ -120,7 +120,6 @@ const SetReminder = ({navigation}: Props) => {
             placeholder="Start Date"
             dateValue={Moment(startDate).format('LL')}
             onValueChange={(itemValue: any) => {
-              console.log({itemValue});
               setStartDate(itemValue);
             }}
           />
@@ -129,7 +128,6 @@ const SetReminder = ({navigation}: Props) => {
             placeholder="End Date"
             dateValue={endDate}
             onValueChange={(itemValue: any) => {
-              console.log({itemValue});
               setEndDate(itemValue);
             }}
           />

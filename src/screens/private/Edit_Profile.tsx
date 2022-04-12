@@ -48,15 +48,13 @@ const EditProfile = ({navigation}) => {
   useEffect(() => {
     getUserIdService()
       .then(id => {
-        // console.log('Id is here', id);
         setUserId(id);
       })
-      .catch(e => console.log(e));
+      .catch(e => {throw e});
   }, []);
 
   const getProfile = (id: any) => {
     getUserProfileService(id).then(profil => {
-      // console.log('User profile', profil.data.getUserProfile?.userDetails);
       setUserProfile(profil.data.getUserProfile?.userDetails);
     });
   };
@@ -85,9 +83,7 @@ const EditProfile = ({navigation}) => {
       facebook: !facebook.value ? userProfile?.facebook : facebook.value,
       biography: !bio.value ? userProfile?.biography : bio.value,
     };
-    // console.log('profile data', data);
     await updateUserProfileService(data).then(res => {
-      console.log(res.data);
       getProfile(userId);
       setIsLoading(false);
     });

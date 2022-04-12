@@ -77,16 +77,15 @@ const Contact = ({navigation}: Props) => {
           requestContactPermission();
           listUserConversationsService(id)
             .then(res => {
-              // console.log('List User Conversations Response', res);
               if (res.data) {
                 setFilteredDataSource(res.data as []);
               }
             })
-            .catch(e => {
-              console.log('List Error', e);
-            });
+            .catch(e => {});
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+          throw e;
+        });
     }, []),
   );
 
@@ -109,7 +108,6 @@ const Contact = ({navigation}: Props) => {
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           getPhoneContacts();
         } else {
-          console.log('Contact permission denied');
         }
       } catch (err) {
         console.warn(err);
@@ -139,7 +137,6 @@ const Contact = ({navigation}: Props) => {
         return cont.phoneNumber !== undefined;
       });
       await listContactService(filteredContacts).then(res => {
-        // console.log('contact list response', res.data);
         setContacts(res.data?.tapiollaContacts);
         setPhoneContact(res.data?.phoneContacts);
       });
@@ -284,7 +281,7 @@ const Contact = ({navigation}: Props) => {
           />
         </View>
       ) : (
-        <>{contacts?.length > 0 ? <ContactList /> : <NoContactYet />}</>
+        <>{contacts?.length > 0 ? <NoContactYet /> : <ContactList />}</>
       )}
     </View>
   );

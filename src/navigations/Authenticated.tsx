@@ -12,6 +12,7 @@ import SetMessage from '../screens/private/SetMessage';
 import CreateCard from '../screens/private/Create_Card';
 import Dashboard from '../screens/private/Dashboard';
 import ChatMessage from '../screens/private/ChatMessage';
+import ScheduledMessages from '../screens/private/ScheduledMessages';
 import EditProfile from '../screens/private/Edit_Profile';
 import Subscriptions from '../screens/private/Subscriptions';
 import About from '../screens/private/About';
@@ -56,7 +57,11 @@ export default function AuthenticatedRoutes() {
         options={{headerShown: false}}
       />
 
-      <Drawer.Screen name="ReminderCalendar" component={ReminderCalendar} />
+      <Drawer.Screen
+        name="ReminderCalendar"
+        component={ReminderCalendar}
+        options={{headerShown: false}}
+      />
 
       <Drawer.Screen
         name="CreateCard"
@@ -79,6 +84,12 @@ export default function AuthenticatedRoutes() {
       <Drawer.Screen
         name="EditProfile"
         component={EditProfile}
+        options={{headerShown: false}}
+      />
+
+      <Drawer.Screen
+        name="ScheduledMessages"
+        component={ScheduledMessages}
         options={{headerShown: false}}
       />
 

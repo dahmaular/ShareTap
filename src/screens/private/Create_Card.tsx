@@ -18,7 +18,6 @@ import {
 import Modal from 'react-native-modal';
 import TextInputs from '../../components/TextInput';
 import {TextInput} from 'react-native-paper';
-import SelectDropdown from 'react-native-select-dropdown';
 
 import LottieView from 'lottie-react-native';
 import Header from '../../components/Header';
@@ -140,28 +139,28 @@ const CreateCard = ({navigation}: any) => {
       // setIsLoading(true);
       getUserIdService()
         .then(id => {
-          // console.log('Id is here', id);
           setUserId(id);
           fetchBussinessProfile(id);
           listDraftService(id).then(draft => {
-            // console.log('Card drafts here', draft);
             setDrafts(draft.data);
           });
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+          throw e;
+        });
       listUserCardTemplateService()
         .then(temp => {
           template = temp?.data?.cardTemplates;
           setTemplat(temp?.data?.cardTemplates);
-          // console.log('Template here', temp);
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+          throw e;
+        });
     }, []),
   );
 
   const fetchBussinessProfile = async (id: any) => {
     await listUserBusinessProfilesService(id).then(bizProf => {
-      // console.log('Bussiness profile', bizProf.data?.businessProfiles);
       // roles.push(bizProf.data?.businessProfiles);
       setBizProfi(bizProf.data?.businessProfiles);
       const warefa: any = bizProf.data?.businessProfiles?.map((item, i) => {
@@ -172,7 +171,6 @@ const CreateCard = ({navigation}: any) => {
       });
       setBusinessProfile(warefa);
     });
-    // console.log('Bis profile', businessProfile);
   };
 
   const cardTemplateService = async () => {
@@ -180,7 +178,7 @@ const CreateCard = ({navigation}: any) => {
       backgroundColor: 'white',
       borderBottomColor: '#219653',
     };
-    await createCardTemplateService(data).then(res => console.log(res.data));
+    await createCardTemplateService(data).then(res => {});
   };
 
   const submitSocial = () => {
@@ -207,17 +205,13 @@ const CreateCard = ({navigation}: any) => {
   const onPlay = async () => {
     setLoading(true);
     const businessProfileId = bussinessProfileId?.id;
-    // console.log(cardDetails[0]);
     const data = {...cardDetails[0], userId, businessProfileId};
-    // console.log('This is input', data);
     await createUserCard(data)
       .then(userCard => {
-        console.log(userCard.data?.card);
         setCardSuccess(true);
         setLoading(false);
       })
       .catch(e => {
-        console.log(e);
         setLoading(false);
       });
   };
@@ -226,17 +220,13 @@ const CreateCard = ({navigation}: any) => {
     setIsLoading(true);
     const businessProfileId = bussinessProfileId?.id;
     const color = bottomColor;
-    // console.log(cardDetails[0]);
     const data = {...cardDetails[0], userId, businessProfileId, color};
-    console.log('This is input', data);
     await createDraftService(data)
       .then(draft => {
-        // console.log(userCard.data?.card);
         setCardSuccess(true);
         setIsLoading(false);
       })
       .catch(e => {
-        console.log(e);
         setIsLoading(false);
       });
   };
@@ -270,7 +260,6 @@ const CreateCard = ({navigation}: any) => {
             <View style={{backgroundColor: '#EFEFEF', marginTop: 20}}>
               <RNPickerSelect
                 onValueChange={value => {
-                  console.log(value);
                   if (bizProfi) {
                     const pID = bizProfi?.filter(
                       (bId: {role: any}) => bId?.role === value,
@@ -421,7 +410,7 @@ const CreateCard = ({navigation}: any) => {
               useNativeDriver: false,
             },
           )}
-          onScrollEndDrag={() => console.log('Animation ended')}
+          onScrollEndDrag={() => {}}
           keyExtractor={(item, index) => `${index}-${item}`}
           renderItem={({item, index}) => (
             <CardTemplate
@@ -468,7 +457,7 @@ const CreateCard = ({navigation}: any) => {
               useNativeDriver: false,
             },
           )}
-          onScrollEndDrag={() => console.log('Animation ended')}
+          onScrollEndDrag={() => {}}
           keyExtractor={(item, index) => `${index}-${item}`}
           renderItem={({item, index}) => (
             <CardTemplate
@@ -663,7 +652,10 @@ const CreateCard = ({navigation}: any) => {
           </View>
           <TouchableOpacity
             style={styles.successmodalButton}
-            onPress={() => navigation.navigate('Home')}>
+            onPress={() => {
+              setCardSuccess(false);
+              navigation.navigate('Home');
+            }}>
             <Text style={styles.modalBtnText}>GO BACK</Text>
           </TouchableOpacity>
         </View>

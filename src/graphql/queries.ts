@@ -8,6 +8,34 @@ export const listReceivedCards = /* GraphQL */ `
       receivedCards {
         id
         category
+        data {
+          cards {
+            cardDetails {
+              id
+              name
+              role
+              email
+              phone
+              address
+              website
+              facebook
+              twitter
+              linkedIn
+              createdAt
+              businessProfileId
+              userId
+              cardTemplateId
+              status
+              color
+              category
+            }
+            cardTemplate {
+              id
+              backgroundColor
+              borderBottomColor
+            }
+          }
+        }
       }
       error
     }

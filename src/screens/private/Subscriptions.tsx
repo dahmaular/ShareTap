@@ -35,7 +35,6 @@ const Subscriptions = ({navigation}: any) => {
   const getSubscriptions = async () => {
     setIsLoading(true);
     const subs = (await listSubscriptionsService()).data?.subscriptionPlans;
-    console.log(subs);
     setSubscriptions(subs);
     setIsLoading(false);
   };

@@ -131,7 +131,6 @@ const Profile = ({navigation}: Props) => {
 
   const getProfile = (id: any) => {
     getUserProfileService(id).then(profil => {
-      // console.log('User profile', profil.data.getUserProfile?.userDetails);
       setUserProfile(profil.data.getUserProfile?.userDetails);
       setBusinessProfile(profil.data.getUserProfile?.userBusinessProfiles);
     });
@@ -142,12 +141,13 @@ const Profile = ({navigation}: Props) => {
       // setIsLoading(true);
       getUserIdService()
         .then(id => {
-          // console.log('Id is here', id);
           setUserId(id);
           getProfile(id);
           getUserCards(id);
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+          throw e;
+        });
     }, []),
   );
 
@@ -156,7 +156,9 @@ const Profile = ({navigation}: Props) => {
       .then(card => {
         setUserCards(card.data?.cards);
       })
-      .catch(e => console.log(e));
+      .catch(e => {
+        throw e;
+      });
   };
 
   const dispatch = useDispatch();
@@ -239,7 +241,6 @@ const Profile = ({navigation}: Props) => {
   };
 
   const handleImageUploadAvatar = async (uri: string, type: string) => {
-    // console.log('File object here', file);
     setIsLoadingAv(true);
     const data = {
       key: new Date().getTime().toString(),
@@ -335,9 +336,7 @@ const Profile = ({navigation}: Props) => {
       endDate: selectEndDate,
       userId: userId,
     };
-    // console.log('profile data', data);
     await createUserBusinessProfile(data).then(res => {
-      // console.log(res.data);
       getProfile(userId);
       setIsLoading(false);
       setProfileModal(false);
@@ -359,9 +358,7 @@ const Profile = ({navigation}: Props) => {
       facebook: !facebook.value ? userProfile?.facebook : facebook.value,
       biography: !biography.value ? userProfile?.biography : biography.value,
     };
-    // console.log('profile data', data);
     await updateUserProfileService(data).then(res => {
-      // console.log(res.data);
       getProfile(userId);
       setIsLoading(false);
       setIsLoadingAv(false);
@@ -382,10 +379,9 @@ const Profile = ({navigation}: Props) => {
           const result = userCards?.filter(
             (uc: any) => uc.cardDetails.role === item?.role,
           );
-          // console.log('No of cards', result);
           return (
-            <>
-              <View style={styles.userProfile} key={index}>
+            <View key={index}>
+              <View style={styles.userProfile}>
                 <View style={styles.profileRole}>
                   <TapLogo style={styles.logo} />
                   <View>
@@ -411,7 +407,7 @@ const Profile = ({navigation}: Props) => {
                 </View>
               </View>
               <View style={styles.line}></View>
-            </>
+            </View>
           );
         })}
       </>
@@ -475,7 +471,6 @@ const Profile = ({navigation}: Props) => {
                 placeholder="Start date"
                 dateValue={moment(selectStartDate).format('l')}
                 onValueChange={(itemValue: any) => {
-                  // console.log('start year', {itemValue});
                   setSelectedStartDate(itemValue);
                 }}
               />
@@ -487,7 +482,6 @@ const Profile = ({navigation}: Props) => {
                 placeholder="Present"
                 dateValue={moment(selectEndDate).format('l')}
                 onValueChange={(itemValue: any) => {
-                  // console.log('present', {itemValue});
                   setSelectedEndDate(itemValue);
                 }}
               />

@@ -68,12 +68,16 @@ export type AuthenticatedRoutesParamsList = {
   Root: undefined;
   Search: Record<'cardd', SearchRoute>;
   Rolodex: undefined;
-  SearchContact: undefined | Record<'item', SearchContactRoute>;
-  AddContact: undefined | Record<'item', SearchContactRoute>;
+  SetReminder: undefined;
+  SetMessage: Record<'item', ScheduleMessagesRoute>;
+  CreateCard: undefined;
+  ScheduledMessages: undefined;
+  ChatMessage: Record<'item', ListChatMessagesRoute>;
+  ReminderCalendar: Record<'item', ReminderCalenderRoute>;
+  SearchContact: undefined | Record<'item', Contacts_>;
+  AddContact: undefined | Record<'item', Contacts_>;
   Dashboard: undefined;
   PrivacyPolicy: undefined;
-  CreateCard: undefined;
-  ChatMessage: undefined | Record<'item', ListChatMessagesRoute>;
 };
 
 export interface AccountCreationRoute {
@@ -97,6 +101,17 @@ export interface PhoneNumberRoute {
 
 export interface SearchContactRoute {
   contacts: any;
+}
+
+export interface Contacts_ {
+  name: string | null;
+  phoneNumber: string;
+}
+[];
+
+export interface Contacts__ {
+  name: string | null;
+  phoneNumber: string;
 }
 
 export interface VerificationRoute {
@@ -129,4 +144,15 @@ export interface ListChatMessagesRoute {
   lastMessage: string | null;
   createdAt: string | null;
   error: string | null;
+}
+
+export interface ScheduleMessagesRoute {
+  message?: string | null;
+  sender?: string | null;
+  conversationId?: string | null;
+  minute?: string | null;
+  hour?: string | null;
+  day?: string | null;
+  month?: string | null;
+  year?: string | null;
 }

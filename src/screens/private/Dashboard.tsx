@@ -40,10 +40,9 @@ const Dashboard = ({navigation}: any) => {
   // useEffect(() => {
   //   getUserIdService()
   //     .then(id => {
-  //       // console.log('Id is here', id);
   //       setUserId(id);
   //     })
-  //     .catch(e => console.log(e));
+  //     .catch(e => {throw e});
   // }, []);
 
   useFocusEffect(
@@ -51,11 +50,10 @@ const Dashboard = ({navigation}: any) => {
       // setIsLoading(true);
       getUserIdService()
         .then(id => {
-          // console.log('Id is here', id);
           setUserId(id);
           getUserCards(id);
         })
-        .catch(e => console.log(e));
+        .catch(e => {throw e});
     }, []),
   );
 
@@ -63,11 +61,12 @@ const Dashboard = ({navigation}: any) => {
     setIsLoading(true);
     listUserCardsService(id)
       .then(card => {
-        // console.log('card is here @dashboard', card.data.listUserCards?.cards);
         setUserCards(card.data?.cards);
         setIsLoading(false);
       })
-      .catch(e => console.log(e));
+      .catch(e => {
+        throw e;
+      });
   };
 
   // useEffect(() => {
@@ -126,7 +125,7 @@ const Dashboard = ({navigation}: any) => {
               useNativeDriver: false,
             },
           )}
-          onScrollEndDrag={() => console.log('Animation ended')}
+          onScrollEndDrag={() => {}}
           keyExtractor={(item, index) => `${index}-${item}`}
           renderItem={({item, index}) => (
             <DashboardCard
@@ -198,7 +197,6 @@ const Dashboard = ({navigation}: any) => {
                 placeholder="Start date"
                 dateValue={moment(selectStartDate).format('l')}
                 onValueChange={(itemValue: any) => {
-                  console.log('start year', {itemValue});
                   setSelectedStartDate(itemValue);
                 }}
               />
@@ -209,7 +207,6 @@ const Dashboard = ({navigation}: any) => {
                 placeholder="Present"
                 dateValue={moment(selectEndDate).format('l')}
                 onValueChange={(itemValue: any) => {
-                  console.log('present', {itemValue});
                   setSelectedEndDate(itemValue);
                 }}
               />

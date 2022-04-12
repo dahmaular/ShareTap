@@ -54,10 +54,12 @@
 	</dict>
 	<key>NSCalendarsUsageDescription</key>
 	<string>This app requires access to the calendar</string>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs access to your camera to capture profile photo and upload to the server.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs access to your contacts for virtual cards sharing</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) requires user location to complete know your customer.</string>
-		<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) needs access to your camera to capture profile photo and upload to the server.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs to access the Photo Library</string>
 	<key>UIAppFonts</key>

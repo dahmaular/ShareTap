@@ -55,14 +55,11 @@ const Card = ({item, index, boxWidth, halfBoxDistance, pan}: CardProps) => {
         dynamicLinks.ShortLinkType.DEFAULT,
       );
       return link;
-    } catch (error) {
-      console.log('Error raised', error);
-    }
+    } catch (error) {}
   };
 
   const onShare = async () => {
     const getLink: any = await generateLink();
-    console.log('Link to be shared', getLink);
     try {
       const result = await Share.share({
         message: getLink,
