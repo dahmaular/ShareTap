@@ -521,6 +521,7 @@ const CreateCard = ({navigation}: any) => {
             label="Twitter"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
             placeholder="Twitter Handle"
+            autoCapitalize="none"
             value={twitter.value}
             onFocus={() => setTwitterFocus(true)}
             onChangeText={text => {
@@ -532,6 +533,7 @@ const CreateCard = ({navigation}: any) => {
             label="Facebook"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
             placeholder="Facebook Handle"
+            autoCapitalize="none"
             value={facebook.value}
             onFocus={() => setFacebookFocus(true)}
             onChangeText={text => {
@@ -543,6 +545,7 @@ const CreateCard = ({navigation}: any) => {
             label="LinkedIn"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
             placeholder="LinkedIn Account"
+            autoCapitalize="none"
             value={linkedIn.value}
             onFocus={() => setLinkedInFocus(true)}
             onChangeText={text => {

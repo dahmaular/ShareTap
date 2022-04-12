@@ -53,7 +53,6 @@ const AddContacts = ({navigation, route}: Props) => {
 
   useEffect(() => {
     setPhoneContacts(item as unknown as []);
-    console.log('Item from contact', item);
   }, [item]);
 
   const ContactList = () => {

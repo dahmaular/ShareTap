@@ -281,7 +281,7 @@ const Contact = ({navigation}: Props) => {
           />
         </View>
       ) : (
-        <>{contacts?.length > 0 ? <NoContactYet /> : <ContactList />}</>
+        <>{contacts?.length > 0 ? <ContactList /> : <NoContactYet />}</>
       )}
     </View>
   );
