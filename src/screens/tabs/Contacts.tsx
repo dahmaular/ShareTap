@@ -81,8 +81,7 @@ const Contact = ({navigation}: Props) => {
                 setFilteredDataSource(res.data as []);
               }
             })
-            .catch(e => {
-            });
+            .catch(e => {});
         })
         .catch(e => {
           throw e;
@@ -130,7 +129,12 @@ const Contact = ({navigation}: Props) => {
 
       const warefa: any = sortedContacts?.map((item, i) => {
         return {
-          name: item?.displayName,
+          name:
+            Platform.OS === 'android'
+              ? item?.displayName
+              : `${item.givenName}` +
+                `${' '}` +
+                `${item.familyName}`,
           phoneNumber: item?.phoneNumbers[0]?.number,
         };
       });

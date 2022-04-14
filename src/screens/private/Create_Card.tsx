@@ -145,13 +145,17 @@ const CreateCard = ({navigation}: any) => {
             setDrafts(draft.data);
           });
         })
-        .catch(e => {throw e});
+        .catch(e => {
+          throw e;
+        });
       listUserCardTemplateService()
         .then(temp => {
           template = temp?.data?.cardTemplates;
           setTemplat(temp?.data?.cardTemplates);
         })
-        .catch(e => {throw e});
+        .catch(e => {
+          throw e;
+        });
     }, []),
   );
 
@@ -204,7 +208,7 @@ const CreateCard = ({navigation}: any) => {
     const data = {...cardDetails[0], userId, businessProfileId};
     await createUserCard(data)
       .then(userCard => {
-        setCardSuccess(false);
+        setCardSuccess(true);
         setLoading(false);
       })
       .catch(e => {
@@ -517,6 +521,7 @@ const CreateCard = ({navigation}: any) => {
             label="Twitter"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
             placeholder="Twitter Handle"
+            autoCapitalize="none"
             value={twitter.value}
             onFocus={() => setTwitterFocus(true)}
             onChangeText={text => {
@@ -528,6 +533,7 @@ const CreateCard = ({navigation}: any) => {
             label="Facebook"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
             placeholder="Facebook Handle"
+            autoCapitalize="none"
             value={facebook.value}
             onFocus={() => setFacebookFocus(true)}
             onChangeText={text => {
@@ -539,6 +545,7 @@ const CreateCard = ({navigation}: any) => {
             label="LinkedIn"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
             placeholder="LinkedIn Account"
+            autoCapitalize="none"
             value={linkedIn.value}
             onFocus={() => setLinkedInFocus(true)}
             onChangeText={text => {
@@ -648,7 +655,10 @@ const CreateCard = ({navigation}: any) => {
           </View>
           <TouchableOpacity
             style={styles.successmodalButton}
-            onPress={() => navigation.navigate('Home')}>
+            onPress={() => {
+              setCardSuccess(false);
+              navigation.navigate('Home');
+            }}>
             <Text style={styles.modalBtnText}>GO BACK</Text>
           </TouchableOpacity>
         </View>
