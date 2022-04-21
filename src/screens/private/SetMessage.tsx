@@ -156,10 +156,7 @@ const SetMessage = ({navigation, route}: Props) => {
           keyboardShouldPersistTaps="handled">
           <View style={styles.setReminderView}>
             <Text style={styles.reminderText}>Schedule a Message</Text>
-            <Text style={styles.reminder}>
-              Send follow up text, lorem ipsum dolor amet til
-            </Text>
-            <Text style={styles.reminder}>ime dolor impsum.</Text>
+            <Text style={styles.reminder}>Send follow up message</Text>
           </View>
 
           <TextInputs
