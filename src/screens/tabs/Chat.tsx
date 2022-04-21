@@ -65,10 +65,11 @@ const Chat = ({navigation}: Props) => {
                 setFilteredDataSource(res.data as []);
               }
             })
-            .catch(e => {
-            });
+            .catch(e => {});
         })
-        .catch(e => {throw e});
+        .catch(e => {
+          throw e;
+        });
     }, []),
   );
 

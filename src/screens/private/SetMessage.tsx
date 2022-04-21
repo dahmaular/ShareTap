@@ -1,6 +1,6 @@
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -23,6 +23,7 @@ import Hurray from '../../assets/svg/hurray.svg';
 import {ScheduleMessageInput} from '../../types/apiTypes';
 import {scheduleMessageService} from '../../services/rolodexService';
 import Toast from '../../core/toast';
+import {getUserIdService} from '../../services/userService';
 
 type SetMessageProps = NativeStackNavigationProp<
   AuthenticatedRoutesParamsList,
@@ -42,6 +43,7 @@ type Props = {
 const {width} = Dimensions.get('screen');
 
 const SetMessage = ({navigation, route}: Props) => {
+  const [userId, setUserId] = useState('');
   const [message, setMessage] = useState({value: '', error: ''});
   const [messageFocus, setMessageFocus] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
@@ -56,6 +58,16 @@ const SetMessage = ({navigation, route}: Props) => {
 
   const {item} = route.params;
 
+  useEffect(() => {
+    getUserIdService()
+      .then(id => {
+        setUserId(id);
+      })
+      .catch(e => {
+        throw e;
+      });
+  }, [item]);
+
   const handleMessageBlur = () => {
     setMessageFocus(true);
   };
@@ -64,7 +76,7 @@ const SetMessage = ({navigation, route}: Props) => {
     setLoading(true);
     const body: ScheduleMessageInput = {
       message: message.value,
-      sender: item.sender,
+      sender: userId,
       conversationId: item.conversationId,
       year: year,
       month: month,
@@ -111,10 +123,12 @@ const SetMessage = ({navigation, route}: Props) => {
           <TouchableOpacity
             style={styles.modalButton}
             onPress={() => {
+              setMessage({value: '', error: ''});
+              setStartDate(new Date());
               setModal(false);
-              navigation.navigate('Rolodex');
+              navigation.goBack();
             }}>
-            <Text style={styles.modalBtnText}>GO TO CALENDAR</Text>
+            <Text style={styles.modalBtnText}>GO BACK</Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -153,7 +167,7 @@ const SetMessage = ({navigation, route}: Props) => {
             returnKeyType="next"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
             placeholder="Brain storming Session"
-            value={message.value}
+            value={item?.message ? item.message : message.value}
             onChangeText={text => setMessage({value: text, error: ''})}
             error={!!message.error}
             errorText={message.error}
@@ -174,13 +188,20 @@ const SetMessage = ({navigation, route}: Props) => {
 
           <DateSelect
             placeholder="Set Date"
-            dateValue={Moment(startDate).format('LL')}
+            dateValue={
+              item?.year && item?.month && item?.day
+                ? `${item.year}-${item.month}-${item.day}`
+                : Moment(startDate).format('LL')
+            }
             onValueChange={(itemValue: any) => {
               setStartDate(itemValue);
-              const year = new Date(itemValue).getFullYear().toString();
-              const month = new Date(itemValue).getMonth().toString();
-              const day = new Date(itemValue).getDay().toString();
-              const hour = new Date(itemValue).getHours().toString();
+
+              const splitDate = Moment(itemValue).format('l').split('/');
+              const splitTime = Moment.utc(itemValue).format('LT').split(':');
+              const year = splitDate[2];
+              const month = splitDate[0];
+              const day = splitDate[1];
+              const hour = splitTime[0];
               const minute = new Date(itemValue).getMinutes().toString();
               setYear(year);
               setMonth(month);

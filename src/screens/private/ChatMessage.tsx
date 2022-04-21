@@ -18,6 +18,7 @@ import Header from '../../components/Header';
 import ArrowBack from '../../assets/svg/arrow_back.svg';
 import SendArrow from '../../assets/svg/send_black_24dp 1.svg';
 import More from '../../assets/svg/more_horiz_black_24dp 1.svg';
+import ScheduleIcon from '../../assets/svg/ScheduleMessageIcon.svg';
 import Attachment from '../../assets/svg/attach_file_black_24dp 1.svg';
 import {BACKGROUND_COLOR} from '../../core/color';
 import {
@@ -333,8 +334,10 @@ const ChatMessage = ({navigation, route}: Props) => {
         bgColor="#316F8A"
         leftSvg={<ArrowBack />}
         leftOnPress={() => navigation.goBack()}
-        rightSvg={<></>}
-        rightOnPress={() => <></>}
+        rightSvg={<ScheduleIcon />}
+        rightOnPress={() =>
+          navigation.navigate('SetMessage', {item: {conversationId: item.id}})
+        }
       />
 
       <View style={styles.container}>
