@@ -169,8 +169,11 @@ const ScheduledMessages = ({navigation}: Props) => {
                         <View>
                           <Text style={styles.name}>{item.message}</Text>
                           <Text numberOfLines={2} style={styles.chat}>
-                            In {item.day} days {item.hour} hours {item.minute}{' '}
-                            mins
+                            Date: {item?.day}/{item?.month}/{item?.year} Time:{' '}
+                            {JSON.parse(item?.hour as string) + 1}:{' '}
+                            {(item?.minute as string) < '10'
+                              ? `0${item.minute}`
+                              : item.minute}
                           </Text>
                         </View>
 
