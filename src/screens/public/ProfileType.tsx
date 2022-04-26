@@ -19,7 +19,7 @@ import { UnauthenticatedRoutesParamsList } from '../../types/navigation';
 const {width} = Dimensions.get('screen');
 
 type ProfileNavigationProp = NativeStackNavigationProp<
-  UnauthenticatedRoutesParamsList,
+  UnauthenticatedRoutesParamsList, 
   'ProfileType'
 >;
 
