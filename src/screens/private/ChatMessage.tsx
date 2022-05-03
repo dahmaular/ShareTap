@@ -355,6 +355,7 @@ const ChatMessage = ({navigation, route}: Props) => {
           renderInputToolbar={customtInputToolbar}
           renderChatEmpty={ListEmptyView}
           renderLoading={renderLoading}
+          inverted={true}
         />
         {Platform.OS === 'android' && (
           <KeyboardAvoidingView behavior="position" />

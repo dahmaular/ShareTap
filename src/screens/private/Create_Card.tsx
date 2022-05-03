@@ -270,7 +270,7 @@ const CreateCard = ({navigation}: any) => {
                   cardDetails[0].role = value;
                 }}
                 placeholder={{
-                  label: 'Select Position',
+                  label: 'Select Profile',
                   value: null,
                   color: '#8C8C8C',
                 }}
@@ -508,7 +508,7 @@ const CreateCard = ({navigation}: any) => {
           <TextInputs
             label="Website"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
-            placeholder="Add Website Link"
+            placeholder="https://example.com"
             autoCapitalize="none"
             value={website.value}
             onFocus={() => setWebsiteFocus(true)}
@@ -520,7 +520,7 @@ const CreateCard = ({navigation}: any) => {
           <TextInputs
             label="Twitter"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
-            placeholder="Twitter Handle"
+            placeholder="https://twitter.com/username "
             autoCapitalize="none"
             value={twitter.value}
             onFocus={() => setTwitterFocus(true)}
@@ -532,7 +532,7 @@ const CreateCard = ({navigation}: any) => {
           <TextInputs
             label="Facebook"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
-            placeholder="Facebook Handle"
+            placeholder="https://facebook.com/username"
             autoCapitalize="none"
             value={facebook.value}
             onFocus={() => setFacebookFocus(true)}
@@ -544,7 +544,7 @@ const CreateCard = ({navigation}: any) => {
           <TextInputs
             label="LinkedIn"
             placeholderTextColor="rgba(90, 89, 89, 0.55)"
-            placeholder="LinkedIn Account"
+            placeholder="https://linkedin.com/username"
             autoCapitalize="none"
             value={linkedIn.value}
             onFocus={() => setLinkedInFocus(true)}

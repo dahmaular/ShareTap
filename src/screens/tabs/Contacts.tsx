@@ -34,7 +34,10 @@ import {
 } from '../../types/navigation';
 import {getUserIdService, listContactService} from '../../services/userService';
 import SearchContactHeader from '../../components/SearchContactHeader';
-import {listUserConversationsService} from '../../services/chatService';
+import {
+  createConversationService,
+  listUserConversationsService,
+} from '../../services/chatService';
 
 type Props = {
   navigation: CompositeNavigationProp<
@@ -51,6 +54,12 @@ interface UserConversationsProps {
   lastMessage: string | null;
   createdAt: string | null;
   error: string | null;
+}
+
+interface ContactsProps {
+  id: string;
+  name: string;
+  phoneNumber: string;
 }
 
 const Contact = ({navigation}: Props) => {
@@ -115,6 +124,24 @@ const Contact = ({navigation}: Props) => {
     }
   };
 
+  const initiateConversation = async (item: ContactsProps) => {
+
+    const payload = {
+      recipients: [item.id, userId],
+    };
+
+    const res = await createConversationService(payload);
+
+
+    // {
+    //   chatItem
+    //     ? navigation.navigate('ChatMessage', {item: chatItem})
+    //     : navigation.navigate('ChatMessage', {
+    //         item: {...item, recipientUsername: item.name},
+    //       });
+    // }
+  };
+
   const getPhoneContacts = () => {
     Contacts.getAll().then(async (contacts: any[]) => {
       const sortedContacts = contacts.sort(function (a, b) {
@@ -132,9 +159,7 @@ const Contact = ({navigation}: Props) => {
           name:
             Platform.OS === 'android'
               ? item?.displayName
-              : `${item.givenName}` +
-                `${' '}` +
-                `${item.familyName}`,
+              : `${item.givenName}` + `${' '}` + `${item.familyName}`,
           phoneNumber: item?.phoneNumbers[0]?.number,
         };
       });
@@ -210,14 +235,7 @@ const Contact = ({navigation}: Props) => {
                     alignItems: 'center',
                     alignContent: 'center',
                   }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      chatItem
-                        ? navigation.navigate('ChatMessage', {item: chatItem})
-                        : navigation.navigate('ChatMessage', {
-                            item: {...item, recipientUsername: item.name},
-                          });
-                    }}>
+                  <TouchableOpacity onPress={() => initiateConversation(item)}>
                     <MessageIcon />
                   </TouchableOpacity>
                   <TouchableOpacity onLongPress={openMenu}>

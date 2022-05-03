@@ -8,6 +8,8 @@ import {
   View,
   Platform,
   PermissionsAndroid,
+  Share,
+  Linking,
 } from 'react-native';
 import {Menu} from 'react-native-paper';
 import {
@@ -117,7 +119,23 @@ const AddContacts = ({navigation, route}: Props) => {
     );
   };
 
-  const addCard = async (value: any) => {};
+  const addCard = async (value: any) => {
+    const result = await Share.share({
+      message:
+        Platform.OS == 'ios'
+          ? 'https://apps.apple.com/us/app/itunes-connect/id376771144'
+          : 'https://play.google.com/apps/internaltest/4697472967841541888',
+    });
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        // shared with activity type of result.activityType
+      } else {
+        // shared
+      }
+    } else if (result.action === Share.dismissedAction) {
+      // dismissed
+    }
+  };
 
   return (
     <View style={styles.container}>

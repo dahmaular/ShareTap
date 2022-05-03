@@ -31,7 +31,6 @@ export const signUpService = async (
         'custom:lastName': user.lastName,
       },
     });
-
     return response;
   } catch (error) {
     throw error;

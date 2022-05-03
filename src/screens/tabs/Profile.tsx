@@ -431,7 +431,7 @@ const Profile = ({navigation}: Props) => {
         <View style={styles.resultsModal}>
           <View style={styles.modalHeader}>
             <View style={{flexDirection: 'row'}}>
-              <Text style={styles.searchResultText}>Add Position </Text>
+              <Text style={styles.searchResultText}>Add Profile </Text>
             </View>
 
             <View style={{marginTop: 10}}>
@@ -886,7 +886,7 @@ const Profile = ({navigation}: Props) => {
               <TouchableOpacity
                 style={styles.addProfileBtn}
                 onPress={() => setProfileModal(true)}>
-                <Text style={styles.profileBtnText}>+ Add position</Text>
+                <Text style={styles.profileBtnText}>+ Add profile</Text>
               </TouchableOpacity>
             </View>
             <UserProfile />

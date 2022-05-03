@@ -3,6 +3,8 @@ import {GRAPHQL_AUTH_MODE} from '@aws-amplify/api';
 
 import {ExtractType} from '../types/extractApiTypes';
 import {
+  ConversationInput,
+  CreateConversationMutation,
   CreateMessageMutation,
   ListMessagesForConversationQuery,
   ListUserConversationsQuery,
@@ -13,7 +15,7 @@ import {
   listMessagesForConversation,
   listUserConversations,
 } from '../graphql/queries';
-import {createMessage} from '../graphql/mutations';
+import {createConversation, createMessage} from '../graphql/mutations';
 import {onCreateMessageByConversationId} from '../graphql/subscriptions';
 
 export type ListUserConversationsResponse =
@@ -23,6 +25,8 @@ export type ListUserConversationsByIdResponse =
   ExtractType<ListMessagesForConversationQuery>;
 
 export type createMessageResponse = ExtractType<CreateMessageMutation>;
+
+export type createConverstionResponse = ExtractType<CreateConversationMutation>;
 
 export type ListenToUserConversationsByIdResponse =
   ExtractType<OnCreateMessageByConversationIdSubscription>;
@@ -74,4 +78,19 @@ export const createMessageService = async (messagePayload: MessageInput) => {
   }
 };
 
-
+export const createConversationService = async (
+  conversationPayload: ConversationInput,
+) => {
+  try {
+    const {data} = (await API.graphql({
+      query: createConversation,
+      variables: {conversationPayload: conversationPayload},
+      authMode: GRAPHQL_AUTH_MODE.API_KEY,
+    })) as {
+      data: createConverstionResponse;
+    };
+    return {data: data.createConversation};
+  } catch (error) {
+    throw error;
+  }
+};

@@ -65,13 +65,16 @@ const Chat = ({navigation}: Props) => {
                 setFilteredDataSource(res.data as []);
               }
             })
-            .catch(e => {});
+            .catch(e => {
+            });
         })
         .catch(e => {
           throw e;
         });
     }, []),
   );
+
+  
 
   const searchFilterFunction = (text: string) => {
     // Check if searched text is not blank
@@ -184,10 +187,22 @@ const Chat = ({navigation}: Props) => {
                 style={styles.chatCard}
                 onPress={() => navigation.navigate('ChatMessage', {item})}>
                 <View style={{flex: 0.18}}>
-                  <Avatar.Image
-                    size={50}
-                    source={{uri: item.recipientAvatar as string}}
-                  />
+                  {item.recipientAvatar != '' ? (
+                    <Avatar.Image
+                      size={50}
+                      source={{uri: item.recipientAvatar as string}}
+                    />
+                  ) : (
+                    <Avatar.Text
+                      size={50}
+                      label={item.recipientUsername?.split('')[0] as string}
+                      style={{
+                        flexDirection: 'row',
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                      }}
+                    />
+                  )}
                 </View>
 
                 <View style={{flex: 0.82, justifyContent: 'space-between'}}>
