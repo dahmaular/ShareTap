@@ -173,7 +173,8 @@ const ChatMessage = ({navigation, route}: Props) => {
       <View style={styles.listEmpty}>
         <View style={styles.emptyView}>
           <Text style={styles.emptyText}>
-            To start a conversation, send a message {'\n'} to your contact
+            To start a conversation, send a message {'\n'} to{' '}
+            {item.recipientUsername}
           </Text>
         </View>
       </View>
@@ -183,7 +184,7 @@ const ChatMessage = ({navigation, route}: Props) => {
   const renderLoading = () => {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" animating color="#8661FF" />
+        <ActivityIndicator size="large" animating color="#316F8A" />
       </View>
     );
   };
@@ -382,6 +383,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    transform: [{scaleY: -1}],
   },
 
   emptyView: {

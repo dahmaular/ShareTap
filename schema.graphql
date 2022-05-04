@@ -100,13 +100,13 @@ input ConfirmSignUpPayload {
 
 type Conversation {
 	id: String
-	recipients: [String]
+	users: [String]
 	createdAt: String
 	error: String
 }
 
 input ConversationInput {
-	recipients: [String]
+	users: [String]
 }
 
 input CreateCardInput {
@@ -352,7 +352,7 @@ type Query {
 	getTermsAndConditionsPage: PageData
 	getUserProfile(userId: String): UserProfilePayload
 	getPresignedUploadUrl(presignedUploadInput: PresignedUploadInput): String
-	listUserConversations(userId: String): [UserConversation]
+	listUserConversations(userId: String): UserConversationResponse
 	getConversation(id: String): Conversation
 	listMessagesForConversation(conversationId: String): [Message]
 	listScheduledMessages(userId: String): ListScheduledMessagesPayload
@@ -567,6 +567,10 @@ type UserConversation {
 	recipientAvatar: String
 	lastMessage: String
 	createdAt: String
+}
+
+type UserConversationResponse {
+	userConversations: [UserConversation]
 	error: String
 }
 

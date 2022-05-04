@@ -497,12 +497,14 @@ export const getPresignedUploadUrl = /* GraphQL */ `
 export const listUserConversations = /* GraphQL */ `
   query ListUserConversations($userId: String) {
     listUserConversations(userId: $userId) {
-      id
-      recipientUserId
-      recipientUsername
-      recipientAvatar
-      lastMessage
-      createdAt
+      userConversations {
+        id
+        recipientUserId
+        recipientUsername
+        recipientAvatar
+        lastMessage
+        createdAt
+      }
       error
     }
   }
@@ -511,7 +513,7 @@ export const getConversation = /* GraphQL */ `
   query GetConversation($id: String) {
     getConversation(id: $id) {
       id
-      recipients
+      users
       createdAt
       error
     }

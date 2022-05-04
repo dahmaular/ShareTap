@@ -61,20 +61,17 @@ const Chat = ({navigation}: Props) => {
           listUserConversationsService(id)
             .then(res => {
               if (res.data) {
-                setChats(res.data as []);
-                setFilteredDataSource(res.data as []);
+                setChats(res.data.userConversations as []);
+                setFilteredDataSource(res.data.userConversations as []);
               }
             })
-            .catch(e => {
-            });
+            .catch(e => {});
         })
         .catch(e => {
           throw e;
         });
     }, []),
   );
-
-  
 
   const searchFilterFunction = (text: string) => {
     // Check if searched text is not blank
