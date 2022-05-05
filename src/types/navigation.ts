@@ -140,12 +140,12 @@ export interface ListChatMessagesRoute {
   id: string | null;
   recipientUserId: string | null;
   recipientUsername: string | null;
-  recipientAvatar: string | null;
-  lastMessage: string | null;
-  createdAt: string | null;
-  error: string | null;
 }
 
+export interface ListChatMessagesRoute {
+  id: string | null;
+  recipientUserId: string | null;
+}
 export interface ScheduleMessagesRoute {
   message?: string | null;
   sender?: string | null;

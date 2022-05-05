@@ -513,7 +513,11 @@ export const getConversation = /* GraphQL */ `
   query GetConversation($id: String) {
     getConversation(id: $id) {
       id
+<<<<<<< HEAD
       userIds
+=======
+      users
+>>>>>>> samuel
       createdAt
       error
     }

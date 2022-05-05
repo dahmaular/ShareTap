@@ -100,13 +100,13 @@ input ConfirmSignUpPayload {
 
 type Conversation {
   id: String
-  userIds: [String]
+  users: [String]
   createdAt: String
   error: String
 }
 
 input ConversationInput {
-  userIds: [String]
+  users: [String]
 }
 
 input CreateCardInput {

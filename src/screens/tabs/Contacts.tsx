@@ -78,7 +78,7 @@ const Contact = ({navigation}: Props) => {
           listUserConversationsService(id)
             .then(res => {
               if (res.data) {
-                setFilteredDataSource(res.data as []);
+                setFilteredDataSource(res.data.userConversations as []);
               }
             })
             .catch(e => {});
@@ -113,6 +113,21 @@ const Contact = ({navigation}: Props) => {
         console.warn(err);
       }
     }
+  };
+
+  const initiateConversation = async (item: ContactsProps) => {
+    const payload = {
+      users: [item.id, userId],
+    };
+
+    const res = await createConversationService(payload);
+
+    const newItem = {
+      id: res.data?.id as string,
+      recipientUserId: item.id,
+      recipientUsername: item.name,
+    };
+    navigation.navigate('ChatMessage', {item: newItem});
   };
 
   const getPhoneContacts = () => {
