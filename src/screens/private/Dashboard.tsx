@@ -53,7 +53,9 @@ const Dashboard = ({navigation}: any) => {
           setUserId(id);
           getUserCards(id);
         })
-        .catch(e => {throw e});
+        .catch(e => {
+          throw e;
+        });
     }, []),
   );
 
@@ -158,69 +160,9 @@ const Dashboard = ({navigation}: any) => {
         <View style={styles.resultsModal}>
           <View style={styles.modalHeader}>
             <View style={{flexDirection: 'row'}}>
-              <Text style={styles.searchResultText}>Recipients (7) </Text>
+              <Text style={styles.searchResultText}>Recipients (0) </Text>
             </View>
-
-            {/* <View style={{marginTop: 10}}>
-              <Text style={styles.searchResultNote}>
-                Add more roles *********
-              </Text>
-            </View> */}
           </View>
-          {/* <TextInputs
-            label="Role"
-            placeholderTextColor="rgba(90, 89, 89, 0.55)"
-            placeholder="Add role"
-            autoCapitalize="none"
-            value={role.value}
-            // onFocus={() => setWebsiteFocus(true)}
-            onChangeText={text => {
-              setRole({value: text, error: ''});
-            }}
-            style={styles.socialInputs}
-          /> */}
-          {/* <TextInputs
-            label="Organization"
-            placeholderTextColor="rgba(90, 89, 89, 0.55)"
-            placeholder="Add organization"
-            value={organisation.value}
-            // onFocus={() => setTwitterFocus(true)}
-            onChangeText={text => {
-              setOrganisation({value: text, error: ''});
-            }}
-            style={styles.socialInputs}
-          /> */}
-          {/* <View style={styles.dateView}>
-            <View style={styles.startDate}>
-              <YearSelect
-                name="doe"
-                placeholder="Start date"
-                dateValue={moment(selectStartDate).format('l')}
-                onValueChange={(itemValue: any) => {
-                  setSelectedStartDate(itemValue);
-                }}
-              />
-            </View>
-            <View style={styles.endDate}>
-              <YearSelect
-                name="doe"
-                placeholder="Present"
-                dateValue={moment(selectEndDate).format('l')}
-                onValueChange={(itemValue: any) => {
-                  setSelectedEndDate(itemValue);
-                }}
-              />
-            </View>
-          </View> */}
-          {/* <TouchableOpacity
-            style={
-              role.value !== '' || organisation.value !== ''
-                ? styles.modalButton
-                : styles.modalButtonInactive
-            }
-            onPress={() => submitProfile()}>
-            <Text style={styles.modalBtnText}>CONFIRM</Text>
-          </TouchableOpacity> */}
         </View>
       </Modal>
     );
@@ -256,11 +198,13 @@ const Dashboard = ({navigation}: any) => {
                 <TouchableOpacity
                   style={styles.totalCards}
                   onPress={() => setRecipientModal(true)}>
-                  <Text style={styles.number}>42</Text>
+                  <Text style={styles.number}>0</Text>
                   <Text style={styles.numberText}>TOTAL RECIPIENT</Text>
                 </TouchableOpacity>
               </View>
-              <UserCardS />
+              <View style={{marginBottom: 200}}>
+                <UserCardS />
+              </View>
             </>
           ) : (
             <NoActivity />
@@ -277,6 +221,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    // marginBottom: 200,
   },
   activityIndicator: {
     flex: 1,

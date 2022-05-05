@@ -18,14 +18,25 @@ import Back from '../../assets/svg/back.svg';
 import Mark from '../../assets/svg/mark.svg';
 import MasterCard from '../../assets/svg/Mastercard.svg';
 import DashboardHeader from '../../components/DashboardHeader';
-import {listSubscriptionsService} from '../../services/userService';
+import {
+  getUserIdService,
+  listSubscriptionsService,
+} from '../../services/userService';
 import {ScrollView} from 'react-native-gesture-handler';
 import {PRIMARY_COLOR} from '../../core/color';
 import {useFocusEffect} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('screen');
 
+interface PaymentProps {
+  currency: string;
+  features: string;
+  plan: String;
+  price: string;
+}
+
 const Subscriptions = ({navigation}: any) => {
+  const [userId, setUserId] = useState('');
   const [showPlans, setShowPlans] = useState<boolean>(true);
   const [showPayment, setShowPayment] = useState<boolean>(false);
   const [subscriptions, setSubscriptions] = useState<any>(null);
@@ -41,14 +52,21 @@ const Subscriptions = ({navigation}: any) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // setIsLoading(true);
+      getUserIdService()
+        .then(id => {
+          console.log(id);
+          setUserId(id);
+        })
+        .catch(e => {
+          throw e;
+        });
       getSubscriptions();
     }, []),
   );
 
-  // useEffect(() => {
-  //   getSubscriptions();
-  // }, []);
+  const handleSubscriptionPayment = (item: PaymentProps) => {
+    console.log(item);
+  };
 
   const PlanFlatList = () => {
     return (
@@ -179,6 +197,23 @@ const Subscriptions = ({navigation}: any) => {
                   color: PRIMARY_COLOR,
                 }}>
                 Change Payment Method
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.btnView}>
+            <TouchableOpacity
+              style={styles.btnStan}
+              onPress={() => {
+                handleSubscriptionPayment(chosenPlan);
+              }}>
+              <Text
+                style={{
+                  ...styles.aboutText,
+                  textAlign: 'center',
+                  marginTop: 12,
+                  color: 'white',
+                }}>
+                PAY ${chosenPlan?.price}
               </Text>
             </TouchableOpacity>
           </View>

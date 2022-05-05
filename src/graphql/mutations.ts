@@ -265,7 +265,7 @@ export const createConversation = /* GraphQL */ `
   mutation CreateConversation($conversationPayload: ConversationInput) {
     createConversation(conversationPayload: $conversationPayload) {
       id
-      recipients
+      userIds
       createdAt
       error
     }

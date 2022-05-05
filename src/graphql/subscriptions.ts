@@ -6,7 +6,7 @@ export const onCreateConversation = /* GraphQL */ `
   subscription OnCreateConversation {
     onCreateConversation {
       id
-      recipients
+      userIds
       createdAt
       error
     }

@@ -240,13 +240,13 @@ export type User = {
 };
 
 export type ConversationInput = {
-  recipients?: Array< string | null > | null,
+  userIds?: Array< string | null > | null,
 };
 
 export type Conversation = {
   __typename: "Conversation",
   id?: string | null,
-  recipients?: Array< string | null > | null,
+  userIds?: Array< string | null > | null,
   createdAt?: string | null,
   error?: string | null,
 };
@@ -486,6 +486,12 @@ export type PresignedUploadInput = {
   type?: string | null,
 };
 
+export type UserConversationResponse = {
+  __typename: "UserConversationResponse",
+  userConversations?:  Array<UserConversation | null > | null,
+  error?: string | null,
+};
+
 export type UserConversation = {
   __typename: "UserConversation",
   id?: string | null,
@@ -494,7 +500,6 @@ export type UserConversation = {
   recipientAvatar?: string | null,
   lastMessage?: string | null,
   createdAt?: string | null,
-  error?: string | null,
 };
 
 export type ListScheduledMessagesPayload = {
@@ -908,7 +913,7 @@ export type CreateConversationMutation = {
   createConversation?:  {
     __typename: "Conversation",
     id?: string | null,
-    recipients?: Array< string | null > | null,
+    userIds?: Array< string | null > | null,
     createdAt?: string | null,
     error?: string | null,
   } | null,
@@ -1588,16 +1593,19 @@ export type ListUserConversationsQueryVariables = {
 };
 
 export type ListUserConversationsQuery = {
-  listUserConversations?:  Array< {
-    __typename: "UserConversation",
-    id?: string | null,
-    recipientUserId?: string | null,
-    recipientUsername?: string | null,
-    recipientAvatar?: string | null,
-    lastMessage?: string | null,
-    createdAt?: string | null,
+  listUserConversations?:  {
+    __typename: "UserConversationResponse",
+    userConversations?:  Array< {
+      __typename: "UserConversation",
+      id?: string | null,
+      recipientUserId?: string | null,
+      recipientUsername?: string | null,
+      recipientAvatar?: string | null,
+      lastMessage?: string | null,
+      createdAt?: string | null,
+    } | null > | null,
     error?: string | null,
-  } | null > | null,
+  } | null,
 };
 
 export type GetConversationQueryVariables = {
@@ -1608,7 +1616,7 @@ export type GetConversationQuery = {
   getConversation?:  {
     __typename: "Conversation",
     id?: string | null,
-    recipients?: Array< string | null > | null,
+    userIds?: Array< string | null > | null,
     createdAt?: string | null,
     error?: string | null,
   } | null,
@@ -1730,7 +1738,7 @@ export type OnCreateConversationSubscription = {
   onCreateConversation?:  {
     __typename: "Conversation",
     id?: string | null,
-    recipients?: Array< string | null > | null,
+    userIds?: Array< string | null > | null,
     createdAt?: string | null,
     error?: string | null,
   } | null,
